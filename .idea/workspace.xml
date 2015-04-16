@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="921a0646-d7f3-4ebc-a35d-fa086a0f3716" name="Default" comment="" />
+    <list default="true" id="921a0646-d7f3-4ebc-a35d-fa086a0f3716" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/design.txt" afterPath="$PROJECT_DIR$/design.txt" />
+    </list>
     <ignored path="SpacedOut.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="921a0646-d7f3-4ebc-a35d-fa086a0f3716" time="1429215113719" ignored="false" />
     <file path="/index.html" changelist="921a0646-d7f3-4ebc-a35d-fa086a0f3716" time="1429215301349" ignored="false" />
+    <file path="/design.txt" changelist="921a0646-d7f3-4ebc-a35d-fa086a0f3716" time="1429215912795" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,10 +40,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="loader.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="loader.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/src/loader.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="27" column="40" selection-start="624" selection-end="624" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="design.txt" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/design.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="23" column="14" selection-start="438" selection-end="438" vertical-scroll-proportion="0.6982143">
               <folding />
             </state>
           </provider>
@@ -74,6 +86,7 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/design.txt" />
       </list>
     </option>
   </component>
@@ -295,7 +308,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/src/loader.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="27" column="40" selection-start="624" selection-end="624" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/design.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="14" selection-start="438" selection-end="438" vertical-scroll-proportion="0.6982143">
           <folding />
         </state>
       </provider>
