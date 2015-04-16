@@ -1,4 +1,4 @@
-spaced out - get pushed out of space
+out spaced - don't get pushed out of space
 
 1. Game setup
     size
