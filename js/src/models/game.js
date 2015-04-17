@@ -22,6 +22,12 @@ define(['phaser', 'lodash', 'candy', 'galaxyPanel', 'budgetPanel',
     var OutSpacedApp = function(h, w, mode, targetElement){
         var loadingSignal = new Phaser.Signal();
         loadingSignal.add(this.appLoad, this);
+
+        var targetDiv = document.createElement('div');
+        targetDiv.id = targetElement;
+
+        document.getElementById('appRoot').addChild(targetDiv);
+
         //context in these functions is the PHASER OBJECT not our object
         this.gameInstance = new Phaser.Game(h, w, mode, targetElement,{
             preload: this.preload,
@@ -47,6 +53,7 @@ define(['phaser', 'lodash', 'candy', 'galaxyPanel', 'budgetPanel',
             this.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
             this.physics.startSystem(Phaser.Physics.ARCADE);
             //Fire off our signal so we can change to our app context
+            this.viewModels = [];
             this.loadComplete.dispatch();
         },
 
@@ -58,7 +65,7 @@ define(['phaser', 'lodash', 'candy', 'galaxyPanel', 'budgetPanel',
         },
 
         update: function () {
-            _.each(this.gameInstance.models, function(model){
+            _.each(this.gameInstance.viewModels, function(model){
                model.update();
             });
         },

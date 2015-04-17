@@ -8,6 +8,7 @@ require.config({
         'planet': 'src/models/planet',
         'player': 'src/models/player',
         'ship': 'src/models/ship',
+        'galaxy': 'src/models/galaxy',
         'galaxyPanel': 'src/ui/galaxyPanel',
         'battlePanel': 'src/ui/battlePanel',
         'gameSetupModal': 'src/ui/gameSetupModal',
@@ -24,7 +25,7 @@ require.config({
 });
 
 require(['phaser', 'outSpacedApp'], function(Phaser, OutSpacedApp){
-    new OutSpacedApp(1024, 768, Phaser.AUTO, 'appRoot');
+    new OutSpacedApp(1024, 768, Phaser.AUTO, 'galaxyMap');
 });
 
 
