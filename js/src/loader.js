@@ -4,13 +4,17 @@ require.config({
         'phaser': 'lib/phaser',
         'lodash': 'lib/lodash.min',
         'candy': 'lib/candy',
-        'simperialismApp': 'src/game',
-        'worldmap': 'src/worldmap',
-        'province': 'src/province',
-        'provinceData': 'src/provinceData',
-        'unit': 'src/unit',
-        'unitData' : 'src/unitData',
-        'base': 'src/base'
+        'outSpacedApp': 'src/models/game',
+        'planet': 'src/models/planet',
+        'player': 'src/models/player',
+        'ship': 'src/models/ship',
+        'galaxyPanel': 'src/ui/galaxyPanel',
+        'battlePanel': 'src/ui/battlePanel',
+        'gameSetupModal': 'src/ui/gameSetupModal',
+        'messagePanel': 'src/ui/messagePanel',
+        'planetPanel' : 'src/ui/planelPanel',
+        'techPanel': 'src/ui/techPanel',
+        'budgetPanel': 'src/ui/budgetPanel'
     },
     shim: {
         'phaser': {
@@ -19,8 +23,8 @@ require.config({
     }
 });
 
-require(['phaser', 'simperialismApp'], function(Phaser, SimperialismApp){
-    new SimperialismApp(1024, 768, Phaser.AUTO, 'appRoot');
+require(['phaser', 'outSpacedApp'], function(Phaser, OutSpacedApp){
+    new OutSpacedApp(1024, 768, Phaser.AUTO, 'appRoot');
 });
 
 

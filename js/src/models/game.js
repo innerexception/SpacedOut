@@ -1,4 +1,7 @@
-define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phaser, _, Candy, WorldMap, ProvinceData){
+define(['phaser', 'lodash', 'candy', 'galaxyPanel', 'budgetPanel',
+    'gameSetupPanel', 'messagePanel', 'planetPanel', 'techPanel', 'battleModal'],
+    function(Phaser, _, Candy, GalaxyPanel, BudgetPanel, GameSetupModal,
+             MessagePanel, PlanetPanel, TechPanel, BattleModal){
 
     //Shitty Globals for Google WebFonts
     //  The Google WebFont Loader will look for this object, so create it before loading the script.
@@ -16,7 +19,7 @@ define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phase
         }
     };
 
-    var SimperialismApp = function(h, w, mode, targetElement){
+    var OutSpacedApp = function(h, w, mode, targetElement){
         var loadingSignal = new Phaser.Signal();
         loadingSignal.add(this.appLoad, this);
         //context in these functions is the PHASER OBJECT not our object
@@ -28,24 +31,12 @@ define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phase
         });
     };
 
-    SimperialismApp.prototype = {
+    OutSpacedApp.prototype = {
 
         preload: function () {
             //Load all assets here
-            this.load.image('mapBackground', 'res/sprite/mapBG.png');
-            this.load.image('bullet', 'res/sprite/bullet.png');
-            this.load.spritesheet('fight', 'res/sprite/fight.png', 16, 16);
-            this.load.spritesheet('intelligencia_surface_unit', 'res/sprite/intelligencia_surface_unit.png', 16, 16);
-            this.load.spritesheet('military_surface_unit', 'res/sprite/military_surface_unit.png', 16, 16);
-            this.load.spritesheet('oligarch_surface_unit', 'res/sprite/oligarch_surface_unit.png', 16, 16);
 
-            _.each(ProvinceData, function(province){
-                this.load.tilemap(province.name+'_map', 'res/tilemaps/'+province.name+'_map.json', null, Phaser.Tilemap.TILED_JSON);
-            }, this);
-            this.load.spritesheet('base', 'res/sprite/base.png', 55, 55);
-            this.load.image('surface_plains', 'res/sprite/surface_plains.png');
-            this.load.image('sightBox', 'res/sprite/sightBox.png');
-            //  Load the Google WebFont Loader script
+           //  Load the Google WebFont Loader script
             this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
         },
 
@@ -55,8 +46,7 @@ define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phase
             //Camera init
             this.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
             this.physics.startSystem(Phaser.Physics.ARCADE);
-            //  Enable the QuadTree
-            //this.physics.arcade.skipQuadTree = false;
+            //Fire off our signal so we can change to our app context
             this.loadComplete.dispatch();
         },
 
@@ -68,12 +58,20 @@ define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phase
         },
 
         update: function () {
-            if (this.game.worldMap) this.game.worldMap.update();
+            _.each(this.gameInstance.models, function(model){
+               model.update();
+            });
         },
 
         setUpIntro: function () {
 
-            this.gameInstance.worldMap = new WorldMap(this.gameInstance);
+            this.gameInstance.galaxyMapPanel = new GalaxyPanel(this.gameInstance);
+            this.gameInstance.battleModal = new BattleModal(this.gameInstance);
+            this.gameInstance.budgetPanel = new BudgetPanel(this.gameInstance);
+            this.gameInstance.gameSetupModal = new GameSetupModal(this.gameInstance);
+            this.gameInstance.messagePanel = new MessagePanel(this.gameInstance);
+            this.gameInstance.planetPanel = new PlanetPanel(this.gameInstance);
+            this.gameInstance.techPanel = new TechPanel(this.gameInstance);
 
             //Keyboard init
             //this.cursors = this.gameInstance.input.keyboard.createCursorKeys();
@@ -86,7 +84,7 @@ define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phase
 
         startNewGame: function () {
             Candy.clearIntro(this.gameInstance);
-            this.gameInstance.worldMap.transitionTo();
+            this.gameInstance.gameSetupModal.transitionTo();
         },
 
         runVictory: function () {
@@ -99,6 +97,6 @@ define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phase
 
     };
 
-    return SimperialismApp;
+    return OutSpacedApp;
 });
 
