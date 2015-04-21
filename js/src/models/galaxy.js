@@ -1,7 +1,5 @@
-define(['galaxy'], function(GalaxyModel){
+define([], function(){
    var galaxy = function(gameInstance){
-        this.model = new GalaxyModel();
-        gameInstance.viewModels.push(this.model);
         this.dom = document.getElementById('galaxyMap');
         this.planets = [];
         this.players = [];

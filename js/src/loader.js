@@ -1,9 +1,15 @@
 require.config({
     baseUrl: 'js',
     paths:{
-        'phaser': 'lib/phaser',
-        'lodash': 'lib/lodash.min',
+        //Framework
+        'phaser': 'lib/vendor/phaser',
+        'lodash': 'lib/vendor/lodash.min',
         'candy': 'lib/candy',
+        'amd-loader': 'lib/vendor/requirejs-ractive/amd-loader',
+        'css': 'lib/vendor/require-css/css',
+        'rv': 'lib/vendor/requirejs-ractive/rv',
+        'ractive': 'lib/vendor/ractive/ractive',
+
         'outSpacedApp': 'src/models/game',
         'planet': 'src/models/planet',
         'player': 'src/models/player',
@@ -15,6 +21,11 @@ require.config({
         'planetPanel' : 'src/ui/planelPanel',
         'techPanel': 'src/ui/techPanel',
         'budgetPanel': 'src/ui/budgetPanel'
+    },
+    map: {
+        '*': {
+            'css': 'lib/vendor/require-css/css'
+        }
     },
     shim: {
         'phaser': {
