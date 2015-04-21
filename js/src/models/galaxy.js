@@ -1,5 +1,5 @@
 define(['galaxy'], function(GalaxyModel){
-   var GalaxyPanel = function(gameInstance){
+   var galaxy = function(gameInstance){
         this.model = new GalaxyModel();
         gameInstance.viewModels.push(this.model);
         this.dom = document.getElementById('galaxyMap');
@@ -8,7 +8,7 @@ define(['galaxy'], function(GalaxyModel){
         this.ships = [];
    };
 
-   GalaxyPanel.prototype = {
+    galaxy.prototype = {
        update: function() {
 
        },
@@ -23,8 +23,15 @@ define(['galaxy'], function(GalaxyModel){
        },
        endShipDrag: function() {
 
+       },
+       initializePlayer: function(name, ai, difficulty){
+           //set homeworld
+           //set initial ships
+       },
+       generatePlanets: function(shape, number, spread){
+
        }
    };
 
-   return GalaxyPanel;
+   return galaxy;
 });

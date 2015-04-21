@@ -1,7 +1,7 @@
-define(['phaser', 'lodash', 'candy', 'galaxyPanel', 'budgetPanel',
-    'gameSetupPanel', 'messagePanel', 'planetPanel', 'techPanel', 'battleModal'],
-    function(Phaser, _, Candy, GalaxyPanel, BudgetPanel, GameSetupModal,
-             MessagePanel, PlanetPanel, TechPanel, BattleModal){
+define(['phaser', 'lodash', 'candy', 'budgetPanel',
+    'gameSetupPanel', 'messagePanel', 'planetPanel', 'techPanel', 'galaxy'],
+    function(Phaser, _, Candy, BudgetPanel, GameSetupModal,
+             MessagePanel, PlanetPanel, TechPanel, Galaxy){
 
     //Shitty Globals for Google WebFonts
     //  The Google WebFont Loader will look for this object, so create it before loading the script.
@@ -72,13 +72,12 @@ define(['phaser', 'lodash', 'candy', 'galaxyPanel', 'budgetPanel',
 
         setUpIntro: function () {
 
-            this.gameInstance.galaxyMapPanel = new GalaxyPanel(this.gameInstance);
-            this.gameInstance.battleModal = new BattleModal(this.gameInstance);
-            this.gameInstance.budgetPanel = new BudgetPanel(this.gameInstance);
-            this.gameInstance.gameSetupModal = new GameSetupModal(this.gameInstance);
-            this.gameInstance.messagePanel = new MessagePanel(this.gameInstance);
-            this.gameInstance.planetPanel = new PlanetPanel(this.gameInstance);
-            this.gameInstance.techPanel = new TechPanel(this.gameInstance);
+            this.galaxy = new Galaxy(this.gameInstance);
+            this.budgetPanel = new BudgetPanel(this.galaxy.dom, this.gameInstance);
+            this.gameSetupModal = new GameSetupModal(this.galaxy.dom, this.gameInstance);
+            this.messagePanel = new MessagePanel(this.galaxy.dom, this.gameInstance);
+            this.planetPanel = new PlanetPanel(this.galaxy.dom, this.gameInstance);
+            this.techPanel = new TechPanel(this.galaxy.dom, this.gameInstance);
 
             //Keyboard init
             //this.cursors = this.gameInstance.input.keyboard.createCursorKeys();

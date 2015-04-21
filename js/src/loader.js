@@ -10,7 +10,6 @@ require.config({
         'ship': 'src/models/ship',
         'galaxy': 'src/models/galaxy',
         'galaxyPanel': 'src/ui/galaxyPanel',
-        'battlePanel': 'src/ui/battlePanel',
         'gameSetupModal': 'src/ui/gameSetupModal',
         'messagePanel': 'src/ui/messagePanel',
         'planetPanel' : 'src/ui/planelPanel',
