@@ -1,9 +1,10 @@
 define([], function(){
-   var galaxy = function(gameInstance){
+   var galaxy = function(gameInstance, signal){
         this.dom = document.getElementById('galaxyMap');
         this.planets = [];
         this.players = [];
         this.ships = [];
+        this.finishedSignal = signal;
    };
 
     galaxy.prototype = {
@@ -28,6 +29,14 @@ define([], function(){
        },
        generatePlanets: function(shape, number, spread){
 
+       },
+       initGalaxy: function(size, shape, ai_players, difficulty, handicap, spread){
+           this.generatePlanets(shape, size, spread);
+           this.initializePlayer(this.getRandomPlayerName(), false, difficulty);
+           for(var i=0; i<ai_players; i++){
+               this.initializePlayer(this.getRandomPlayerName(), true, difficulty);
+           }
+           this.finishedSignal.dispatch();
        }
    };
 

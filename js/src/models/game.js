@@ -1,5 +1,5 @@
 define(['phaser', 'lodash', 'candy', 'budgetPanel',
-    'gameSetupPanel', 'messagePanel', 'planetPanel', 'techPanel', 'galaxy'],
+    'gameSetupModal', 'messagePanel', 'planetPanel', 'techPanel', 'galaxy'],
     function(Phaser, _, Candy, BudgetPanel, GameSetupModal,
              MessagePanel, PlanetPanel, TechPanel, Galaxy){
 
@@ -26,7 +26,8 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
         var targetDiv = document.createElement('div');
         targetDiv.id = targetElement;
 
-        document.getElementById('appRoot').addChild(targetDiv);
+        var root = document.getElementById('appRoot');
+        root.appendChild(targetDiv);
 
         //context in these functions is the PHASER OBJECT not our object
         this.gameInstance = new Phaser.Game(h, w, mode, targetElement,{
@@ -53,7 +54,6 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
             this.physics.startSystem(Phaser.Physics.ARCADE);
             //Fire off our signal so we can change to our app context
-            this.viewModels = [];
             this.loadComplete.dispatch();
         },
 
@@ -65,19 +65,20 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
         },
 
         update: function () {
-            _.each(this.gameInstance.viewModels, function(model){
-               model.update();
-            });
+
         },
 
         setUpIntro: function () {
 
-            this.galaxy = new Galaxy(this.gameInstance);
-            this.budgetPanel = new BudgetPanel(this.galaxy.dom, this.gameInstance);
-            this.gameSetupModal = new GameSetupModal(this.galaxy.dom, this.gameInstance);
-            this.messagePanel = new MessagePanel(this.galaxy.dom, this.gameInstance);
-            this.planetPanel = new PlanetPanel(this.galaxy.dom, this.gameInstance);
-            this.techPanel = new TechPanel(this.galaxy.dom, this.gameInstance);
+            var galaxyInitFinishedSignal = new Phaser.Signal();
+            galaxyInitFinishedSignal.add(this.galaxyInitFinished, this);
+
+            this.galaxy = new Galaxy(this.gameInstance, galaxyInitFinishedSignal);
+            this.budgetPanel = new BudgetPanel(this.galaxy);
+            this.gameSetupModal = new GameSetupModal(this.galaxy);
+            this.messagePanel = new MessagePanel(this.galaxy);
+            this.planetPanel = new PlanetPanel(this.galaxy);
+            this.techPanel = new TechPanel(this.galaxy);
 
             //Keyboard init
             //this.cursors = this.gameInstance.input.keyboard.createCursorKeys();
@@ -88,9 +89,16 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.gameInstance.input.onDown.addOnce(this.startNewGame, this);
         },
 
+        galaxyInitFinished: function(){
+            this.budgetPanel.init();
+            this.messagePanel.init();
+            this.planetPanel.init();
+            this.techPanel.init();
+        },
+
         startNewGame: function () {
             Candy.clearIntro(this.gameInstance);
-            this.gameInstance.gameSetupModal.transitionTo();
+            this.gameSetupModal.transitionTo();
         },
 
         runVictory: function () {

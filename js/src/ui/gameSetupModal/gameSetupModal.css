@@ -1,0 +1,9 @@
+.gameSetupIn{
+    transition: top 2s;
+    top: 25%;
+}
+
+.gameSetupOut{
+    transition: top 2s;
+    top: -200px;
+}
