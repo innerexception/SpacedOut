@@ -60,7 +60,7 @@ define(['planet'], function(Planet){
            //set initial ships
        },
        generatePlanets: function(shape, size, spread){
-           this._positions = this._generatePositions(shape size, spread);
+           this._positions = this._generatePositions(shape, size, spread);
            for(var i=0; i<this.Constants.Size[size]; i++){
                this.planets.push(this._getRandomPlanet());
            }
@@ -79,15 +79,33 @@ define(['planet'], function(Planet){
            var metal = this._getRandomPlanetMetal();
            return new Planet(
                this._getRandomPlanetName(),
-               this.gameInstance.add.sprite(this._getPlanetSprite(temp, gravity, metal)),
+               this._getPlanetSprites(temp, gravity, metal),
                temp, gravity, metal,
                this._getNextPlanetPosition());
        },
        _getNextPlanetPosition: function(){
-            return this._positions.shift();
+           return this._positions.shift();
        },
-       _getPlanetSprite: function(temp, gravity, metal){
-            
+       _getPlanetSprites: function(temp, gravity, metal){
+           var cold, barren, poor, hot, fertile, rich;
+           if(temp < 10) cold = true;
+           if(temp > 100) hot = true;
+           if(gravity > 2) barren = true;
+           if(gravity < 0.7) barren = true;
+           if(metal > 4000) rich = true;
+
+           var sprites = [];
+
+           if(barren) sprites.push(this.Constants.Gravity.BarrenSprite);
+           else sprites.push(this.Constants.Gravity.FertileSprite);
+
+           if(cold) sprites.push(this.Constants.Temp.ColdSprite);
+           else if(hot) sprites.push(this.Constants.Temp.HotSprite);
+
+           if(poor && (hot || cold)) sprites.push(this.Constants.Metal.PoorSprite);
+           else if(rich) sprites.push(this.Constants.Metal.RichSprite);
+
+           return sprites;
        },
        _getRandomPlanetTemp: function(){
            return (Math.random() * this.Constants.Temp.max) + this.Constants.Temp.min;

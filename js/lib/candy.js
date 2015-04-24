@@ -106,7 +106,7 @@ define(['phaser'], function(Phaser){
     };
 
     Candy.drawIntro = function(phaserInstance){
-        Candy.logo = phaserInstance.add.text(400, 0, "sImperialism");
+        Candy.logo = phaserInstance.add.text(400, 0, "Out Spaced");
         Candy.setTextProps(Candy.logo, {fontSiez:48});
 
         Candy.logo.bounce = phaserInstance.add.tween(Candy.logo);
