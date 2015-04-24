@@ -69,6 +69,7 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
         },
 
         setUpIntro: function () {
+            window.clearInterval(this.fontInterval);
 
             var galaxyInitFinishedSignal = new Phaser.Signal();
             galaxyInitFinishedSignal.add(this.galaxyInitFinished, this);
@@ -76,24 +77,25 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.galaxy = new Galaxy(this.gameInstance, galaxyInitFinishedSignal);
             this.budgetPanel = new BudgetPanel(this.galaxy);
             this.gameSetupModal = new GameSetupModal(this.galaxy);
-            this.messagePanel = new MessagePanel(this.galaxy);
-            this.planetPanel = new PlanetPanel(this.galaxy);
-            this.techPanel = new TechPanel(this.galaxy);
+            //this.messagePanel = new MessagePanel(this.galaxy);
+            //this.planetPanel = new PlanetPanel(this.galaxy);
+            //this.techPanel = new TechPanel(this.galaxy);
 
             //Keyboard init
             //this.cursors = this.gameInstance.input.keyboard.createCursorKeys();
 
-            window.clearInterval(this.fontInterval);
             Candy.drawIntro(this.gameInstance);
             this.gameInstance.camera.focusOnXY(0, 0);
             this.gameInstance.input.onDown.addOnce(this.startNewGame, this);
         },
 
         galaxyInitFinished: function(){
-            this.budgetPanel.init();
-            this.messagePanel.init();
-            this.planetPanel.init();
-            this.techPanel.init();
+            console.log('init panels...');
+            //this.budgetPanel.init();
+            //this.messagePanel.init();
+            //this.planetPanel.init();
+            //this.techPanel.init();
+            console.log('init panels done.');
         },
 
         startNewGame: function () {

@@ -1,16 +1,16 @@
-.gameSetupIn{
+.budgetPanelIn{
     transition: top 2s, opacity 2s;
-    top: 25%;
+    left: 0;
     opacity: 1;
 }
 
-.gameSetupOut{
+.budgetPanelOut{
     transition: top 2s, opacity 2s;
-    top: -200px;
+    left: -200px;
     opacity: 0;
 }
 
-.game-setup{
+.budget-panel{
     position: absolute;
-    left: 100px;
+    top:0;
 }

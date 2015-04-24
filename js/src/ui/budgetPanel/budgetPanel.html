@@ -1,0 +1,22 @@
+<div class="panel">
+    <div class="list-group">
+        <label for="capitalSlider">Capital</label>
+        <input id="capitalSlider" type="range" />
+        <label for="techSlider">Tech</label>
+        <input id="techSlider" type="range" />
+    </div>
+    <div class="list-group">
+        {{#planets:i}}
+            {{>planetItem}}
+        {{/planets}}
+    </div>
+</div>
+
+
+<!-- {{>planetItem}} -->
+<div class="well">
+    <img src="{{planetThumbPath}}" />
+    <label for="{{planetName + 'slider'}}">{{budgetPercent}}</label>
+    <input type="range" id="{{planetName + 'slider'}}" value="{{budgetPercent}}" on-change="onPlanetBudgetChanged" />
+</div>
+<!-- {{/planetItem}} -->

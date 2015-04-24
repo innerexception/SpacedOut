@@ -20,7 +20,7 @@ require.config({
         'messagePanel': 'src/ui/messagePanel',
         'planetPanel' : 'src/ui/planetPanel',
         'techPanel': 'src/ui/techPanel',
-        'budgetPanel': 'src/ui/budgetPanel'
+        'budgetPanel': 'src/ui/budgetPanel/budgetPanel'
     },
     map: {
         '*': {
