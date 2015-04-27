@@ -9,6 +9,7 @@ require.config({
         'css': 'lib/vendor/require-css/css',
         'rv': 'lib/vendor/requirejs-ractive/rv',
         'ractive': 'lib/vendor/ractive/ractive',
+        'worldGen': 'lib/vendor/world',
 
         'outSpacedApp': 'src/models/game',
         'planet': 'src/models/planet',

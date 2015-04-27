@@ -8,37 +8,6 @@ define(['planet'], function(Planet){
         this.gameInstance = gameInstance;
    };
 
-   galaxy.Constants = {
-       Size: {
-           small: 10,
-           medium: 20,
-           large: 30
-       },
-       Shape: {
-           Spiral: 'spiral',
-           Circle: 'circle',
-           Ring: 'ring'
-       },
-       Temp: {
-           min: -300,
-           max: 300
-       },
-       Gravity: {
-           min: 0.1,
-           max: 4.0
-       },
-       Metal: {
-           min: 0,
-           max: 20000
-       },
-       PlayerNames: [
-
-       ],
-       PlanetNames: [
-
-       ]
-   };
-
    galaxy.prototype = {
        update: function() {
 
@@ -66,6 +35,7 @@ define(['planet'], function(Planet){
            }
        },
        initGalaxy: function(size, shape, ai_players, difficulty, handicap, spread){
+           console.log('making galaxy with '+size+', '+shape+', '+ai_players+', '+difficulty+', '+handicap+', '+spread);
            this.generatePlanets(shape, size, spread);
            this.initializePlayer(this._getRandomPlayerName(), false, difficulty);
            for(var i=0; i<ai_players; i++){
@@ -77,35 +47,16 @@ define(['planet'], function(Planet){
            var temp = this._getRandomPlanetTemp();
            var gravity = this._getRandomPlanetGravity();
            var metal = this._getRandomPlanetMetal();
+           console.log('made planet of '+temp+'f, '+gravity + 'g '+metal+' metal');
            return new Planet(
+               this.gameInstance,
                this._getRandomPlanetName(),
-               this._getPlanetSprites(temp, gravity, metal),
                temp, gravity, metal,
                this._getNextPlanetPosition());
        },
        _getNextPlanetPosition: function(){
+           console.log('remaining positions: '+ this._positions.length);
            return this._positions.shift();
-       },
-       _getPlanetSprites: function(temp, gravity, metal){
-           var cold, barren, poor, hot, fertile, rich;
-           if(temp < 10) cold = true;
-           if(temp > 100) hot = true;
-           if(gravity > 2) barren = true;
-           if(gravity < 0.7) barren = true;
-           if(metal > 4000) rich = true;
-
-           var sprites = [];
-
-           if(barren) sprites.push(this.Constants.Gravity.BarrenSprite);
-           else sprites.push(this.Constants.Gravity.FertileSprite);
-
-           if(cold) sprites.push(this.Constants.Temp.ColdSprite);
-           else if(hot) sprites.push(this.Constants.Temp.HotSprite);
-
-           if(poor && (hot || cold)) sprites.push(this.Constants.Metal.PoorSprite);
-           else if(rich) sprites.push(this.Constants.Metal.RichSprite);
-
-           return sprites;
        },
        _getRandomPlanetTemp: function(){
            return (Math.random() * this.Constants.Temp.max) + this.Constants.Temp.min;
@@ -123,27 +74,32 @@ define(['planet'], function(Planet){
            return this.Constants.PlanetNames[Math.round(Math.random() * (this.Constants.PlanetNames.length-1))];
        },
        _generatePositions: function(shape, size, spread){
+           console.log('making positions for '+ shape);
            var centerX = this.gameInstance.world.width/2;
            var centerY = this.gameInstance.world.height/2;
            switch(shape){
                case this.Constants.Shape.Circle:
-                   return this._getCirclePoints(centerX, centerY, centerX/2, spread);
+                   return this._getCirclePoints(centerX, centerY, centerX/2, this.Constants.Size[size]);
                    break;
                case this.Constants.Shape.Spiral:
-                   return this._getSpiralPoints(centerX, centerY, centerX/2, spread);
+                   return this._getSpiralPoints(centerX, centerY, centerX/2, size);
                    break;
                case this.Constants.Shape.Ring:
-                   return this._getRingPoints(centerX, centerY, centerX/2, spread);
+                   return this._getRingPoints(centerX, centerY, centerX/2, size);
                    break;
            }
        },
-       _getCirclePoints: function(centerx, centery, r, spread){
+       _getCirclePoints: function(centerx, centery, r, size){
            var x, y, points = [];
-           for(x=centerx-r; x<=centerx+r; x+=spread){
-               for(y=centery-r; y<=centery+r; y+=spread){
-                   if (((x*x)+(y*y))<(r*r)) points.push({x:x,y:y});
-               }
+           var step = 2*Math.PI/size;  //If size is greater than something, need to make concentric rings here
+
+           for(var theta=0;  theta < 2*Math.PI;  theta+=step)
+           {
+               x = centerx + r*Math.cos(theta);
+               y = centery - r*Math.sin(theta);
+               points.push({x:x,y:y});
            }
+
            return points;
        },
        _getSpiralPoints: function(centerX, centerY, r, spread){
@@ -168,6 +124,37 @@ define(['planet'], function(Planet){
            }
            return points;
        }
+   };
+
+   galaxy.prototype.Constants = {
+        Size: {
+            Small: 10,
+            Medium: 20,
+            Large: 30
+        },
+        Shape: {
+            Spiral: 'Spiral',
+            Circle: 'Circle',
+            Ring: 'Ring'
+        },
+        Temp: {
+            min: -300,
+            max: 300
+        },
+        Gravity: {
+            min: 0.1,
+            max: 4.0
+        },
+        Metal: {
+            min: 0,
+            max: 20000
+        },
+        PlayerNames: [
+            'Yojimbo'
+        ],
+        PlanetNames: [
+            'Dicks'
+        ]
    };
 
    return galaxy;

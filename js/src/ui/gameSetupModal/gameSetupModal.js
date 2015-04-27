@@ -5,7 +5,7 @@ define(['ractive', 'rv!/spacedout/js/src/ui/gameSetupModal/gameSetupModal.html',
             this.size = 'Small';
             this.shape = 'Circle';
             this.handicap = 0;
-            this.spread = 0;
+            this.spread = 100;
             this.players = 2;
             this.difficulty = 0;
 
