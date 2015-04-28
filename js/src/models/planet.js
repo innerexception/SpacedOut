@@ -1,4 +1,4 @@
-define(['worldGen', 'illuminated'], function(worldGen, illuminated){
+define(['worldGen'], function(worldGen){
    var planet = function(gameInstance, name, temp, gravity, metal, position){
        this.position = position;
        this.name = name;
@@ -6,13 +6,16 @@ define(['worldGen', 'illuminated'], function(worldGen, illuminated){
        this.gravity = gravity;
        this.metal = metal;
        this.gameInstance = gameInstance;
-       this.sprite = this._getPlanetSprite(temp, gravity, metal, position);
-
+       this.sprites = this._getPlanetSprites(temp, gravity, metal, position);
    };
    planet.prototype = {
-       _getPlanetSprite: function(temp, gravity, metal, position){
+       _getPlanetSprites: function(temp, gravity, metal, position){
            //Grab updated canvas from generator
-           if(this.sprite)this.sprite.destroy();
+           if(this.sprites){
+               this.sprites[0].destroy();
+               this.sprites[1].destroy();
+               this.sprites[2].destroy();
+           }
 
            var spriteGroup = this.gameInstance.add.group();
 
@@ -24,18 +27,23 @@ define(['worldGen', 'illuminated'], function(worldGen, illuminated){
 
            var sprite2 = this.gameInstance.add.sprite(position.x-100, position.y, bmd, null, spriteGroup);
 
+           //Add 'light' source
+           var lightSprite = this.gameInstance.add.sprite(position.x, position.y, 'alphaMask', null, spriteGroup);
+
            bmd = null;
 
            //Create sprite mask
-           if(!this.mask) {
-               this.mask = this.gameInstance.add.graphics(position.x, position.y);
-               //	Shapes drawn to the Graphics object must be filled.
-               this.mask.beginFill(0xffffff);
-               //	Here we'll draw a circle
-               this.mask.drawCircle(50, 50, 50);
-               //	And apply it to the Sprite
-               spriteGroup.mask = this.mask;
+           if(this.mask) {
+               delete this.mask;
            }
+           this.mask = this.gameInstance.add.graphics(position.x, position.y);
+           //	Shapes drawn to the Graphics object must be filled.
+           this.mask.beginFill(0xffffff);
+           //	Here we'll draw a circle
+           this.mask.drawCircle(50, 50, 50);
+           //	And apply it to the Sprite
+           spriteGroup.mask = this.mask;
+
 
            var rotationalPeriod = (Math.random()*20000)+10000;
            //Setup tweens for sprite behind mask
@@ -50,10 +58,7 @@ define(['worldGen', 'illuminated'], function(worldGen, illuminated){
                .loop();
            sprite2.tween.start();
 
-           //Add light source
-
-
-           return sprite;
+           return [sprite, sprite2, lightSprite];
        }
    };
    return planet;

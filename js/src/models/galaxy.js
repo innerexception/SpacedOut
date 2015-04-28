@@ -6,11 +6,37 @@ define(['planet'], function(Planet){
         this.ships = [];
         this.finishedSignal = signal;
         this.gameInstance = gameInstance;
+        this.StarField = {
+            distance: 300,
+            speed: 6,
+            star: this.gameInstance.make.sprite(0, 0, 'tinystar'),
+            texture: this.gameInstance.add.renderTexture(1024, 768, 'texture'),
+            max: 400,
+            xx: [],
+            yy: [],
+            zz: []
+        };
    };
 
    galaxy.prototype = {
        update: function() {
+           this.StarField.texture.clear();
 
+           for (var i = 0; i < this.StarField.max; i++)
+           {
+               var perspective = this.StarField.distance / (this.StarField.distance - this.StarField.zz[i]);
+               var x = this.gameInstance.world.centerX + this.StarField.xx[i] * perspective;
+               var y = this.gameInstance.world.centerY + this.StarField.yy[i] * perspective;
+
+               this.StarField.zz[i] += this.StarField.speed;
+
+               if (this.StarField.zz[i] > 300)
+               {
+                   this.StarField.zz[i] -= 600;
+               }
+
+               this.StarField.texture.renderXY(this.StarField.star, x, y);
+           }
        },
        endTurnClicked: function() {
 
@@ -36,12 +62,23 @@ define(['planet'], function(Planet){
        },
        initGalaxy: function(size, shape, ai_players, difficulty, handicap, spread){
            console.log('making galaxy with '+size+', '+shape+', '+ai_players+', '+difficulty+', '+handicap+', '+spread);
+           this._initStarField();
            this.generatePlanets(shape, size, spread);
            this.initializePlayer(this._getRandomPlayerName(), false, difficulty);
            for(var i=0; i<ai_players; i++){
                this.initializePlayer(this._getRandomPlayerName(), true, difficulty);
            }
            this.finishedSignal.dispatch();
+       },
+       _initStarField: function(){
+           this.gameInstance.add.sprite(0, 0, this.StarField.texture);
+
+           for (var i = 0; i < this.StarField.max; i++)
+           {
+               this.StarField.xx[i] = Math.floor(Math.random() * 1024) - 400;
+               this.StarField.yy[i] = Math.floor(Math.random() * 768) - 300;
+               this.StarField.zz[i] = Math.floor(Math.random() * 1700) - 100;
+           }
        },
        _getRandomPlanet: function(shape, spread){
            var temp = this._getRandomPlanetTemp();

@@ -42,7 +42,8 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
 
         preload: function () {
             //Load all assets here
-
+            this.load.image('alphaMask', 'js/res/img/alphaMask.png');
+            this.load.image('tinystar', 'js/res/img/tinyStar.png');
            //  Load the Google WebFont Loader script
             this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
         },
@@ -65,7 +66,7 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
         },
 
         update: function () {
-
+            if(this.galaxy)this.galaxy.update();
         },
 
         setUpIntro: function () {
