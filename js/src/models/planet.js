@@ -14,11 +14,15 @@ define(['worldGen', 'illuminated'], function(worldGen, illuminated){
            //Grab updated canvas from generator
            if(this.sprite)this.sprite.destroy();
 
+           var spriteGroup = this.gameInstance.add.group();
+
            var bmd = this.gameInstance.add.bitmapData(100,100);
 
            worldGen.generateWorldCanvas(bmd.canvas, temp, gravity, metal);
 
-           var sprite = this.gameInstance.add.sprite(position.x, position.y, bmd);
+           var sprite = this.gameInstance.add.sprite(position.x, position.y, bmd, null, spriteGroup);
+
+           var sprite2 = this.gameInstance.add.sprite(position.x-100, position.y, bmd, null, spriteGroup);
 
            bmd = null;
 
@@ -30,13 +34,21 @@ define(['worldGen', 'illuminated'], function(worldGen, illuminated){
                //	Here we'll draw a circle
                this.mask.drawCircle(50, 50, 50);
                //	And apply it to the Sprite
-               sprite.mask = this.mask;
+               spriteGroup.mask = this.mask;
            }
 
-           ////Setup tweens for sprite behind mask
-           //if(!this.mask.tween) this.mask.tween = this.gameInstance.add.tween({
-           //
-           //});
+           var rotationalPeriod = (Math.random()*20000)+10000;
+           //Setup tweens for sprite behind mask
+           sprite.tween = this.gameInstance.add.tween(sprite)
+               .to({x: position.x + 100}, rotationalPeriod, Phaser.Easing.Linear.None)
+               .to({x: position.x}, 10, Phaser.Easing.Linear.None)
+               .loop();
+           sprite.tween.start();
+           sprite2.tween = this.gameInstance.add.tween(sprite2)
+               .to({x: position.x}, rotationalPeriod, Phaser.Easing.Linear.None)
+               .to({x: position.x-100}, 10, Phaser.Easing.Linear.None)
+               .loop();
+           sprite2.tween.start();
 
            //Add light source
 
