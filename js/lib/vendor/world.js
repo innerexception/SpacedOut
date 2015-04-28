@@ -862,7 +862,7 @@ define([], function(){
         d = a.getImageData(0, 0, b, c);
     _.each(pixel_cache, function(value, e) {
       var f = color_rgb(e);
-      _.each(pixel_cache[e], function(value, h) {
+      _.each(pixel_cache[e], function(h) {
         h = h[1] * b + h[0] << 2;
         var g;
         for (g = 0; g < 4; g++) d.data[h + g] = f[g]

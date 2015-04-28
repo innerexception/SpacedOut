@@ -1,4 +1,4 @@
-define(['worldGen'], function(worldGen){
+define(['worldGen', 'illuminated'], function(worldGen, illuminated){
    var planet = function(gameInstance, name, temp, gravity, metal, position){
        this.position = position;
        this.name = name;
@@ -22,23 +22,24 @@ define(['worldGen'], function(worldGen){
 
            bmd = null;
 
-           ////Create sprite mask
-           //if(!this.mask) {
-           //    this.mask = this.gameInstance.add.graphics(position.x, position.y);
-           //    //	Shapes drawn to the Graphics object must be filled.
-           //    this.mask.beginFill(0xffffff);
-           //
-           //    //	Here we'll draw a circle
-           //    this.mask.drawCircle(50, 50, 50);
-           //
-           //    //	And apply it to the Sprite
-           //    sprite.mask = this.mask;
-           //}
+           //Create sprite mask
+           if(!this.mask) {
+               this.mask = this.gameInstance.add.graphics(position.x, position.y);
+               //	Shapes drawn to the Graphics object must be filled.
+               this.mask.beginFill(0xffffff);
+               //	Here we'll draw a circle
+               this.mask.drawCircle(50, 50, 50);
+               //	And apply it to the Sprite
+               sprite.mask = this.mask;
+           }
 
            ////Setup tweens for sprite behind mask
            //if(!this.mask.tween) this.mask.tween = this.gameInstance.add.tween({
            //
            //});
+
+           //Add light source
+
 
            return sprite;
        }

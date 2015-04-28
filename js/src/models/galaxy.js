@@ -138,8 +138,8 @@ define(['planet'], function(Planet){
             Ring: 'Ring'
         },
         Temp: {
-            min: -300,
-            max: 300
+            min: -100,
+            max: 200
         },
         Gravity: {
             min: 0.1,
