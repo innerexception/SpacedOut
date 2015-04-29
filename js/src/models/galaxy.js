@@ -7,35 +7,37 @@ define(['planet'], function(Planet){
         this.finishedSignal = signal;
         this.gameInstance = gameInstance;
         this.StarField = {
-            distance: 300,
-            speed: 6,
             star: this.gameInstance.make.sprite(0, 0, 'tinystar'),
-            texture: this.gameInstance.add.renderTexture(1024, 768, 'texture'),
-            max: 400,
-            xx: [],
-            yy: [],
-            zz: []
+            stars: []
         };
    };
 
    galaxy.prototype = {
        update: function() {
-           this.StarField.texture.clear();
-
-           for (var i = 0; i < this.StarField.max; i++)
-           {
-               var perspective = this.StarField.distance / (this.StarField.distance - this.StarField.zz[i]);
-               var x = this.gameInstance.world.centerX + this.StarField.xx[i] * perspective;
-               var y = this.gameInstance.world.centerY + this.StarField.yy[i] * perspective;
-
-               this.StarField.zz[i] += this.StarField.speed;
-
-               if (this.StarField.zz[i] > 300)
+           if(this.StarField.stars.length > 0){
+               for (var i = 0; i < 300; i++)
                {
-                   this.StarField.zz[i] -= 600;
-               }
+                   //  Update the stars y position based on its speed
+                   this.StarField.stars[i].y += this.StarField.stars[i].speed;
 
-               this.StarField.texture.renderXY(this.StarField.star, x, y);
+                   if (this.StarField.stars[i].y > this.gameInstance.world.height)
+                   {
+                       //  Off the bottom of the screen? Then wrap around to the top
+                       this.StarField.stars[i].x = this.gameInstance.world.randomX;
+                       this.StarField.stars[i].y = -32;
+                   }
+
+                   if (i == 0 || i == 100 || i == 200)
+                   {
+                       //  If it's the first star of the layer then we clear the texture
+                       this.StarField.stars[i].texture.renderXY(this.StarField.star, this.StarField.stars[i].x, this.StarField.stars[i].y, true);
+                   }
+                   else
+                   {
+                       //  Otherwise just draw the star sprite where we need it
+                       this.StarField.stars[i].texture.renderXY(this.StarField.star, this.StarField.stars[i].x, this.StarField.stars[i].y, false);
+                   }
+               }
            }
        },
        endTurnClicked: function() {
@@ -73,11 +75,33 @@ define(['planet'], function(Planet){
        _initStarField: function(){
            this.gameInstance.add.sprite(0, 0, this.StarField.texture);
 
-           for (var i = 0; i < this.StarField.max; i++)
+           var texture1 = this.gameInstance.add.renderTexture(this.gameInstance.world.width, this.gameInstance.world.height, 'texture1');
+           var texture2 = this.gameInstance.add.renderTexture(this.gameInstance.world.width, this.gameInstance.world.height, 'texture2');
+           var texture3 = this.gameInstance.add.renderTexture(this.gameInstance.world.width, this.gameInstance.world.height, 'texture3');
+
+           this.gameInstance.add.sprite(0, 0, texture1);
+           this.gameInstance.add.sprite(0, 0, texture2);
+           this.gameInstance.add.sprite(0, 0, texture3);
+
+           var t = texture1;
+           var s = 0.05;
+
+           //  100 sprites per layer
+           for (var i = 0; i < 300; i++)
            {
-               this.StarField.xx[i] = Math.floor(Math.random() * 1024) - 400;
-               this.StarField.yy[i] = Math.floor(Math.random() * 768) - 300;
-               this.StarField.zz[i] = Math.floor(Math.random() * 1700) - 100;
+               if (i == 100)
+               {
+                   //  With each 100 stars we ramp up the speed a little and swap to the next texture
+                   s = 0.1;
+                   t = texture2;
+               }
+               else if (i == 200)
+               {
+                   s = 0.2;
+                   t = texture3;
+               }
+
+               this.StarField.stars.push( { x: Math.random()*this.gameInstance.world.width, y: Math.random()*this.gameInstance.world.height+125, speed: s, texture: t });
            }
        },
        _getRandomPlanet: function(shape, spread){
@@ -113,7 +137,7 @@ define(['planet'], function(Planet){
        _generatePositions: function(shape, size, spread){
            console.log('making positions for '+ shape);
            var centerX = this.gameInstance.world.width/2;
-           var centerY = this.gameInstance.world.height/2;
+           var centerY = this.gameInstance.world.height/3;
            switch(shape){
                case this.Constants.Shape.Circle:
                    return this._getCirclePoints(centerX, centerY, centerX/2, this.Constants.Size[size]);

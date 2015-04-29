@@ -23,12 +23,17 @@ define(['worldGen'], function(worldGen){
 
            worldGen.generateWorldCanvas(bmd.canvas, temp, gravity, metal);
 
-           var sprite = this.gameInstance.add.sprite(position.x, position.y, bmd, null, spriteGroup);
+           var scaleFactor = gravity/4;
 
-           var sprite2 = this.gameInstance.add.sprite(position.x-100, position.y, bmd, null, spriteGroup);
+           var sprite = this.gameInstance.add.sprite(position.x, position.y, bmd, null, spriteGroup);
+           sprite.scale.setTo(scaleFactor);
+
+           var sprite2 = this.gameInstance.add.sprite(position.x-(100*scaleFactor), position.y, bmd, null, spriteGroup);
+           sprite2.scale.setTo(scaleFactor);
 
            //Add 'light' source
            var lightSprite = this.gameInstance.add.sprite(position.x, position.y, 'alphaMask', null, spriteGroup);
+           lightSprite.scale.setTo(scaleFactor);
 
            bmd = null;
 
@@ -40,21 +45,20 @@ define(['worldGen'], function(worldGen){
            //	Shapes drawn to the Graphics object must be filled.
            this.mask.beginFill(0xffffff);
            //	Here we'll draw a circle
-           this.mask.drawCircle(50, 50, 50);
+           this.mask.drawCircle(50*scaleFactor, 50*scaleFactor, 50*scaleFactor);
            //	And apply it to the Sprite
            spriteGroup.mask = this.mask;
-
 
            var rotationalPeriod = (Math.random()*20000)+10000;
            //Setup tweens for sprite behind mask
            sprite.tween = this.gameInstance.add.tween(sprite)
-               .to({x: position.x + 100}, rotationalPeriod, Phaser.Easing.Linear.None)
+               .to({x: position.x + (100*scaleFactor)}, rotationalPeriod, Phaser.Easing.Linear.None)
                .to({x: position.x}, 10, Phaser.Easing.Linear.None)
                .loop();
            sprite.tween.start();
            sprite2.tween = this.gameInstance.add.tween(sprite2)
                .to({x: position.x}, rotationalPeriod, Phaser.Easing.Linear.None)
-               .to({x: position.x-100}, 10, Phaser.Easing.Linear.None)
+               .to({x: position.x-(100*scaleFactor)}, 10, Phaser.Easing.Linear.None)
                .loop();
            sprite2.tween.start();
 
