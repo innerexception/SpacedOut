@@ -1,13 +1,16 @@
-define(['planet'], function(Planet){
+define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
    var galaxy = function(gameInstance, signal){
         this.dom = document.getElementById('galaxyMap');
         this.planets = [];
+        this.homeWorlds = [];
         this.players = [];
         this.ships = [];
         this.finishedSignal = signal;
         this.gameInstance = gameInstance;
         this.StarField = {
-            star: this.gameInstance.make.sprite(0, 0, 'tinystar'),
+            star: [this.gameInstance.make.sprite(0, 0, 'tinystar'),
+                this.gameInstance.make.sprite(0, 0, 'star'),
+                this.gameInstance.make.sprite(0, 0, 'bigstar')],
             stars: []
         };
    };
@@ -30,12 +33,12 @@ define(['planet'], function(Planet){
                    if (i == 0 || i == 100 || i == 200)
                    {
                        //  If it's the first star of the layer then we clear the texture
-                       this.StarField.stars[i].texture.renderXY(this.StarField.star, this.StarField.stars[i].x, this.StarField.stars[i].y, true);
+                       this.StarField.stars[i].texture.renderXY(this.StarField.star[0], this.StarField.stars[i].x, this.StarField.stars[i].y, true);
                    }
                    else
                    {
                        //  Otherwise just draw the star sprite where we need it
-                       this.StarField.stars[i].texture.renderXY(this.StarField.star, this.StarField.stars[i].x, this.StarField.stars[i].y, false);
+                       this.StarField.stars[i].texture.renderXY(this.StarField.star[0], this.StarField.stars[i].x, this.StarField.stars[i].y, false);
                    }
                }
            }
@@ -52,9 +55,26 @@ define(['planet'], function(Planet){
        endShipDrag: function() {
 
        },
-       initializePlayer: function(name, ai, difficulty){
-           //set homeworld
-           //set initial ships
+       initializePlayer: function(name, isAi, difficulty){
+
+           //set homeworld. each homeworld should be mapSize/numPlayers away from other homeworlds
+           var homeWorld;
+           if(this.homeWorlds.length === 0){
+               //Pick a random one.
+               homeWorld = this.planets[Math.round(Math.random()*this.planets.length-1)];
+           }
+           else{
+               //Pick one an appropriate distance away
+               homeWorld = _.filter(this.planets, function(planet){
+                   return this.gameInstance.distanceBetween(homeWorld.sprites[0], planet.sprites[0]) >= 200;
+               }, this);
+           }
+           var player = new Player(homeWorld, name, isAi, difficulty);
+
+           //get initial ships
+           player.ships = this._getInitialShips(difficulty);
+           this.ships = this.ships.concat(player.ships);
+
        },
        generatePlanets: function(shape, size, spread){
            this._positions = this._generatePositions(shape, size, spread);
@@ -115,6 +135,25 @@ define(['planet'], function(Planet){
                temp, gravity, metal,
                this._getNextPlanetPosition());
        },
+       _getInitialShips: function(difficulty){
+           var ships = [];
+           switch(difficulty){
+               case 0:
+                   ships.push(new Ship('scout', 9, 2, 1, 0));
+                   ships.push(new Ship('scout', 9, 2, 1, 0));
+                   ships.push(new Ship('colony', 6, 1, 1, 0));
+                   break;
+               case 1:
+                   ships.push(new Ship('scout', 9, 2, 1, 0));
+                   ships.push(new Ship('scout', 9, 2, 1, 0));
+                   break;
+               case 2:
+                   ships.push(new Ship('scout', 9, 2, 1, 0));
+                   break;
+           }
+           return ships;
+       },
+
        _getNextPlanetPosition: function(){
            console.log('remaining positions: '+ this._positions.length);
            return this._positions.shift();

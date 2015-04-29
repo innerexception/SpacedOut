@@ -73,28 +73,6 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
         },
 
         appUpdate: function(){
-            //Mouse moves camera
-            if(this.inGame){
-                var pointerPosition = this.gameInstance.input.mousePointer.position;
-                //console.log('x:'+pointerPosition.x +', y:'+pointerPosition.y);
-                var camera = this.gameInstance.camera;
-                if(pointerPosition.x >= this.gameInstance.width * 0.9 && camera.x <= this.gameInstance.width * 0.9){
-                    camera.x+=5;
-                    this.galaxy.isScrolling = true;
-                }
-                if(pointerPosition.y >= this.gameInstance.height * 0.9 && camera.y <= this.gameInstance.height * 0.9){
-                    camera.y+=5;
-                    this.galaxy.isScrolling = true;
-                }
-                if(pointerPosition.x < 25 && camera.x > 0){
-                    camera.x-=5;
-                    this.galaxy.isScrolling = true;
-                }
-                if(pointerPosition.y < 120 && camera.y > 0){
-                    camera.y-=5;
-                    this.galaxy.isScrolling = true;
-                }
-            }
             if(this.galaxy) {
                 this.galaxy.update();
                 this.galaxy.isScrolling = false;
@@ -113,10 +91,45 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             //this.messagePanel = new MessagePanel(this.galaxy);
             //this.planetPanel = new PlanetPanel(this.galaxy);
             //this.techPanel = new TechPanel(this.galaxy);
-
+            this.gameInstance.input.mouse.mouseWheelCallback = this.mouseZoom;
+            this.gameInstance.input.mouse.mouseDownCallback = this.mousePanStart;
+            this.gameInstance.input.mouse.mouseUpCallback = this.mousePanStop;
+            this.gameInstance.input.mouse.mouseOutCallback = this.mousePanStop;
+            this.gameInstance.input.mouse.mouseMoveCallback = this.mousePan;
             Candy.drawIntro(this.gameInstance);
             this.gameInstance.camera.focusOnXY(0, 0);
             this.gameInstance.input.onDown.addOnce(this.startNewGame, this);
+        },
+
+        mousePanStart: function(){
+            this.startMapDrag = true;
+        },
+
+        mousePanStop: function(){
+            this.startMapDrag = false;
+        },
+
+        mousePan: function(){
+            if(this.startMapDrag){
+                if(this.camera.lastX > this.input.mousePointer.position.x) this.camera.x = this.camera.x+10;
+                else this.camera.x = this.camera.x-10;
+                this.camera.lastX = this.input.mousePointer.position.x;
+
+                if(this.camera.lastY > this.input.mousePointer.position.y) this.camera.y = this.camera.y+10;
+                else this.camera.y = this.camera.y-10;
+                this.camera.lastY = this.input.mousePointer.position.y;
+            }
+        },
+
+        mouseZoom: function(){
+            if(this.input.mouse.wheelDelta === 1 && this.camera.scale.x < 2){
+                this.camera.scale.x += 0.005;
+                this.camera.scale.y += 0.005;
+            }
+            else if(this.camera.scale.x > 0.5){
+                this.camera.scale.x -= 0.005;
+                this.camera.scale.y -= 0.005;
+            }
         },
 
         galaxyInitFinished: function(){
@@ -127,6 +140,9 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             //this.techPanel.init();
             console.log('init panels done.');
             this.inGame = true;
+            this.gameInstance.camera.focusOnXY(1000,1000);
+            this.gameInstance.camera.scale.x = 1;
+            this.gameInstance.camera.scale.y = 1;
         },
 
         startNewGame: function () {
