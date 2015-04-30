@@ -1,7 +1,7 @@
 define(['phaser', 'lodash', 'candy', 'budgetPanel',
-    'gameSetupModal', 'messagePanel', 'planetPanel', 'techPanel', 'galaxy'],
+    'gameSetupModal', 'messagePanel', 'planetPanel', 'techPanel', 'galaxy', 'taskBar', 'shipBuilder'],
     function(Phaser, _, Candy, BudgetPanel, GameSetupModal,
-             MessagePanel, PlanetPanel, TechPanel, Galaxy){
+             MessagePanel, PlanetPanel, TechPanel, Galaxy, TaskBarPanel, ShipBuilderPanel){
 
     //Shitty Globals for Google WebFonts
     //  The Google WebFont Loader will look for this object, so create it before loading the script.
@@ -28,6 +28,7 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
 
         var targetDiv = document.createElement('div');
         targetDiv.id = targetElement;
+        targetDiv.style.overflow = 'hidden';
 
         var root = document.getElementById('appRoot');
         root.appendChild(targetDiv);
@@ -88,9 +89,11 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.galaxy = new Galaxy(this.gameInstance, galaxyInitFinishedSignal);
             this.budgetPanel = new BudgetPanel(this.galaxy);
             this.gameSetupModal = new GameSetupModal(this.galaxy);
-            //this.messagePanel = new MessagePanel(this.galaxy);
-            //this.planetPanel = new PlanetPanel(this.galaxy);
-            //this.techPanel = new TechPanel(this.galaxy);
+            this.messagePanel = new MessagePanel(this.galaxy);
+            this.planetPanel = new PlanetPanel(this.galaxy);
+            this.techPanel = new TechPanel(this.galaxy);
+            this.shipBuilderPanel = new ShipBuilderPanel(this.galaxy);
+            this.taskBarPanel = new TaskBarPanel(this.galaxy);
             this.gameInstance.input.mouse.mouseWheelCallback = this.mouseZoom;
             this.gameInstance.input.mouse.mouseDownCallback = this.mousePanStart;
             this.gameInstance.input.mouse.mouseUpCallback = this.mousePanStop;
@@ -99,6 +102,15 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.gameInstance.planetClickedSignal = new Phaser.Signal();
             this.gameInstance.planetClickedSignal.add(this.planetPanel.onPlanetClicked, this.planetPanel);
             this.gameInstance.planetClickedSignal.add(this.galaxy.onPlanetClicked, this.galaxy);
+            this.gameInstance.techPanelSignal = new Phaser.Signal();
+            this.gameInstance.techPanelSignal.add(this.techPanel.transitionTo, this.techPanel);
+            this.gameInstance.budgetPanelSignal = new Phaser.Signal();
+            this.gameInstance.budgetPanelSignal.add(this.budgetPanel.transitionTo, this.budgetPanel);
+            this.gameInstance.messagePanelSignal = new Phaser.Signal();
+            this.gameInstance.messagePanelSignal.add(this.messagePanel.transitionTo, this.messagePanel);
+            this.gameInstance.shipBuilderPanelSignal = new Phaser.Signal();
+            this.gameInstance.shipBuilderPanelSignal.add(this.shipBuilderPanel.transitionTo, this.shipBuilderPanel);
+
             Candy.drawIntro(this.gameInstance);
             this.gameInstance.camera.focusOnXY(0, 0);
             this.gameInstance.input.onDown.addOnce(this.startNewGame, this);
@@ -121,6 +133,15 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
                 if(this.camera.lastY > this.input.mousePointer.position.y) this.camera.y = this.camera.y+3;
                 else this.camera.y = this.camera.y-3;
                 this.camera.lastY = this.input.mousePointer.position.y;
+            }
+            //Check if entered taskbar show area
+            if(this.input.mousePointer.position.x < 600 && this.input.mousePointer.position.x > 300){
+                if(this.input.mousePointer.position.y > 0 && this.input.mousePointer.position.y < 100){
+                    if(!this.taskBarPanel.isVisible) this.taskBarPanel.transitionTo();
+                }
+            }
+            else{
+                if(this.taskBarPanel.isVisible) this.taskBarPanel.transitionFrom();
             }
         },
 

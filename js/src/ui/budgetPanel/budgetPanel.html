@@ -1,9 +1,9 @@
 <div class="panel">
     <div class="list-group">
         <label for="capitalSlider">Capital</label>
-        <input id="capitalSlider" type="range" />
+        <input id="capitalSlider" type="range" on-change="onCapitalBudgetChanged"/>
         <label for="techSlider">Tech</label>
-        <input id="techSlider" type="range" />
+        <input id="techSlider" type="range" on-change="onTechBudgetChanged"/>
     </div>
     <div class="list-group">
         {{#planets:i}}

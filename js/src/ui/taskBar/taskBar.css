@@ -1,0 +1,16 @@
+.taskBarIn{
+    opacity: 0.7;
+    top: 10%;
+}
+
+.taskBarOut{
+    opacity: 0;
+    top: 0;
+}
+
+.task-bar{
+    width: 100px !important;
+    transition: top 1s, opacity 1s;
+    position: absolute;
+    left: 370px;
+}

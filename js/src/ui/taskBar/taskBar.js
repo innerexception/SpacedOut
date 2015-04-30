@@ -1,37 +1,36 @@
-define(['ractive', 'rv!/spacedout/js/src/ui/planetPanel/planetPanel.html', 'css!/spacedout/js/src/ui/planetPanel/planetPanel'],
-    function(Ractive, planetPanelTemplate){
-        var planetPanel = function(galaxy){
+define(['ractive', 'rv!/spacedout/js/src/ui/taskBar/taskBar.html', 'css!/spacedout/js/src/ui/taskBar/taskBar'],
+    function(Ractive, taskBarTemplate) {
+        var taskBar = function (galaxy) {
             var targetDiv = document.createElement('div');
-            targetDiv.id = 'planetPanel';
-            targetDiv.className = 'container planet-panel planetPanelOut';
+            targetDiv.id = 'taskBar';
+            targetDiv.className = 'container task-bar taskBarOut';
             galaxy.dom.appendChild(targetDiv);
             this.galaxy = galaxy;
             this._dom = targetDiv;
 
             this._ractive = new Ractive({
                 el: this._dom.id,
-                template: planetPanelTemplate,
-                data: {
-                    planet: {}
-                }
+                template: taskBarTemplate
             });
 
             var self = this;
 
             this._ractive.on({
-                onPlanetGrowthChanged: function(event){
-                    console.log('planet growth changed...');
+                onBudgetClicked: function (event) {
+                    self.galaxy.gameInstance.budgetPanelSignal.dispatch();
                 },
-                onPlanetMiningChanged: function(event){
-                    console.log('planet mining changed...');
+                onTechClicked: function(event){
+                    self.galaxy.gameInstance.techPanelSignal.dispatch();
                 },
-                onFleetSelected: function(event){
-                    console.log('fleet selected...');
+                onMessagesClicked: function(event){
+                    self.galaxy.gameInstance.messagePanelSignal.dispatch();
+                },
+                onBuilderClicked: function(event){
+                    self.galaxy.gameInstance.shipBuilderPanelSignal.dispatch();
                 }
             })
         };
-
-        planetPanel.prototype = {
+        taskBar.prototype = {
             transitionFrom: function(){
                 //animate this component away
                 this._dom.className = this._dom.className.replace('planetPanelIn', '');
@@ -43,12 +42,7 @@ define(['ractive', 'rv!/spacedout/js/src/ui/planetPanel/planetPanel.html', 'css!
                 this._dom.className = this._dom.className.replace('planetPanelOut', '');
                 this._dom.className = [this._dom.className, 'planetPanelIn'].join(" ");
                 this.isVisible = true;
-            },
-            onPlanetClicked: function(planet){
-                this._ractive.set('planet', planet);
-                if(!this.isVisible) this.transitionTo();
             }
         };
-
-        return planetPanel;
+        return taskBar;
     });

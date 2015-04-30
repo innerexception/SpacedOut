@@ -17,12 +17,14 @@ require.config({
         'player': 'src/models/player',
         'ship': 'src/models/ship',
         'galaxy': 'src/models/galaxy',
-        'galaxyPanel': 'src/ui/galaxyPanel',
+        
         'gameSetupModal': 'src/ui/gameSetupModal/gameSetupModal',
-        'messagePanel': 'src/ui/messagePanel',
-        'planetPanel' : 'src/ui/planetPanel',
-        'techPanel': 'src/ui/techPanel',
-        'budgetPanel': 'src/ui/budgetPanel/budgetPanel'
+        'messagePanel': 'src/ui/messagePanel/messagePanel',
+        'planetPanel' : 'src/ui/planetPanel/planetPanel',
+        'techPanel': 'src/ui/techPanel/techPanel',
+        'budgetPanel': 'src/ui/budgetPanel/budgetPanel',
+        'taskBar': 'src/ui/taskBar/taskBar',
+        'shipBuilder' : 'src/ui/shipBuilder/shipBuilder'
     },
     map: {
         '*': {

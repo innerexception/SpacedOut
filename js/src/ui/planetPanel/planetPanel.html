@@ -1,0 +1,30 @@
+<div class="panel">
+    <div class="well">
+        {{planet.name}}
+        <img src="{{planet.planetSurfacePath}}" />
+    </div>
+    <div class="list-group">
+        <div>{{planet.temp}} f ({{planet.projectedTempChange}})</div>
+        <div>{{planet.income}} b$ ({{planet.projectedIncomeChange}})</div>
+        <div>{{planet.metal}} tons ({{planet.projectedMetalChange}})</div>
+    </div>
+    <label for="economicGrowthSlider">Growth</label>
+    <input id="economicGrowthSlider" type="range" on-change="onPlanetGrowthChanged"/>
+    <label for="miningSlider">Mining</label>
+    <input id="miningSlider" type="range" on-change="onPlanetMiningChanged"/>
+    <div class="well">
+        Fleets
+        <div class="list-group">
+            {{#planet.fleets:i}}
+                {{>fleetItem}}
+            {{/planet.fleets}}
+        </div>
+    </div>
+</div>
+
+
+<!-- {{>fleetItem}} -->
+<div class="well">
+    <div on-click="onFleetSelected">{{name}}</div>
+</div>
+<!-- {{/fleetItem}} -->

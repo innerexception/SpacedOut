@@ -1,0 +1,21 @@
+.planetPanelIn{
+    opacity: 0.8;
+    top: 70%;
+}
+
+.planetPanelOut{
+    opacity: 0;
+    top: 100%;
+}
+
+.planet-panel{
+    width: 300px !important;
+    transition: top 1s, opacity 1s;
+    position: absolute;
+    left: 370px;
+}
+
+.well{
+    padding: 5px !important;
+    margin-bottom: 5px !important;
+}
