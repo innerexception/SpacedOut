@@ -18,6 +18,10 @@ define(['worldGen'], function(worldGen){
            this.bannerSprite = this.gameInstance.add.sprite(this.position.x-10, this.position.y-10, this.name+'_banner');
            return this;
        },
+       _onPlanetClick: function(){
+           //make it active with halo around it plz kthxbai
+           this.gameInstance.planetClickedSignal.dispatch(this);
+       },
        _getPlanetSprites: function(temp, gravity, metal, position){
            //Grab updated canvas from generator
            if(this.sprites){
@@ -43,6 +47,9 @@ define(['worldGen'], function(worldGen){
            //Add 'light' source
            var lightSprite = this.gameInstance.add.sprite(position.x, position.y, 'alphaMask', null, spriteGroup);
            lightSprite.scale.setTo(scaleFactor);
+
+           lightSprite.inputEnabled = true;
+           lightSprite.events.onInputDown.add(this._onPlanetClick, this);
 
            bmd = null;
 

@@ -83,6 +83,18 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
                this.planets.push(this._getRandomPlanet());
            }
        },
+
+       onPlanetClicked: function(planet){
+           //move selection halo to planet.
+           if(this._selectionHaloSprite){
+               this._selectionHaloSprite.y = planet.position.y-20;
+               this._selectionHaloSprite.x = planet.position.x-20;
+           }
+           else{
+               this._selectionHaloSprite = this.gameInstance.add.sprite(planet.position.x-20, planet.position.y-20, 'halo');
+           }
+       },
+
        initGalaxy: function(size, shape, ai_players, difficulty, handicap, spread){
            console.log('making galaxy with '+size+', '+shape+', '+ai_players+', '+difficulty+', '+handicap+', '+spread);
            this._initStarField();

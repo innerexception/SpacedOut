@@ -96,6 +96,9 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.gameInstance.input.mouse.mouseUpCallback = this.mousePanStop;
             this.gameInstance.input.mouse.mouseOutCallback = this.mousePanStop;
             this.gameInstance.input.mouse.mouseMoveCallback = this.mousePan;
+            this.gameInstance.planetClickedSignal = new Phaser.Signal();
+            this.gameInstance.planetClickedSignal.add(this.planetPanel.onPlanetClicked, this.planetPanel);
+            this.gameInstance.planetClickedSignal.add(this.galaxy.onPlanetClicked, this.galaxy);
             Candy.drawIntro(this.gameInstance);
             this.gameInstance.camera.focusOnXY(0, 0);
             this.gameInstance.input.onDown.addOnce(this.startNewGame, this);
