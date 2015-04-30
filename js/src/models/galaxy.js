@@ -66,13 +66,14 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
            else{
                //Pick one an appropriate distance away
                homeWorld = _.filter(this.planets, function(planet){
-                   return this.gameInstance.distanceBetween(homeWorld.sprites[0], planet.sprites[0]) >= 200;
+                   return this.gameInstance.distanceBetween(homeWorld.sprites[0], planet.sprites[0]) >= 300
+                       && !planet.owner;
                }, this);
            }
            var player = new Player(homeWorld, name, isAi, difficulty);
 
            //get initial ships
-           player.ships = this._getInitialShips(difficulty);
+           player.ships = this._getInitialShips(homeWorld, player, difficulty);
            this.ships = this.ships.concat(player.ships);
 
        },
@@ -135,20 +136,20 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
                temp, gravity, metal,
                this._getNextPlanetPosition());
        },
-       _getInitialShips: function(difficulty){
+       _getInitialShips: function(homeworld, player, difficulty){
            var ships = [];
            switch(difficulty){
                case 0:
-                   ships.push(new Ship('scout', 9, 2, 1, 0));
-                   ships.push(new Ship('scout', 9, 2, 1, 0));
-                   ships.push(new Ship('colony', 6, 1, 1, 0));
+                   ships.push(new Ship(homeworld, player, 'scout', 9, 2, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'scout', 9, 2, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'colony', 6, 1, 1, 0, this.gameInstance));
                    break;
                case 1:
-                   ships.push(new Ship('scout', 9, 2, 1, 0));
-                   ships.push(new Ship('scout', 9, 2, 1, 0));
+                   ships.push(new Ship(homeworld, player, 'scout', 9, 2, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'scout', 9, 2, 1, 0, this.gameInstance));
                    break;
                case 2:
-                   ships.push(new Ship('scout', 9, 2, 1, 0));
+                   ships.push(new Ship(homeworld, player, 'scout', 9, 2, 1, 0, this.gameInstance));
                    break;
            }
            return ships;

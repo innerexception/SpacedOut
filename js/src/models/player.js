@@ -1,7 +1,6 @@
 define([], function(){
    var player = function(homeWorld, name, isAi, difficulty){
-       this.homeWorld = homeWorld;
-       homeWorld.owner = this;
+       this.homeWorld = homeWorld.setNewOwner(this);
        this.planets = [homeWorld];
        this.name = name;
        this.isAi = isAi;

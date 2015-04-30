@@ -4,11 +4,20 @@ define(['worldGen'], function(worldGen){
        this.name = name;
        this.temp = temp;
        this.gravity = gravity;
+       this.owner = null;
        this.metal = metal;
        this.gameInstance = gameInstance;
        this.sprites = this._getPlanetSprites(temp, gravity, metal, position);
+       this.bannerSprite = null;
    };
    planet.prototype = {
+       setNewOwner: function(player){
+           if(this.bannerSprite)this.bannerSprite.destroy();
+           //draw the player banner on the planet top left
+           this.owner = player;
+           this.bannerSprite = this.gameInstance.add.sprite(this.position.x-10, this.position.y-10, this.name+'_banner');
+           return this;
+       },
        _getPlanetSprites: function(temp, gravity, metal, position){
            //Grab updated canvas from generator
            if(this.sprites){

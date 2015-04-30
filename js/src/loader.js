@@ -2,7 +2,7 @@ require.config({
     baseUrl: 'js',
     paths:{
         //Framework
-        'phaser': 'lib/vendor/phaser',
+        'phaser': 'lib/vendor/phaser2.2.2',
         'lodash': 'lib/vendor/lodash.min',
         'candy': 'lib/candy',
         'amd-loader': 'lib/vendor/requirejs-ractive/amd-loader',

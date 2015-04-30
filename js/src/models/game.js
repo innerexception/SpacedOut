@@ -111,12 +111,12 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
 
         mousePan: function(){
             if(this.startMapDrag){
-                if(this.camera.lastX > this.input.mousePointer.position.x) this.camera.x = this.camera.x+10;
-                else this.camera.x = this.camera.x-10;
+                if(this.camera.lastX > this.input.mousePointer.position.x) this.camera.x = this.camera.x+3;
+                else this.camera.x = this.camera.x-3;
                 this.camera.lastX = this.input.mousePointer.position.x;
 
-                if(this.camera.lastY > this.input.mousePointer.position.y) this.camera.y = this.camera.y+10;
-                else this.camera.y = this.camera.y-10;
+                if(this.camera.lastY > this.input.mousePointer.position.y) this.camera.y = this.camera.y+3;
+                else this.camera.y = this.camera.y-3;
                 this.camera.lastY = this.input.mousePointer.position.y;
             }
         },
