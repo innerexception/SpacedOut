@@ -4,6 +4,7 @@ define(['ractive', 'rv!/spacedout/js/src/ui/techPanel/techPanel.html', 'css!/spa
             var targetDiv = document.createElement('div');
             targetDiv.id = 'techPanel';
             targetDiv.className = 'container tech-panel techPanelOut';
+            targetDiv.style.top = galaxy.gameInstance.height - 160 + 'px';
             var parent = document.getElementById('bottom-panel');
             parent.appendChild(targetDiv);
             this._dom = targetDiv;
@@ -30,14 +31,14 @@ define(['ractive', 'rv!/spacedout/js/src/ui/techPanel/techPanel.html', 'css!/spa
                 this.isVisible = false;
                 //animate this component away
                 this._dom.className = this._dom.className.replace('techPanelIn', '');
-                this._dom.className = [this._dom.className, 'techPanelOut'].join(" ");
+                this._dom.className = [this._dom.className, 'techPanelOut'].join("");
 
             },
             transitionTo: function(){
                 this.isVisible = true;
                 //animate this component in
-                this._dom.className = this._dom.className.replace('techPanelIn', '');
-                this._dom.className = [this._dom.className, 'techPanelOut'].join(" ");
+                this._dom.className = this._dom.className.replace('techPanelOut', '');
+                this._dom.className = [this._dom.className, 'techPanelIn'].join("");
             },
             toggle: function(){
                 if(!this.isVisible) this.transitionTo();

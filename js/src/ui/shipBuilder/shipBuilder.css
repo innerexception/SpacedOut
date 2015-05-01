@@ -1,11 +1,19 @@
-.ship-builder-panel{
-    transition: left 1s, opacity 1s;
-    position: absolute;
-    top:100%;
-    width: 200px !important;
-    background-color: black;
+.shipBuilderIn{
+    opacity: 1;
+    height: calc(100% - 1px);
 }
 
 .shipBuilderOut{
     opacity: 0;
+    height: 1px;
+    pointer-events: none;
+}
+
+.ship-builder-panel{
+    transition: height 1s, opacity 1s;
+    position: absolute;
+    left: 100px;
+    width: 60% !important;
+    top: 40%;
+    z-index: 1;
 }
