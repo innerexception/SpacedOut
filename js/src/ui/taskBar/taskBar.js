@@ -33,15 +33,19 @@ define(['ractive', 'rv!/spacedout/js/src/ui/taskBar/taskBar.html', 'css!/spacedo
         taskBar.prototype = {
             transitionFrom: function(){
                 //animate this component away
-                this._dom.className = this._dom.className.replace('planetPanelIn', '');
-                this._dom.className = [this._dom.className, 'planetPanelOut'].join(" ");
+                this._dom.className = this._dom.className.replace('taskBarIn', '');
+                this._dom.className = [this._dom.className, 'taskBarOut'].join(" ");
                 this.isVisible = false;
             },
             transitionTo: function(){
                 //animate this component in
-                this._dom.className = this._dom.className.replace('planetPanelOut', '');
-                this._dom.className = [this._dom.className, 'planetPanelIn'].join(" ");
+                this._dom.className = this._dom.className.replace('taskBarOut', '');
+                this._dom.className = [this._dom.className, 'taskBarIn'].join(" ");
                 this.isVisible = true;
+            },
+            toggle: function(show){
+                if(show && !this.isVisible) this.transitionTo();
+                else if(!show && this.isVisible) this.transitionFrom();
             }
         };
         return taskBar;

@@ -99,6 +99,8 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.gameInstance.input.mouse.mouseUpCallback = this.mousePanStop;
             this.gameInstance.input.mouse.mouseOutCallback = this.mousePanStop;
             this.gameInstance.input.mouse.mouseMoveCallback = this.mousePan;
+            this.gameInstance.taskBarSignal = new Phaser.Signal();
+            this.gameInstance.taskBarSignal.add(this.taskBarPanel.toggle, this.taskBarPanel);
             this.gameInstance.planetClickedSignal = new Phaser.Signal();
             this.gameInstance.planetClickedSignal.add(this.planetPanel.onPlanetClicked, this.planetPanel);
             this.gameInstance.planetClickedSignal.add(this.galaxy.onPlanetClicked, this.galaxy);
@@ -135,13 +137,12 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
                 this.camera.lastY = this.input.mousePointer.position.y;
             }
             //Check if entered taskbar show area
-            if(this.input.mousePointer.position.x < 600 && this.input.mousePointer.position.x > 300){
-                if(this.input.mousePointer.position.y > 0 && this.input.mousePointer.position.y < 100){
-                    if(!this.taskBarPanel.isVisible) this.taskBarPanel.transitionTo();
-                }
+            if(this.input.mousePointer.position.x < 600 && this.input.mousePointer.position.x > 300
+                && this.input.mousePointer.position.y > 0 && this.input.mousePointer.position.y < 100){
+                    if(this.taskBarSignal) this.taskBarSignal.dispatch(true);
             }
             else{
-                if(this.taskBarPanel.isVisible) this.taskBarPanel.transitionFrom();
+                if(this.taskBarSignal) this.taskBarSignal.dispatch(false);
             }
         },
 

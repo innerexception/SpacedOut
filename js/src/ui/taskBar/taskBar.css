@@ -9,8 +9,22 @@
 }
 
 .task-bar{
-    width: 100px !important;
     transition: top 1s, opacity 1s;
     position: absolute;
-    left: 370px;
+    border: solid 1px white;
+    left: 30%;
+    width: 315px !important;
+    border-radius:3px;
+}
+
+.task-bar img{
+    transition: width 1s;
+    display: inline-block;
+    padding: 20px;
+    width: 65px;
+    background-color: transparent;
+}
+
+.task-bar img:hover{
+    width: 75px;
 }
