@@ -5,7 +5,7 @@
 
 .taskBarOut{
     opacity: 0;
-    top: 0;
+    top: -100px;
 }
 
 .task-bar{

@@ -4,7 +4,8 @@ define(['ractive', 'rv!/spacedout/js/src/ui/messagePanel/messagePanel.html', 'cs
             var targetDiv = document.createElement('div');
             targetDiv.id = 'messagePanel';
             targetDiv.className = 'container message-panel messagePanelOut';
-            galaxy.dom.appendChild(targetDiv);
+            var parent = document.getElementById('bottom-panel');
+            parent.appendChild(targetDiv);
             this._dom = targetDiv;
 
             this._ractive = new Ractive({
@@ -34,7 +35,7 @@ define(['ractive', 'rv!/spacedout/js/src/ui/messagePanel/messagePanel.html', 'cs
             transitionTo: function(){
                 //animate this component in
                 this._dom.className = this._dom.className.replace('messagePanelOut', '');
-                this._dom.className = [this._dom.className, 'budgetPanelIn'].join(" ");
+                this._dom.className = [this._dom.className, 'messagePanelIn'].join(" ");
             }
         };
 

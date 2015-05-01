@@ -4,7 +4,8 @@ define(['ractive', 'rv!/spacedout/js/src/ui/techPanel/techPanel.html', 'css!/spa
             var targetDiv = document.createElement('div');
             targetDiv.id = 'techPanel';
             targetDiv.className = 'container tech-panel techPanelOut';
-            galaxy.dom.appendChild(targetDiv);
+            var parent = document.getElementById('bottom-panel');
+            parent.appendChild(targetDiv);
             this._dom = targetDiv;
 
             this._ractive = new Ractive({

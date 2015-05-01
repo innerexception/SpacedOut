@@ -26,13 +26,6 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
         var updateSignal = new Phaser.Signal();
         updateSignal.add(this.appUpdate, this);
 
-        var targetDiv = document.createElement('div');
-        targetDiv.id = targetElement;
-        targetDiv.style.overflow = 'hidden';
-
-        var root = document.getElementById('appRoot');
-        root.appendChild(targetDiv);
-
         //context in these functions is the PHASER OBJECT not our object
         this.gameInstance = new Phaser.Game(h, w, mode, targetElement,{
             preload: this.preload,
@@ -87,18 +80,20 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             galaxyInitFinishedSignal.add(this.galaxyInitFinished, this);
 
             this.galaxy = new Galaxy(this.gameInstance, galaxyInitFinishedSignal);
+            this.planetPanel = new PlanetPanel(this.galaxy);
             this.budgetPanel = new BudgetPanel(this.galaxy);
             this.gameSetupModal = new GameSetupModal(this.galaxy);
-            this.messagePanel = new MessagePanel(this.galaxy);
-            this.planetPanel = new PlanetPanel(this.galaxy);
             this.techPanel = new TechPanel(this.galaxy);
+            this.messagePanel = new MessagePanel(this.galaxy);
             this.shipBuilderPanel = new ShipBuilderPanel(this.galaxy);
             this.taskBarPanel = new TaskBarPanel(this.galaxy);
+
             this.gameInstance.input.mouse.mouseWheelCallback = this.mouseZoom;
             this.gameInstance.input.mouse.mouseDownCallback = this.mousePanStart;
             this.gameInstance.input.mouse.mouseUpCallback = this.mousePanStop;
             this.gameInstance.input.mouse.mouseOutCallback = this.mousePanStop;
             this.gameInstance.input.mouse.mouseMoveCallback = this.mousePan;
+
             this.gameInstance.taskBarSignal = new Phaser.Signal();
             this.gameInstance.taskBarSignal.add(this.taskBarPanel.toggle, this.taskBarPanel);
             this.gameInstance.planetClickedSignal = new Phaser.Signal();
@@ -144,6 +139,7 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             else{
                 if(this.taskBarSignal) this.taskBarSignal.dispatch(false);
             }
+            console.log(this.input.mousePointer.position.x + 'x '+ this.input.mousePointer.position.y + 'y');
         },
 
         mouseZoom: function(){

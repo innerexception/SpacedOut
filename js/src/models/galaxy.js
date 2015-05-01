@@ -1,6 +1,6 @@
 define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
    var galaxy = function(gameInstance, signal){
-        this.dom = document.getElementById('galaxyMap');
+        this.dom = document.getElementById('center-panel');
         this.planets = [];
         this.homeWorlds = [];
         this.players = [];

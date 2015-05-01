@@ -4,7 +4,8 @@ function(Ractive, budgetPanelTemplate){
         var targetDiv = document.createElement('div');
         targetDiv.id = 'budgetPanel';
         targetDiv.className = 'container budget-panel budgetPanelOut';
-        galaxy.dom.appendChild(targetDiv);
+        var parent = document.getElementById('left-panel');
+        parent.appendChild(targetDiv);
         this._dom = targetDiv;
 
         this._ractive = new Ractive({

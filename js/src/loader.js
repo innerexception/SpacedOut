@@ -39,7 +39,7 @@ require.config({
 });
 
 require(['phaser', 'outSpacedApp'], function(Phaser, OutSpacedApp){
-    new OutSpacedApp(1024, 768, Phaser.AUTO, 'galaxyMap');
+    new OutSpacedApp(1024, 768, Phaser.AUTO, 'center-panel');
 });
 
 
