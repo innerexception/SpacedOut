@@ -94,19 +94,17 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.gameInstance.input.mouse.mouseOutCallback = this.mousePanStop;
             this.gameInstance.input.mouse.mouseMoveCallback = this.mousePan;
 
-            this.gameInstance.taskBarSignal = new Phaser.Signal();
-            this.gameInstance.taskBarSignal.add(this.taskBarPanel.toggle, this.taskBarPanel);
             this.gameInstance.planetClickedSignal = new Phaser.Signal();
             this.gameInstance.planetClickedSignal.add(this.planetPanel.onPlanetClicked, this.planetPanel);
             this.gameInstance.planetClickedSignal.add(this.galaxy.onPlanetClicked, this.galaxy);
             this.gameInstance.techPanelSignal = new Phaser.Signal();
-            this.gameInstance.techPanelSignal.add(this.techPanel.transitionTo, this.techPanel);
+            this.gameInstance.techPanelSignal.add(this.techPanel.toggle, this.techPanel);
             this.gameInstance.budgetPanelSignal = new Phaser.Signal();
-            this.gameInstance.budgetPanelSignal.add(this.budgetPanel.transitionTo, this.budgetPanel);
+            this.gameInstance.budgetPanelSignal.add(this.budgetPanel.toggle, this.budgetPanel);
             this.gameInstance.messagePanelSignal = new Phaser.Signal();
-            this.gameInstance.messagePanelSignal.add(this.messagePanel.transitionTo, this.messagePanel);
+            this.gameInstance.messagePanelSignal.add(this.messagePanel.toggle, this.messagePanel);
             this.gameInstance.shipBuilderPanelSignal = new Phaser.Signal();
-            this.gameInstance.shipBuilderPanelSignal.add(this.shipBuilderPanel.transitionTo, this.shipBuilderPanel);
+            this.gameInstance.shipBuilderPanelSignal.add(this.shipBuilderPanel.toggle, this.shipBuilderPanel);
 
             Candy.drawIntro(this.gameInstance);
             this.gameInstance.camera.focusOnXY(0, 0);
@@ -162,8 +160,9 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             console.log('init panels done.');
             this.inGame = true;
             this.gameInstance.camera.focusOnXY(1000,1000);
-            this.gameInstance.camera.scale.x = 1;
-            this.gameInstance.camera.scale.y = 1;
+            this.gameInstance.camera.scale.x = 0.6;
+            this.gameInstance.camera.scale.y = 0.6;
+            this.taskBarPanel._dom.children[1].style.display = 'inherit';
         },
 
         startNewGame: function () {

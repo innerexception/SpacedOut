@@ -1,3 +1,19 @@
 #appRoot{
     overflow: hidden;
 }
+
+.inner-panel{
+    transition: border 1s;
+    height: 100%;
+    background-color: black;
+    border: 1px solid white;
+    border-radius: 3px;
+    color: white;
+    padding: 5px;
+}
+
+.well{
+    background-color: gray !important;
+    padding: 5px !important;
+    margin-bottom: 5px !important;
+}

@@ -1,0 +1,12 @@
+.tech-panel{
+    transition: left 1s, opacity 1s;
+    position: absolute;
+    top:100%;
+    width: 200px !important;
+    height: 50% !important;
+    background-color: black;
+}
+
+.techPanelOut{
+    opacity: 0;
+}

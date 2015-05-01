@@ -1,19 +1,16 @@
-.taskBarIn{
-    opacity: 0.7;
+#taskBar{
+    transition: top 1s;
+    position: absolute;
+    left: 30%;
+    top: -90px;
+    width: 315px !important;
+}
+#taskBar:hover{
     top: 10%;
 }
 
-.taskBarOut{
-    opacity: 0;
-    top: -100px;
-}
-
 .task-bar{
-    transition: top 1s, opacity 1s;
-    position: absolute;
     border: solid 1px white;
-    left: 30%;
-    width: 315px !important;
     border-radius:3px;
 }
 
@@ -27,4 +24,10 @@
 
 .task-bar img:hover{
     width: 75px;
+}
+
+.task-bar-arrow{
+    margin-left:40%;
+    opacity: 0.6;
+    width: 70px;
 }

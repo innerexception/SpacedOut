@@ -1,3 +1,14 @@
-<div class="panel">
-    Message Panel
+<div class="inner-panel">
+    Messages
+    <div class="list-group">
+        {{#messages:i}}
+            {{>messageItem}}
+        {{/messages}}
+    </div>
 </div>
+
+<!-- {{>messageItem}} -->
+<div class="well">
+    <div>{{text}}</div>
+</div>
+<!-- {{/messageItem}} -->

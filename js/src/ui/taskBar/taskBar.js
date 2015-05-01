@@ -3,7 +3,7 @@ define(['ractive', 'rv!/spacedout/js/src/ui/taskBar/taskBar.html', 'css!/spacedo
         var taskBar = function (galaxy) {
             var targetDiv = document.createElement('div');
             targetDiv.id = 'taskBar';
-            targetDiv.className = 'container task-bar taskBarOut';
+            targetDiv.className = 'container taskBarOut';
             galaxy.dom.appendChild(targetDiv);
             this.galaxy = galaxy;
             this._dom = targetDiv;
@@ -31,22 +31,7 @@ define(['ractive', 'rv!/spacedout/js/src/ui/taskBar/taskBar.html', 'css!/spacedo
             })
         };
         taskBar.prototype = {
-            transitionFrom: function(){
-                //animate this component away
-                this._dom.className = this._dom.className.replace('taskBarIn', '');
-                this._dom.className = [this._dom.className, 'taskBarOut'].join(" ");
-                this.isVisible = false;
-            },
-            transitionTo: function(){
-                //animate this component in
-                this._dom.className = this._dom.className.replace('taskBarOut', '');
-                this._dom.className = [this._dom.className, 'taskBarIn'].join(" ");
-                this.isVisible = true;
-            },
-            toggle: function(show){
-                if(show && !this.isVisible) this.transitionTo();
-                else if(!show && this.isVisible) this.transitionFrom();
-            }
+
         };
         return taskBar;
     });

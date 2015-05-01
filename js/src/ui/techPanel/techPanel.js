@@ -27,15 +27,21 @@ define(['ractive', 'rv!/spacedout/js/src/ui/techPanel/techPanel.html', 'css!/spa
 
         techPanel.prototype = {
             transitionFrom: function(){
+                this.isVisible = false;
                 //animate this component away
                 this._dom.className = this._dom.className.replace('techPanelIn', '');
                 this._dom.className = [this._dom.className, 'techPanelOut'].join(" ");
 
             },
             transitionTo: function(){
+                this.isVisible = true;
                 //animate this component in
                 this._dom.className = this._dom.className.replace('techPanelIn', '');
                 this._dom.className = [this._dom.className, 'techPanelOut'].join(" ");
+            },
+            toggle: function(){
+                if(!this.isVisible) this.transitionTo();
+                else this.transitionFrom();
             }
         };
 

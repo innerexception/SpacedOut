@@ -1,0 +1,11 @@
+.ship-builder-panel{
+    transition: left 1s, opacity 1s;
+    position: absolute;
+    top:100%;
+    width: 200px !important;
+    background-color: black;
+}
+
+.shipBuilderOut{
+    opacity: 0;
+}

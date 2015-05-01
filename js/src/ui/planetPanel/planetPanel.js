@@ -4,6 +4,7 @@ define(['ractive', 'rv!/spacedout/js/src/ui/planetPanel/planetPanel.html', 'css!
             var targetDiv = document.createElement('div');
             targetDiv.id = 'planetPanel';
             targetDiv.className = 'container planet-panel planetPanelOut';
+            targetDiv.style.height = galaxy.gameInstance.height/2;
             var parent = document.getElementById('left-panel');
             parent.appendChild(targetDiv);
 

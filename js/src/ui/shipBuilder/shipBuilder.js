@@ -26,15 +26,21 @@ define(['ractive', 'rv!/spacedout/js/src/ui/shipBuilder/shipBuilder.html', 'css!
 
         shipBuilder.prototype = {
             transitionFrom: function(){
+                this.isVisible = false;
                 //animate this component away
                 this._dom.className = this._dom.className.replace('shipBuilderIn', '');
                 this._dom.className = [this._dom.className, 'shipBuilderOut'].join(" ");
 
             },
             transitionTo: function(){
+                this.isVisible = true;
                 //animate this component in
                 this._dom.className = this._dom.className.replace('shipBuilderOut', '');
                 this._dom.className = [this._dom.className, 'shipBuilderIn'].join(" ");
+            },
+            toggle: function(){
+                if(!this.isVisible) this.transitionTo();
+                else this.transitionFrom();
             }
         };
 

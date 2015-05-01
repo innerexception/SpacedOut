@@ -1,4 +1,4 @@
-<div class="panel">
+<div class="panel inner-panel">
     <div class="well">
         {{planet.name}}
         <img src="{{planet.planetSurfacePath}}" />
@@ -12,7 +12,7 @@
     <input id="economicGrowthSlider" type="range" on-change="onPlanetGrowthChanged"/>
     <label for="miningSlider">Mining</label>
     <input id="miningSlider" type="range" on-change="onPlanetMiningChanged"/>
-    <div class="well">
+    <div class="well fleet-well">
         Fleets
         <div class="list-group">
             {{#planet.fleets:i}}

@@ -27,15 +27,21 @@ define(['ractive', 'rv!/spacedout/js/src/ui/messagePanel/messagePanel.html', 'cs
 
         messagePanel.prototype = {
             transitionFrom: function(){
+                this.isVisible = false;
                 //animate this component away
                 this._dom.className = this._dom.className.replace('messagePanelIn', '');
                 this._dom.className = [this._dom.className, 'messagePanelOut'].join(" ");
 
             },
             transitionTo: function(){
+                this.isVisible = true;
                 //animate this component in
                 this._dom.className = this._dom.className.replace('messagePanelOut', '');
                 this._dom.className = [this._dom.className, 'messagePanelIn'].join(" ");
+            },
+            toggle: function(){
+                if(!this.isVisible) this.transitionTo();
+                else this.transitionFrom();
             }
         };
 
