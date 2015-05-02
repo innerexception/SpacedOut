@@ -3,20 +3,34 @@ define(['worldGen'], function(worldGen){
        this.position = position;
        this.name = name;
        this.temp = temp;
+       this.tempChange = 0;
+       this.population = 0;
+       this.populationGrowth = 0;
+       this.income = 0;
+       this.incomeGrowth = 0;
        this.gravity = gravity;
        this.owner = null;
        this.metal = metal;
+       this.metalChange = 0;
        this.gameInstance = gameInstance;
        this.sprites = this._getPlanetSprites(temp, gravity, metal, position);
        this.bannerSprite = null;
+       this.miningPercent = 50;
+       this.terraformPercent = 50;
+       this.fleets = [];
    };
    planet.prototype = {
        setNewOwner: function(player){
            if(this.bannerSprite)this.bannerSprite.destroy();
            //draw the player banner on the planet top left
            this.owner = player;
+           if(this.population === 0) this._setPopulation(7500);
            this.bannerSprite = this.gameInstance.add.sprite(this.position.x-10, this.position.y-10, this.name+'_banner');
            return this;
+       },
+       _setPopulation: function(number){
+           this.population = number;
+           this.income = number * 2.5;
        },
        _onPlanetClick: function(){
            //make it active with halo around it plz kthxbai
@@ -35,8 +49,9 @@ define(['worldGen'], function(worldGen){
            var bmd = this.gameInstance.add.bitmapData(100,100);
 
            worldGen.generateWorldCanvas(bmd.canvas, temp, gravity, metal);
+           this.surfaceImagePath = bmd.canvas.toDataURL();
 
-           var scaleFactor = gravity/4;
+           var scaleFactor = Math.max(gravity/4, 0.3);
 
            var sprite = this.gameInstance.add.sprite(position.x, position.y, bmd, null, spriteGroup);
            sprite.scale.setTo(scaleFactor);

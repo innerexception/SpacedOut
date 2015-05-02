@@ -138,9 +138,9 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
            }
        },
        _getRandomPlanet: function(shape, spread){
-           var temp = this._getRandomPlanetTemp();
-           var gravity = this._getRandomPlanetGravity();
-           var metal = this._getRandomPlanetMetal();
+           var temp = this._getRandomPlanetTemp().toFixed(2);
+           var gravity = this._getRandomPlanetGravity().toFixed(2);
+           var metal = this._getRandomPlanetMetal().toFixed(0);
            console.log('made planet of '+temp+'f, '+gravity + 'g '+metal+' metal');
            return new Planet(
                this.gameInstance,

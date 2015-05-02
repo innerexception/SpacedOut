@@ -47,6 +47,7 @@ define(['lodash'], function(_){
            this.spriteGroup.tween.start();
            this.orbitIn = true;
            this.location = planet;
+           planet.fleets.push(this);
        },
        _onOrbitComplete: function(target, tween){
            if(this.orbitIn){

@@ -38,13 +38,13 @@ define(['ractive', 'rv!/spacedout/js/src/ui/planetPanel/planetPanel.html', 'css!
             transitionFrom: function(){
                 //animate this component away
                 this._dom.className = this._dom.className.replace('planetPanelIn', '');
-                this._dom.className = [this._dom.className, 'planetPanelOut'].join(" ");
+                this._dom.className = [this._dom.className, 'planetPanelOut'].join(' ');
                 this.isVisible = false;
             },
             transitionTo: function(){
                 //animate this component in
                 this._dom.className = this._dom.className.replace('planetPanelOut', '');
-                this._dom.className = [this._dom.className, 'planetPanelIn'].join(" ");
+                this._dom.className = [this._dom.className, 'planetPanelIn'].join(' ');
                 this.isVisible = true;
             },
             onPlanetClicked: function(planet){

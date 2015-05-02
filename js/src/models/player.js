@@ -31,8 +31,6 @@ define([], function(){
        }
        this.techRate = 0.3;
        this.cashRate = 0.7;
-       this.homeWorld.terraformRate = 0.8;
-       this.homeWorld.extractionRate = 0.2;
    };
    player.prototype = {
 

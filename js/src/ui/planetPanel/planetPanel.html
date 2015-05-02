@@ -1,17 +1,20 @@
-<div class="panel inner-panel">
+<div class="inner-panel">
     <div class="well">
         {{planet.name}}
-        <img src="{{planet.planetSurfacePath}}" />
+        <img src="{{planet.surfaceImagePath}}" />
     </div>
     <div class="list-group">
-        <div>{{planet.temp}} f ({{planet.projectedTempChange}})</div>
-        <div>{{planet.income}} b$ ({{planet.projectedIncomeChange}})</div>
-        <div>{{planet.metal}} tons ({{planet.projectedMetalChange}})</div>
+        <div class="gravity-div"><img src="./js/res/img/icon-gravity.png" />{{planet.gravity}}</div>
+        <div><img src="./js/res/img/icon-person.png" />{{planet.population}}<span>({{planet.populationGrowth}})</span></div>
+        <div><img src="./js/res/img/icon-temp.png" />{{planet.temp}}<span>({{planet.tempChange}})</span></div>
+        <div><img src="./js/res/img/icon_budget.png" />{{planet.income}}<span>({{planet.incomeGrowth}})</span></div>
+        <div><img src="./js/res/img/icon-metal.png" />{{planet.metal}}<span>({{planet.metalChange}})</span></div>
     </div>
-    <label for="economicGrowthSlider">Growth</label>
-    <input id="economicGrowthSlider" type="range" on-change="onPlanetGrowthChanged"/>
-    <label for="miningSlider">Mining</label>
-    <input id="miningSlider" type="range" on-change="onPlanetMiningChanged"/>
+    <div class="planet-balance-slider">
+        <img src="./js/res/img/icon-terraform.png" />
+        <input id="planetBalanceSlider" type="range" value="{{planet.terraformPercent}}" on-change="onPlanetGrowthChanged"/>
+        <img src="./js/res/img/icon-mining.png" />
+    </div>
     <div class="well fleet-well">
         Fleets
         <div class="list-group">
@@ -25,6 +28,6 @@
 
 <!-- {{>fleetItem}} -->
 <div class="well">
-    <div on-click="onFleetSelected">{{name}}</div>
+    <div on-click="onFleetSelected">{{type}}</div>
 </div>
 <!-- {{/fleetItem}} -->

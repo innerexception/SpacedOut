@@ -15,6 +15,47 @@
     top:10px;
 }
 
+.planet-panel img{
+    width: 20px;
+    vertical-align: sub;
+}
+
+.planet-panel span{
+    float:right;
+}
+
+.planet-panel .list-group{
+    margin-bottom: 0 !important;
+}
+
 .fleet-well{
-    height: 47%
+    height: 25%;
+    overflow: hidden;
+}
+
+.fleet-well .list-group{
+    overflow-y:scroll;
+    height: 80%;
+}
+
+.well img{
+    width: 100%;
+}
+
+.planet-balance-slider img{
+    display: inline-block;
+}
+.planet-balance-slider input{
+    display: inline-block !important;
+    width: 58% !important;
+}
+.planet-balance-slider{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.gravity-div{
+    margin-left:auto;
+    margin-right:auto;
+    width: 50%;
+    margin-bottom: 5px;
 }

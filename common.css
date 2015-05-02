@@ -1,3 +1,15 @@
+@font-face {
+    font-family: 'Press Start 2P';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Press Start 2P'), url(./js/lib/PressStart2P.woff2) format('woff2');
+}
+
+div{
+    font-family: 'Press Start 2P';
+    font-size: 12px;
+}
+
 #appRoot{
     overflow: hidden;
 }
