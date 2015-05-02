@@ -6,6 +6,26 @@
     background-color: black;
 }
 
+.slider-panel{
+    height: 60%;
+    margin-top: 20px;
+}
+
+.slider-panel input{
+    transform: rotate(90deg);
+    display: inline-block !important;
+    width: 90px !important;
+    margin-top: 22px;
+}
+
+.slider-icons-panel{
+}
+
+.slider-icons-panel img{
+    padding-left: 54px;
+    height: 30px;
+}
+
 .techPanelOut{
     opacity: 0;
     left: 100%;
@@ -14,4 +34,30 @@
 .techPanelIn{
     opacity: 0.8;
     left: 14%
+}
+
+.research-levels{
+    display: inline-block;
+}
+
+.research-levels img{
+    width: 20px;
+    margin-right: 10px;
+    vertical-align: bottom;
+}
+
+.research-levels div {
+    margin-bottom: 3px;
+}
+
+.research-label{
+    width: 70px;
+    margin-bottom: 14%;
+    margin-right: 5%;
+}
+
+.research-summary{
+    display: inline-block;
+    height: 100%;
+    vertical-align: top;
 }

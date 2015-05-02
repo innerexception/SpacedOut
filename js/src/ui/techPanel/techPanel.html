@@ -1,3 +1,29 @@
 <div class="inner-panel">
-    Tech Panel
+    <img class="research-label" src="./js/res/img/icon_tech.png" />
+    <div class="research-levels">
+        <div><img src="./js/res/img/icon-range.png"/>{{player.range}}</div>
+        <div><img src="./js/res/img/icon-speed.png"/>{{player.speed}}</div>
+        <div><img src="./js/res/img/icon-shield.png"/>{{player.shield}}</div>
+        <div><img src="./js/res/img/icon-weapon.png"/>{{player.weapon}}</div>
+        <div><img src="./js/res/img/icon-mini.png"/>{{player.mini}}</div>
+        <div><img src="./js/res/img/icon-radical.png"/>X</div>
+    </div>
+    <div class="research-summary">
+        <div class="slider-panel">
+            <input type="range" on-change="onRangeSpendingChanged" />
+            <input type="range" on-change="onSpeedSpendingChanged" />
+            <input type="range" on-change="onShieldSpendingChanged" />
+            <input type="range" on-change="onWeaponSpendingChanged" />
+            <input type="range" on-change="onMiniSpendingChanged" />
+            <input type="range" on-change="onRadicalSpendingChanged" />
+        </div>
+        <div class="slider-icons-panel">
+            <img style="padding-left:29px;" src="./js/res/img/icon-range.png"/>
+            <img src="./js/res/img/icon-speed.png"/>
+            <img src="./js/res/img/icon-shield.png"/>
+            <img src="./js/res/img/icon-weapon.png"/>
+            <img style="padding-left:64px;" src="./js/res/img/icon-mini.png"/>
+            <img style="padding-left:59px;" src="./js/res/img/icon-radical.png"/>
+        </div>
+    </div>
 </div>

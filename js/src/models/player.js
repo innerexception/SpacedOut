@@ -26,8 +26,7 @@ define([], function(){
            speed: 1,
            shield: 0,
            weapon: 1,
-           mini: 0,
-           extreme: 0
+           mini: 0
        }
        this.techRate = 0.3;
        this.cashRate = 0.7;

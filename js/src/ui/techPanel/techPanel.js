@@ -13,7 +13,7 @@ define(['ractive', 'rv!/spacedout/js/src/ui/techPanel/techPanel.html', 'css!/spa
                 el: this._dom.id,
                 template: techPanelTemplate,
                 data: {
-                    planets: []
+                    player: galaxy.clientPlayer.techs
                 }
             });
 

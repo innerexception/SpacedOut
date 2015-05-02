@@ -75,7 +75,7 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
            //get initial ships
            player.ships = this._getInitialShips(homeWorld, player, difficulty);
            this.ships = this.ships.concat(player.ships);
-
+           return player;
        },
        generatePlanets: function(shape, size, spread){
            this._positions = this._generatePositions(shape, size, spread);
@@ -99,9 +99,11 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
            console.log('making galaxy with '+size+', '+shape+', '+ai_players+', '+difficulty+', '+handicap+', '+spread);
            this._initStarField();
            this.generatePlanets(shape, size, spread);
-           this.initializePlayer(this._getRandomPlayerName(), false, difficulty);
+           this.players = [];
+           this.players.push(this.initializePlayer(this._getRandomPlayerName(), false, difficulty));
+           this.clientPlayer = this.players[0];
            for(var i=0; i<ai_players; i++){
-               this.initializePlayer(this._getRandomPlayerName(), true, difficulty);
+               this.players.push(this.initializePlayer(this._getRandomPlayerName(), true, difficulty));
            }
            this.finishedSignal.dispatch();
        },

@@ -89,31 +89,7 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             galaxyInitFinishedSignal.add(this.galaxyInitFinished, this);
 
             this.galaxy = new Galaxy(this.gameInstance, galaxyInitFinishedSignal);
-            this.planetPanel = new PlanetPanel(this.galaxy);
-            this.budgetPanel = new BudgetPanel(this.galaxy);
             this.gameSetupModal = new GameSetupModal(this.galaxy);
-            this.techPanel = new TechPanel(this.galaxy);
-            this.messagePanel = new MessagePanel(this.galaxy);
-            this.shipBuilderPanel = new ShipBuilderPanel(this.galaxy);
-            this.taskBarPanel = new TaskBarPanel(this.galaxy);
-
-            this.gameInstance.input.mouse.mouseWheelCallback = this.mouseZoom;
-            this.gameInstance.input.mouse.mouseDownCallback = this.mousePanStart;
-            this.gameInstance.input.mouse.mouseUpCallback = this.mousePanStop;
-            this.gameInstance.input.mouse.mouseOutCallback = this.mousePanStop;
-            this.gameInstance.input.mouse.mouseMoveCallback = this.mousePan;
-
-            this.gameInstance.planetClickedSignal = new Phaser.Signal();
-            this.gameInstance.planetClickedSignal.add(this.planetPanel.onPlanetClicked, this.planetPanel);
-            this.gameInstance.planetClickedSignal.add(this.galaxy.onPlanetClicked, this.galaxy);
-            this.gameInstance.techPanelSignal = new Phaser.Signal();
-            this.gameInstance.techPanelSignal.add(this.techPanel.toggle, this.techPanel);
-            this.gameInstance.budgetPanelSignal = new Phaser.Signal();
-            this.gameInstance.budgetPanelSignal.add(this.budgetPanel.toggle, this.budgetPanel);
-            this.gameInstance.messagePanelSignal = new Phaser.Signal();
-            this.gameInstance.messagePanelSignal.add(this.messagePanel.toggle, this.messagePanel);
-            this.gameInstance.shipBuilderPanelSignal = new Phaser.Signal();
-            this.gameInstance.shipBuilderPanelSignal.add(this.shipBuilderPanel.toggle, this.shipBuilderPanel);
 
             Candy.drawIntro(this.gameInstance);
             this.gameInstance.camera.focusOnXY(0, 0);
@@ -154,10 +130,28 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
 
         galaxyInitFinished: function(){
             console.log('init panels...');
-            //this.budgetPanel.init();
-            //this.messagePanel.init();
-            //this.planetPanel.init();
-            //this.techPanel.init();
+            this.gameInstance.input.mouse.mouseWheelCallback = this.mouseZoom;
+            this.gameInstance.input.mouse.mouseDownCallback = this.mousePanStart;
+            this.gameInstance.input.mouse.mouseUpCallback = this.mousePanStop;
+            this.gameInstance.input.mouse.mouseOutCallback = this.mousePanStop;
+            this.gameInstance.input.mouse.mouseMoveCallback = this.mousePan;
+            this.planetPanel = new PlanetPanel(this.galaxy);
+            this.budgetPanel = new BudgetPanel(this.galaxy);
+            this.techPanel = new TechPanel(this.galaxy);
+            this.messagePanel = new MessagePanel(this.galaxy);
+            this.shipBuilderPanel = new ShipBuilderPanel(this.galaxy);
+            this.taskBarPanel = new TaskBarPanel(this.galaxy);
+            this.gameInstance.planetClickedSignal = new Phaser.Signal();
+            this.gameInstance.planetClickedSignal.add(this.planetPanel.onPlanetClicked, this.planetPanel);
+            this.gameInstance.planetClickedSignal.add(this.galaxy.onPlanetClicked, this.galaxy);
+            this.gameInstance.techPanelSignal = new Phaser.Signal();
+            this.gameInstance.techPanelSignal.add(this.techPanel.toggle, this.techPanel);
+            this.gameInstance.budgetPanelSignal = new Phaser.Signal();
+            this.gameInstance.budgetPanelSignal.add(this.budgetPanel.toggle, this.budgetPanel);
+            this.gameInstance.messagePanelSignal = new Phaser.Signal();
+            this.gameInstance.messagePanelSignal.add(this.messagePanel.toggle, this.messagePanel);
+            this.gameInstance.shipBuilderPanelSignal = new Phaser.Signal();
+            this.gameInstance.shipBuilderPanelSignal.add(this.shipBuilderPanel.toggle, this.shipBuilderPanel);
             console.log('init panels done.');
             this.inGame = true;
             this.gameInstance.camera.focusOnXY(1000,1000);
