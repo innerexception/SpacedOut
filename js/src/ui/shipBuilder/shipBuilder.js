@@ -38,9 +38,11 @@ define(['ractive', 'rv!/spacedout/js/src/ui/shipBuilder/shipBuilder.html', 'css!
                 this._dom.className = this._dom.className.replace('shipBuilderOut', '');
                 this._dom.className = [this._dom.className, 'shipBuilderIn'].join(" ");
             },
-            toggle: function(){
-                if(!this.isVisible) this.transitionTo();
-                else this.transitionFrom();
+            toggle: function(panel){
+                if(panel==='builder'){
+                    if(!this.isVisible) this.transitionTo();
+                    else this.transitionFrom();
+                }
             }
         };
 

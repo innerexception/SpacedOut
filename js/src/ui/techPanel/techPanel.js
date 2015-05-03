@@ -53,9 +53,11 @@ define(['ractive', 'rv!/spacedout/js/src/ui/techPanel/techPanel.html', 'css!/spa
                     domNode.className = [domNode.className, 'locked'].join(' ');
                 }
             },
-            toggle: function(){
-                if(!this.isVisible) this.transitionTo();
-                else this.transitionFrom();
+            toggle: function(panel){
+                if(panel === 'tech'){
+                    if(!this.isVisible) this.transitionTo();
+                    else this.transitionFrom();
+                }
             },
             setTechValue: function(type, val){
                 this._ractive.data.player.setIndividualTechRate(type, val);

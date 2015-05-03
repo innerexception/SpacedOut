@@ -191,7 +191,7 @@ define([], function(){
   };
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// world.js // version 1.0
+// worldGen.js // version 1.0
 //
 // written by drow <drow@bin.sh>
 // http://creativecommons.org/licenses/by-nc/3.0/
@@ -227,7 +227,7 @@ define([], function(){
     return {
       seed: Math.round((Math.random() * 100000000) + 999999999),
       algorithm: "voss_a7",
-      iter: 2000,
+      iter: 500,
       hack_theta: true,
       erode: true,
       pct_water: water || 50,

@@ -43,12 +43,13 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
                }
            }
        },
-       onEndTurn: function() {
-           //TODO: update ship moves and battles, metal income rates and savings, terra rates, money income and savings, tech levels and increases
-           this.clientPlayer.getIncome();
-           this.clientPlayer.refreshTechs();
-           this.updateShips();
-           this.resolveCombats();
+       onEndTurn: function(panel) {
+           if(panel==='end'){
+               //TODO: update ship moves and battles, metal income rates and savings, terra rates, money income and savings, tech levels and increases
+               this.clientPlayer.getIncomeAndResearch();
+               this.updateShips();
+               this.resolveCombats();
+           }
        },
 
        updateShips: function(){
@@ -68,15 +69,13 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
            });
        },
 
-       planetClicked: function() {
-
-       },
        beginShipDrag: function() {
 
        },
        endShipDrag: function() {
 
        },
+
        initializePlayer: function(name, isAi, difficulty){
 
            //set homeworld. each homeworld should be mapSize/numPlayers away from other homeworlds
@@ -88,11 +87,14 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
            else{
                //Pick one an appropriate distance away
                homeWorld = _.filter(this.planets, function(planet){
-                   return this.gameInstance.distanceBetween(homeWorld.sprites[0], planet.sprites[0]) >= 300
-                       && !planet.owner;
-               }, this);
+                   return _.filter(this.homeWorlds, function(homeworldPlanet){
+                       return this.gameInstance.physics.arcade.distanceBetween(homeworldPlanet.sprites[0], planet.sprites[0]) >= 600
+                           && !planet.owner;
+                   }, this).length === this.homeWorlds.length;
+               }, this)[0];
            }
-           var player = new Player(homeWorld, name, isAi, difficulty);
+           this.homeWorlds.push(homeWorld);
+           var player = new Player(homeWorld, name, isAi, difficulty, this);
 
            //get initial ships
            this.ships = this.ships.concat(this._getInitialShips(homeWorld, player, difficulty));
@@ -264,9 +266,9 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
 
    galaxy.prototype.Constants = {
         Size: {
-            Small: 10,
-            Medium: 20,
-            Large: 30
+            Small: 20,
+            Medium: 30,
+            Large: 40
         },
         Shape: {
             Spiral: 'Spiral',

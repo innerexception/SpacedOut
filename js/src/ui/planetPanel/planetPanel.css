@@ -22,6 +22,7 @@
 
 .planet-panel span{
     float:right;
+    margin-top: 2px;
 }
 
 .planet-panel .list-group{

@@ -12,7 +12,7 @@ define(['ractive', 'rv!/spacedout/js/src/ui/messagePanel/messagePanel.html', 'cs
                 el: this._dom.id,
                 template: messagePanelTemplate,
                 data: {
-                    planets: []
+                    messages: []
                 }
             });
 
@@ -39,9 +39,14 @@ define(['ractive', 'rv!/spacedout/js/src/ui/messagePanel/messagePanel.html', 'cs
                 this._dom.className = this._dom.className.replace('messagePanelOut', '');
                 this._dom.className = [this._dom.className, 'messagePanelIn'].join(" ");
             },
-            toggle: function(){
-                if(!this.isVisible) this.transitionTo();
-                else this.transitionFrom();
+            toggle: function(panel){
+                if(panel === 'messages'){
+                    if(!this.isVisible) this.transitionTo();
+                    else this.transitionFrom();
+                }
+            },
+            onMessageRecieved: function(message){
+                this._ractive.set('messages', this._ractive.data.messages.push({text: message}));
             }
         };
 

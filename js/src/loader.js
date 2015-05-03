@@ -5,11 +5,11 @@ require.config({
         'phaser': 'lib/vendor/phaser2.2.2',
         'lodash': 'lib/vendor/lodash.min',
         'candy': 'lib/candy',
-        'amd-loader': 'lib/vendor/requirejs-ractive/amd-loader',
-        'css': 'lib/vendor/require-css/css',
-        'rv': 'lib/vendor/requirejs-ractive/rv',
-        'ractive': 'lib/vendor/ractive/ractive',
-        'worldGen': 'lib/vendor/world',
+        'amd-loader': 'lib/vendor/amd-loader',
+        'css': 'lib/vendor/css.min',
+        'rv': 'lib/vendor/rv',
+        'ractive': 'lib/vendor/ractive.min',
+        'worldGen': 'lib/vendor/worldGen',
         'illuminated': 'lib/vendor/illuminated',
 
         'outSpacedApp': 'src/models/game',
@@ -28,7 +28,7 @@ require.config({
     },
     map: {
         '*': {
-            'css': 'lib/vendor/require-css/css'
+            'css': 'lib/vendor/css.min'
         }
     },
     shim: {

@@ -42,9 +42,11 @@ function(Ractive, budgetPanelTemplate){
             this._dom.className = this._dom.className.replace('budgetPanelOut', '');
             this._dom.className = [this._dom.className, 'budgetPanelIn'].join(" ");
         },
-        toggle: function(){
-            if(!this.isVisible) this.transitionTo();
-            else this.transitionFrom();
+        toggle: function(panel){
+            if(panel === 'budget'){
+                if(!this.isVisible) this.transitionTo();
+                else this.transitionFrom();
+            }
         }
     };
 

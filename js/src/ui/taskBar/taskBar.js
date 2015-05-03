@@ -17,22 +17,22 @@ define(['ractive', 'rv!/spacedout/js/src/ui/taskBar/taskBar.html', 'css!/spacedo
 
             this._ractive.on({
                 onBudgetClicked: function (event) {
-                    self.galaxy.gameInstance.budgetPanelSignal.dispatch();
+                    self.galaxy.gameInstance.panelToggleSignal.dispatch('budget');
                 },
                 onTechClicked: function(event){
-                    self.galaxy.gameInstance.techPanelSignal.dispatch();
+                    self.galaxy.gameInstance.panelToggleSignal.dispatch('tech');
                 },
                 onMessagesClicked: function(event){
-                    self.galaxy.gameInstance.messagePanelSignal.dispatch();
+                    self.galaxy.gameInstance.panelToggleSignal.dispatch('messages');
                 },
                 onBuilderClicked: function(event){
-                    self.galaxy.gameInstance.shipBuilderPanelSignal.dispatch();
+                    self.galaxy.gameInstance.panelToggleSignal.dispatch('builder');
                 },
                 onPlanetClicked: function(event){
-                    self.galaxy.gameInstance.planetToggleSignal.dispatch();
+                    self.galaxy.gameInstance.panelToggleSignal.dispatch('planet');
                 },
                 onEndTurnClicked: function(event){
-                    self.galaxy.gameInstance.endTurnSignal.dispatch();
+                    self.galaxy.gameInstance.panelToggleSignal.dispatch('end');
                 }
             })
         };

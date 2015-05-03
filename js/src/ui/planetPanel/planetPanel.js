@@ -44,13 +44,18 @@ define(['ractive', 'rv!/spacedout/js/src/ui/planetPanel/planetPanel.html', 'css!
                 this._dom.className = [this._dom.className, 'planetPanelIn'].join(' ');
                 this.isVisible = true;
             },
-            toggle: function(){
-                if(this.isVisible) this.transitionFrom();
-                else this.transitionTo();
+            toggle: function(panel){
+                if(panel==='planet'){
+                    if(this.isVisible) this.transitionFrom();
+                    else this.transitionTo();
+                }
             },
             onPlanetClicked: function(planet){
                 this._ractive.set('planet', planet);
                 if(!this.isVisible) this.transitionTo();
+            },
+            refreshPanel: function(planet){
+                if(this._ractive.data.planet === planet) this._ractive.set('planet', planet);
             }
         };
 

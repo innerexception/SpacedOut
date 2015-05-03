@@ -2,15 +2,15 @@ define(['worldGen'], function(worldGen){
    var planet = function(gameInstance, name, temp, gravity, metal, position){
        this.position = position;
        this.name = name;
-       this.temp = temp;
+       this.temp = parseInt(temp);
        this.tempChange = 0;
        this.population = 0;
        this.populationGrowth = 0;
        this.income = 0;
        this.incomeGrowth = 0;
-       this.gravity = gravity;
+       this.gravity = parseFloat(gravity);
        this.owner = null;
-       this.metal = metal;
+       this.metal = parseInt(metal);
        this.miningChange = 0;
        this.gameInstance = gameInstance;
        this.sprites = this._getPlanetSprites(temp, gravity, metal, position);
@@ -26,28 +26,36 @@ define(['worldGen'], function(worldGen){
            //draw the player banner on the planet top left
            this.owner = player;
            if(this.population === 0) this._setPopulation(7500);
+           this.setTerraformPercent(50);
            this.bannerSprite = this.gameInstance.add.sprite(this.position.x-10, this.position.y-10, this.name+'_banner');
            //TODO: colonization animation here
            return this;
        },
        setTerraformPercent: function(percent){
            this.terraformPercent = percent;
-           this.tempChange = ((this.terraformPercent/100) * ((this.budgetPercent/100) * this.owner.moneyIncome)) /1000; // = Total terra cash / cash per degree of change
+           this.tempChange = parseFloat((((this.terraformPercent/100) * ((this.budgetPercent/100) * this.owner.moneyIncome)) /1000).toFixed(1)); // = Total terra cash / cash per degree of change
+           if(this.tempChange > 72) this.tempChange = -this.tempChange;
            this.miningPercent = 100-percent;
-           this.miningChange = (this.miningPercent/100) * (this.budgetPercent/100 * this.owner.moneyIncome); //1:1 metal extraction rate
+           this.miningChange = Math.round((this.miningPercent/100) * (this.budgetPercent/100 * this.owner.moneyIncome) / 100);
+           this._setPopulationGrowth();
+           this.gameInstance.planetUpdatedSignal && this.gameInstance.planetUpdatedSignal.dispatch(this);
        },
        refreshResources: function(){
-           this.temp += this.tempChange;
+           this.temp = parseFloat((this.tempChange + this.temp).toFixed(1));
            this.metal -= this.miningChange;
-           this.populationGrowth = this.temp <= 72 ? (this.temp/72) * 1000 : (72/this.temp)*1000;
            this.population += this.populationGrowth;
            this._setPopulation(this.population);
+           this.gameInstance.planetUpdatedSignal.dispatch(this);
+       },
+       resolveCombat: function(){
+           //TODO
        },
        _setPopulation: function(number){
            this.population = number;
            var oldIncome = this.income;
            this.income = number * 0.5;
-           this.incomeGrowth = (this.income / oldIncome).toFixed(0);
+           this.incomeGrowth = Math.round(oldIncome === 0 ? 0 : (this.income / oldIncome));
+           this._setPopulationGrowth();
        },
        _onPlanetClick: function(){
            this.gameInstance.planetClickedSignal.dispatch(this);
@@ -108,6 +116,9 @@ define(['worldGen'], function(worldGen){
            sprite2.tween.start();
 
            return [sprite, sprite2, lightSprite];
+       },
+       _setPopulationGrowth: function(){
+           this.populationGrowth = Math.round((this.temp <= 72 ? (this.temp/72) * 100 : (72/this.temp)*100));
        }
    };
    return planet;
