@@ -23,12 +23,12 @@ define(['lodash'], function(_){
                break;
        }
        this.techs = {
-           range: {level: 1, rate: 20},
-           speed: {level: 1, rate: 20},
-           shield: {level: 0, rate: 20},
-           weapon: {level: 1, rate: 20},
-           mini: {level: 0, rate: 20},
-           radical: {rate: 0}
+           range: {level: 1, rate: 20, locked: false},
+           speed: {level: 1, rate: 20, locked: false},
+           shield: {level: 0, rate: 20, locked: false},
+           weapon: {level: 1, rate: 20, locked: false},
+           mini: {level: 0, rate: 20, locked: false},
+           radical: {rate: 0, locked: false}
        }
        this.techRate = 30;
        this.cashRate = 70;
@@ -55,27 +55,59 @@ define(['lodash'], function(_){
        },
        setIndividualTechRate: function(type, percent){
            var delta = 100-percent;
-           var subtractions = delta / 6;
 
-           this.techs.range.rate -= subtractions;
-           this.techs.speed.rate -= subtractions;
-           this.techs.shield.rate -= subtractions;
-           this.techs.weapon.rate -= subtractions;
-           this.techs.mini.rate -= subtractions;
-           this.techs.radical.rate -= subtractions;
-           this.techs[type].rate += subtractions;
+           //subtract amount from locked techs
+           delta -= this._getLockedTechAmount();
 
-           if(type !== 'radical' && delta % 6 !== 0){
-               //Excess goes to rad first
-               this.techs.radical.rate -= delta % 6;
+           var unlockedTechs = this._getUnLockedTechsCount();
+           var subtractions = delta / unlockedTechs;
+
+           if(subtractions > 0){
+               if(type!=='range' && !this.techs.range.locked)this.techs.range.rate = subtractions;
+               if(type!=='speed' && !this.techs.speed.locked)this.techs.speed.rate = subtractions;
+               if(type!=='shield' && !this.techs.shield.locked)this.techs.shield.rate = subtractions;
+               if(type!=='weapon' && !this.techs.weapon.locked)this.techs.weapon.rate = subtractions;
+               if(type!=='mini' && !this.techs.mini.locked)this.techs.mini.rate = subtractions;
+               if(type!=='radical' && !this.techs.radical.locked)this.techs.radical.rate = subtractions;
+
+               if(type !== 'range' && delta % unlockedTechs !== 0 && !this.techs.range.locked){
+                   //Excess goes to range first
+                   this.techs.range.rate += delta % unlockedTechs;
+               }
+               else if(delta % unlockedTechs !== 0){
+                   //Then comes from mini
+                   this.techs.mini.rate += delta % unlockedTechs;
+               }
+               this.techs[type].lastRate = this.techs[type].rate;
            }
-           else if(delta % 6 !== 0 && type === 'radical'){
-               //Then comes from mini
-               this.techs.mini.rate -= delta % 6;
+           else{
+               this.techs[type].rate = this.techs[type].lastRate
            }
 
-           console.log('tech rates are now '+ this.techs);
+           console.log('range: '+this.techs.range.rate
+                        +' speed: '+this.techs.speed.rate
+                        +' shield: '+this.techs.shield.rate
+                        +' weapon: '+this.techs.weapon.rate
+                        +' mini: '+this.techs.mini.rate
+                        +' radical: '+this.techs.radical.rate);
 
+       },
+       lockTechValue: function(type, percent){
+           this.techs[type].locked = !this.techs[type].locked;
+       },
+       _getLockedTechAmount: function(){
+           var lockedAmt = 0;
+           _.forOwn(this.techs, function(tech){
+               if(tech.locked) lockedAmt+=tech.rate;
+           });
+           return lockedAmt
+       },
+       _getUnLockedTechsCount: function(){
+           var locked = 6;
+           _.forOwn(this.techs, function(tech){
+               if(tech.locked) locked--;
+           });
+           return locked;
        }
    };
    return player;

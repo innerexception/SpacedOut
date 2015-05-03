@@ -10,20 +10,20 @@
     </div>
     <div class="research-summary">
         <div class="slider-panel">
-            <input type="range" value="{{player.techs.range.rate}}" on-change="onRangeSpendingChanged" />
-            <input type="range" value="{{player.techs.speed.rate}}" on-change="onSpeedSpendingChanged" />
-            <input type="range" value="{{player.techs.shield.rate}}" on-change="onShieldSpendingChanged" />
-            <input type="range" value="{{player.techs.weapon.rate}}" on-change="onWeaponSpendingChanged" />
-            <input type="range" value="{{player.techs.mini.rate}}" on-change="onMiniSpendingChanged" />
-            <input type="range" value="{{player.techs.radical.rate}}" on-change="onRadicalSpendingChanged" />
+            <input type="range" class="range-slider" data-type="range" value="{{player.techs.range.rate}}" on-change="onTechSpendingChanged" on-input="onTechSpendingChanged" />
+            <input type="range" class="speed-slider" data-type="speed" value="{{player.techs.speed.rate}}" on-change="onTechSpendingChanged" on-input="onTechSpendingChanged" />
+            <input type="range" class="shield-slider" data-type="shield" value="{{player.techs.shield.rate}}" on-change="onTechSpendingChanged" on-input="onTechSpendingChanged" />
+            <input type="range" class="weapon-slider" data-type="weapon" value="{{player.techs.weapon.rate}}" on-change="onTechSpendingChanged" on-input="onTechSpendingChanged" />
+            <input type="range" class="mini-slider" data-type="mini" value="{{player.techs.mini.rate}}" on-change="onTechSpendingChanged" on-input="onTechSpendingChanged" />
+            <input type="range" class="radical-slider" data-type="radical" value="{{player.techs.radical.rate}}" on-change="onTechSpendingChanged" on-input="onTechSpendingChanged" />
         </div>
         <div class="slider-icons-panel">
-            <img style="padding-left:29px;" src="./js/res/img/icon-range.png"/>
-            <img src="./js/res/img/icon-speed.png"/>
-            <img src="./js/res/img/icon-shield.png"/>
-            <img src="./js/res/img/icon-weapon.png"/>
-            <img style="padding-left:64px;" src="./js/res/img/icon-mini.png"/>
-            <img style="padding-left:59px;" src="./js/res/img/icon-radical.png"/>
+            <img data-type="range" on-click="onLockTechClick" style="padding-left:29px;" src="./js/res/img/icon-range.png"/>
+            <img data-type="speed" on-click="onLockTechClick" src="./js/res/img/icon-speed.png"/>
+            <img data-type="shield" on-click="onLockTechClick" src="./js/res/img/icon-shield.png"/>
+            <img data-type="weapon" on-click="onLockTechClick" src="./js/res/img/icon-weapon.png"/>
+            <img data-type="mini" on-click="onLockTechClick" style="padding-left:64px;" src="./js/res/img/icon-mini.png"/>
+            <img data-type="radical" on-click="onLockTechClick" style="padding-left:59px;" src="./js/res/img/icon-radical.png"/>
         </div>
     </div>
 </div>

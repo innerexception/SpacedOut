@@ -12,10 +12,14 @@
 }
 
 .slider-panel input{
-    transform: rotate(90deg);
+    transform: rotate(-90deg);
     display: inline-block !important;
     width: 90px !important;
     margin-top: 22px;
+}
+
+.slider-panel .locked input{
+
 }
 
 .slider-icons-panel{
@@ -60,4 +64,9 @@
     display: inline-block;
     height: 100%;
     vertical-align: top;
+}
+
+.locked {
+    opacity: 0.5;
+    pointer-events: none;
 }

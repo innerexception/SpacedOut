@@ -21,23 +21,12 @@ define(['ractive', 'rv!/spacedout/js/src/ui/techPanel/techPanel.html', 'css!/spa
             var self = this;
 
             this._ractive.on({
-                onRangeSpendingChanged: function(event){
-                    self.setTechValue('range', event.node.value);
+                onTechSpendingChanged: function(event){
+                    self.setTechValue(event.node.attributes['data-type'].value, event.node.value);
                 },
-                onSpeedSpendingChanged: function(event){
-                    self.setTechValue('speed', event.node.value);
-                },
-                onShieldSpendingChanged: function(event){
-                    self.setTechValue('shield', event.node.value);
-                },
-                onWeaponSpendingChanged: function(event){
-                    self.setTechValue('weapon', event.node.value);
-                },
-                onMiniSpendingChanged: function(event){
-                    self.setTechValue('mini', event.node.value);
-                },
-                onRadicalSpendingChanged: function(event){
-                    self.setTechValue('radical', event.node.value);
+                onLockTechClick: function(event){
+                    self.lockTechValue(event.node.attributes['data-type'].value, event.node.value);
+                    self.toggleLocked(document.getElementsByClassName(event.node.attributes['data-type'].value + '-slider')[0]);
                 }
             })
         };
@@ -47,22 +36,33 @@ define(['ractive', 'rv!/spacedout/js/src/ui/techPanel/techPanel.html', 'css!/spa
                 this.isVisible = false;
                 //animate this component away
                 this._dom.className = this._dom.className.replace('techPanelIn', '');
-                this._dom.className = [this._dom.className, 'techPanelOut'].join("");
+                this._dom.className = [this._dom.className, 'techPanelOut'].join(' ');
 
             },
             transitionTo: function(){
                 this.isVisible = true;
                 //animate this component in
                 this._dom.className = this._dom.className.replace('techPanelOut', '');
-                this._dom.className = [this._dom.className, 'techPanelIn'].join("");
+                this._dom.className = [this._dom.className, 'techPanelIn'].join(' ');
+            },
+            toggleLocked: function(domNode){
+                if(domNode.className.indexOf('locked') !== -1) {
+                    domNode.className = domNode.className.replace('locked', '');
+                }
+                else {
+                    domNode.className = [domNode.className, 'locked'].join(' ');
+                }
             },
             toggle: function(){
                 if(!this.isVisible) this.transitionTo();
                 else this.transitionFrom();
             },
             setTechValue: function(type, val){
-                this._ractive.data.player.setIndividualTechRate(type, event.target.value);
+                this._ractive.data.player.setIndividualTechRate(type, val);
                 this._ractive.set('player', this.galaxy.clientPlayer);
+            },
+            lockTechValue: function(type, val){
+                this._ractive.data.player.lockTechValue(type, val);
             }
         };
 
