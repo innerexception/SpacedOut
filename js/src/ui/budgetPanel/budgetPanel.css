@@ -16,5 +16,52 @@
 }
 
 .planet-well{
-    height: 71%;
+    height: 67%;
+}
+
+.planet-well .list-group img{
+    display: inline-block;
+    width: 40%;
+}
+
+.planet-well .list-group input{
+    display: inline-block;
+}
+
+.planet-well .list-group label{
+    display: inline-block;
+    vertical-align: top;
+    max-width: 50%;
+    font-size: 8px;
+}
+
+.top-sliders{
+    margin-bottom: 10px;
+}
+
+.budget-panel .top-sliders img{
+    display: inline-block;
+    height: 25px;
+}
+
+.budget-panel .top-sliders input{
+    display: inline-block;
+    vertical-align: middle;
+    width: 73%;
+}
+
+.budget-label{
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 10px;
+    width: 35px;
+}
+
+.budget-label img{
+    width: 35px;
+}
+
+.planet-thumb{
+    -webkit-clip-path: circle(37% at 50% 50%);
+    width: 50%;
 }

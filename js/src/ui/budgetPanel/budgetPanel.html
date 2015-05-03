@@ -1,16 +1,21 @@
 <div class="inner-panel">
-    <div class="list-group">
-        <label for="capitalSlider">Capital</label>
-        <input id="capitalSlider" type="range" on-change="onCapitalBudgetChanged"/>
-        <label for="techSlider">Tech</label>
-        <input id="techSlider" type="range" on-change="onTechBudgetChanged"/>
+    <div class="budget-label"><img src="{{player.bannerPath}}"/></div>
+    <div class="top-sliders">
+        <div>
+            <img src="./js/res/img/icon_budget.png" />
+            <input id="capitalSlider" type="range" on-change="onCapitalBudgetChanged"/>
+        </div>
+        <div>
+            <img src="./js/res/img/icon_tech.png" />
+            <input id="techSlider" type="range" on-change="onTechBudgetChanged"/>
+        </div>
     </div>
     <div class="well planet-well">
-        Planets
+        <div class="budget-label"><img src="./js/res/img/icon-gravity.png" /></div>
         <div class="list-group">
-            {{#planets:i}}
+            {{#player.planets:i}}
                 {{>planetItem}}
-            {{/planets}}
+            {{/player.planets}}
         </div>
     </div>
 </div>
@@ -18,8 +23,8 @@
 
 <!-- {{>planetItem}} -->
 <div class="well">
-    <img src="{{planetThumbPath}}" />
-    <label for="{{planetName + 'slider'}}">{{budgetPercent}}</label>
-    <input type="range" id="{{planetName + 'slider'}}" value="{{budgetPercent}}" on-change="onPlanetBudgetChanged" />
+    <img class="planet-thumb" src="{{surfaceImagePath}}" />
+    <label for="{{name + 'slider'}}">{{name + ': '+ budgetPercent + '% /yr'}}</label>
+    <input type="range" id="{{name + 'slider'}}" value="{{budgetPercent}}" on-change="onPlanetBudgetChanged" />
 </div>
 <!-- {{/planetItem}} -->

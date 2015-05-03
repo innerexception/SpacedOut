@@ -14,7 +14,7 @@ function(Ractive, budgetPanelTemplate){
             el: this._dom.id,
             template: budgetPanelTemplate,
             data: {
-                planets: []
+                player: galaxy.clientPlayer
             }
         });
 

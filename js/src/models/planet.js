@@ -17,6 +17,7 @@ define(['worldGen'], function(worldGen){
        this.bannerSprite = null;
        this.miningPercent = 50;
        this.terraformPercent = 50;
+       this.budgetPercent = 100;
        this.fleets = [];
    };
    planet.prototype = {
@@ -65,8 +66,6 @@ define(['worldGen'], function(worldGen){
 
            lightSprite.inputEnabled = true;
            lightSprite.events.onInputDown.add(this._onPlanetClick, this);
-
-           bmd = null;
 
            //Create sprite mask
            if(this.mask) {

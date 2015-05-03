@@ -51,9 +51,9 @@
 }
 
 .research-label{
-    width: 70px;
-    margin-bottom: 14%;
-    margin-right: 5%;
+    vertical-align: top;
+    margin-left: 2%;
+    margin-top: 4%;
 }
 
 .research-summary{

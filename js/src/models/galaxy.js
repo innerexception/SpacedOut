@@ -268,7 +268,8 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
             'Yojimbo'
         ],
         PlanetNames: [
-            'Dicks'
+            'Phil',
+            'Murray'
         ]
    };
 
