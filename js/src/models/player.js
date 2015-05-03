@@ -35,19 +35,19 @@ define(['lodash'], function(_){
    };
    player.prototype = {
        getIncomeAndResearch: function(){
-           this.tempMoney = 0;
+           this.moneyIncome = 0;
            _.each(this.galaxy.planets, function(planet){
                if(planet.owner && planet.owner.name === this.name){
-                   this.tempMoney += planet.income;
+                   this.moneyIncome += planet.income;
                    this.metal += planet.miningChange;
-                   planet.refreshResources();
+                   planet.extractResources();
                }
            }, this);
            this.refreshTechs();
        },
        refreshTechs: function(){
-           var techMoney = this.tempMoney * (this.techRate /100);
-           this.money = this.tempMoney - techMoney;
+           var techMoney = this.moneyIncome * (this.techRate /100);
+           this.money = this.moneyIncome - techMoney;
            _.forOwn(this.techs, function(tech, name){
                tech.progress += (techMoney * (tech.rate/100)) / 500;  //500 per point
                if(tech.progress >= 100){
@@ -62,8 +62,44 @@ define(['lodash'], function(_){
            this.cashRate = 100-percent;
            console.log('techrate is now '+percent + ' cashrate is now '+this.cashRate);
        },
-       getTechName: function(name, level){
+       setPlanetBudgetPercent: function(planet, percent){
+           var delta = 100-percent;
+           var planets = this.getPlanets();
+           var subtractions = parseFloat((delta / (planets.length-1)).toFixed(1));
+           var leftOvers = delta % planets.length-1;
 
+           if(subtractions > 0){
+               _.each(planets, function(planetObj){
+                   if(planet !== planetObj){
+                       planetObj.budgetPercent = subtractions;
+                       planetObj.budgetAmount = Math.round((subtractions/100) * this.moneyIncome);
+                       planetObj.refreshTerraformNumbers();
+                   }
+               }, this);
+               if(planet !== this.homeWorld && leftOvers !== 0){
+                   //Excess goes to the homeworld
+                   this.homeWorld.budgetPercent += leftOvers;
+                   this.homeWorld.budgetAmount = Math.round(this.moneyIncome * (this.homeWorld.budgetPercent/100));
+               }
+               else if(delta % planets.length !== 0){
+                   //Then goes to random planet
+                   planet.budgetPercent += leftOvers;
+               }
+               planet.lastRate = planet.budgetPercent;
+               planet.budgetAmount = Math.round(this.moneyIncome * (planet.budgetPercent/100));
+           }
+           else{
+               planet.budgetPercent = planet.lastRate
+           }
+           planet.refreshTerraformNumbers();
+       },
+       getTechName: function(name, level){
+           //TODO
+       },
+       getPlanets: function(){
+           return _.filter(this.galaxy.planets, function(planet){
+               return planet.owner && planet.owner.name === this.name;
+           }, this);
        },
        setIndividualTechRate: function(type, percent){
            var delta = 100-percent;

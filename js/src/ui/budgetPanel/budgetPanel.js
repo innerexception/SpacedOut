@@ -14,7 +14,8 @@ function(Ractive, budgetPanelTemplate){
             el: this._dom.id,
             template: budgetPanelTemplate,
             data: {
-                player: galaxy.clientPlayer
+                player: galaxy.clientPlayer,
+                planets: galaxy.clientPlayer.getPlanets()
             }
         });
 
@@ -24,6 +25,10 @@ function(Ractive, budgetPanelTemplate){
             onBudgetBalanceChanged: function(event){
                 self._ractive.data.player.setTechPercent(event.node.value);
                 self._ractive.set('player', galaxy.clientPlayer);
+            },
+            onPlanetBudgetChanged: function(event){
+                galaxy.clientPlayer.setPlanetBudgetPercent(event.context, event.node.value);
+                self._ractive.set('planets', galaxy.clientPlayer.getPlanets());
             }
         })
     };

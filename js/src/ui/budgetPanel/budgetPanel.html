@@ -2,15 +2,15 @@
     <div class="budget-label"><img src="{{player.bannerPath}}"/></div>
     <div class="budget-balance-slider">
         <img src="./js/res/img/icon_budget.png" />
-        <input id="planetBalanceSlider" type="range" value="{{player.techRate}}" on-change="onBudgetBalanceChanged"/>
+        <input id="planetBalanceSlider" type="range" value="{{player.techRate}}" on-input="onBudgetBalanceChanged"/>
         <img src="./js/res/img/icon_tech.png" />
     </div>
     <div class="well planet-well">
         <div class="budget-label"><img src="./js/res/img/icon-gravity.png" /></div>
         <div class="list-group">
-            {{#player.planets:i}}
+            {{#planets:i}}
                 {{>planetItem}}
-            {{/player.planets}}
+            {{/planets}}
         </div>
     </div>
 </div>
@@ -19,7 +19,7 @@
 <!-- {{>planetItem}} -->
 <div class="well">
     <img class="planet-thumb" src="{{surfaceImagePath}}" />
-    <label for="{{name + 'slider'}}">{{name + ': '+ budgetPercent + '% /yr'}}</label>
-    <input type="range" id="{{name + 'slider'}}" value="{{budgetPercent}}" on-change="onPlanetBudgetChanged" />
+    <label for="{{name + 'slider'}}">{{name + ': '+ (budgetAmount)}}</label>
+    <input type="range" id="{{name + 'slider'}}" value="{{budgetPercent}}" on-input="onPlanetBudgetChanged" on-change="onPlanetBudgetChanged" />
 </div>
 <!-- {{/planetItem}} -->

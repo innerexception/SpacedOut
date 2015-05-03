@@ -18,6 +18,7 @@ define(['worldGen'], function(worldGen){
        this.miningPercent = 50;
        this.terraformPercent = 50;
        this.budgetPercent = 100;
+       this.budgetAmount = 0;
        this.fleets = [];
    };
    planet.prototype = {
@@ -40,7 +41,15 @@ define(['worldGen'], function(worldGen){
            this._setPopulationGrowth();
            this.gameInstance.planetUpdatedSignal && this.gameInstance.planetUpdatedSignal.dispatch(this);
        },
-       refreshResources: function(){
+       refreshTerraformNumbers: function(){
+           this.tempChange = parseFloat((((this.terraformPercent/100) * ((this.budgetPercent/100) * this.owner.moneyIncome)) /1000).toFixed(1)); // = Total terra cash / cash per degree of change
+           if(this.tempChange > 72) this.tempChange = -this.tempChange;
+           this.miningPercent = 100-this.terraformPercent;
+           this.miningChange = Math.round((this.miningPercent/100) * (this.budgetPercent/100 * this.owner.moneyIncome) / 100);
+           this._setPopulationGrowth();
+           this.gameInstance.planetUpdatedSignal.dispatch(this);
+       },
+       extractResources: function(){
            this.temp = parseFloat((this.tempChange + this.temp).toFixed(1));
            this.metal -= this.miningChange;
            this.population += this.populationGrowth;

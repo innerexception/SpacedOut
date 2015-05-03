@@ -93,6 +93,12 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
                    }, this).length === this.homeWorlds.length;
                }, this)[0];
            }
+           if(!homeWorld){
+               homeWorld = _.filter(this.planets, function(planet){
+                   return !planet.owner;
+               })[0];
+           }
+
            this.homeWorlds.push(homeWorld);
            var player = new Player(homeWorld, name, isAi, difficulty, this);
 

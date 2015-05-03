@@ -12,7 +12,7 @@
     </div>
     <div class="planet-balance-slider">
         <img src="./js/res/img/icon-mining.png" />
-        <input id="planetBalanceSlider" type="range" value="{{planet.terraformPercent}}" on-change="onPlanetGrowthChanged"/>
+        <input disabled="{{!planet.owner}}" id="planetBalanceSlider" type="range" value="{{planet.terraformPercent}}" on-input="onPlanetGrowthChanged"/>
         <img src="./js/res/img/icon-terraform.png" />
     </div>
     <div class="well fleet-well">
