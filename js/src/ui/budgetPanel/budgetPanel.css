@@ -16,7 +16,7 @@
 }
 
 .planet-well{
-    height: 67%;
+    height: 77%;
 }
 
 .planet-well .list-group img{
@@ -35,7 +35,17 @@
     font-size: 8px;
 }
 
-.top-sliders{
+.budget-balance-slider img{
+    display: inline-block;
+    width: 15%;
+}
+.budget-balance-slider input{
+    display: inline-block !important;
+    width: 50% !important;
+    vertical-align: middle;
+}
+.budget-balance-slider{
+    margin-top: 10px;
     margin-bottom: 10px;
 }
 

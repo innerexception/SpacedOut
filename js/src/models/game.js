@@ -144,6 +144,8 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.gameInstance.planetClickedSignal = new Phaser.Signal();
             this.gameInstance.planetClickedSignal.add(this.planetPanel.onPlanetClicked, this.planetPanel);
             this.gameInstance.planetClickedSignal.add(this.galaxy.onPlanetClicked, this.galaxy);
+            this.gameInstance.planetToggleSignal = new Phaser.Signal();
+            this.gameInstance.planetToggleSignal.add(this.planetPanel.toggle, this.planetPanel);
             this.gameInstance.techPanelSignal = new Phaser.Signal();
             this.gameInstance.techPanelSignal.add(this.techPanel.toggle, this.techPanel);
             this.gameInstance.budgetPanelSignal = new Phaser.Signal();
@@ -152,6 +154,9 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.gameInstance.messagePanelSignal.add(this.messagePanel.toggle, this.messagePanel);
             this.gameInstance.shipBuilderPanelSignal = new Phaser.Signal();
             this.gameInstance.shipBuilderPanelSignal.add(this.shipBuilderPanel.toggle, this.shipBuilderPanel);
+            this.gameInstance.endTurnSignal = new Phaser.Signal();
+            this.gameInstance.endTurnSignal.add(this.galaxy.onEndTurn, this.galaxy);
+
             console.log('init panels done.');
             this.inGame = true;
             this.gameInstance.camera.focusOnXY(1000,1000);

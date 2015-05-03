@@ -23,10 +23,7 @@ define(['ractive', 'rv!/spacedout/js/src/ui/planetPanel/planetPanel.html', 'css!
 
             this._ractive.on({
                 onPlanetGrowthChanged: function(event){
-                    console.log('planet growth changed...');
-                },
-                onPlanetMiningChanged: function(event){
-                    console.log('planet mining changed...');
+                    self._ractive.data.planet.setTerraformPercent(event.node.value);
                 },
                 onFleetSelected: function(event){
                     console.log('fleet selected...');
@@ -46,6 +43,10 @@ define(['ractive', 'rv!/spacedout/js/src/ui/planetPanel/planetPanel.html', 'css!
                 this._dom.className = this._dom.className.replace('planetPanelOut', '');
                 this._dom.className = [this._dom.className, 'planetPanelIn'].join(' ');
                 this.isVisible = true;
+            },
+            toggle: function(){
+                if(this.isVisible) this.transitionFrom();
+                else this.transitionTo();
             },
             onPlanetClicked: function(planet){
                 this._ractive.set('planet', planet);

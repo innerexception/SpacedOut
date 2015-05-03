@@ -21,8 +21,9 @@ function(Ractive, budgetPanelTemplate){
         var self = this;
 
         this._ractive.on({
-            onPlanetBudgetChanged: function(event){
-                console.log('planet budget changed...');
+            onBudgetBalanceChanged: function(event){
+                self._ractive.data.player.setTechPercent(event.node.value);
+                self._ractive.set('player', galaxy.clientPlayer);
             }
         })
     };

@@ -3,7 +3,7 @@ define(['ractive', 'rv!/spacedout/js/src/ui/taskBar/taskBar.html', 'css!/spacedo
         var taskBar = function (galaxy) {
             var targetDiv = document.createElement('div');
             targetDiv.id = 'taskBar';
-            targetDiv.className = 'container taskBarOut';
+            targetDiv.className = 'taskBarOut';
             galaxy.dom.appendChild(targetDiv);
             this.galaxy = galaxy;
             this._dom = targetDiv;
@@ -27,6 +27,12 @@ define(['ractive', 'rv!/spacedout/js/src/ui/taskBar/taskBar.html', 'css!/spacedo
                 },
                 onBuilderClicked: function(event){
                     self.galaxy.gameInstance.shipBuilderPanelSignal.dispatch();
+                },
+                onPlanetClicked: function(event){
+                    self.galaxy.gameInstance.planetToggleSignal.dispatch();
+                },
+                onEndTurnClicked: function(event){
+                    self.galaxy.gameInstance.endTurnSignal.dispatch();
                 }
             })
         };

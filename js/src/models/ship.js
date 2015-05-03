@@ -8,6 +8,8 @@ define(['lodash'], function(_){
         this.spriteGroup = null;
         this.owner = player;
         this.gameInstance = gameInstance;
+        this.destination = null;
+        this.distanceToDestination = null;
         this._setLocation(planet);
    };
 
@@ -32,12 +34,26 @@ define(['lodash'], function(_){
                this.spriteGroup.destroy(true);
            }
        },
+       setLocation: function(planet){
+           this.destination = null;
+           this.distanceToDestination = null;
+           this._setLocation(planet);
+           if(!planet.owner && this.type === 'colony'){
+               planet.setNewOwner(this.owner);
+           }
+           else if(planet.owner.name != this.owner.name){
+               //TODO
+               //planet.queueShipForCombat(this);
+           }
+       },
        _setLocation: function(planet){
            this._destroySpritesAndGroup();
 
-           //draws the ship orbiting the planet
+           //draws the ship warping in and orbiting the planet
            this._createShipSpriteGroup(planet.position.x-20,
                planet.position.y+(Math.random()*60), 0.2);
+
+           //TODO add warping in animation here:
 
            this.spriteGroup.tween = this.gameInstance.add.tween(this.spriteGroup)
                .to({x: planet.position.x+40, y: planet.position.y+(Math.random()*60) }, 10000, Phaser.Easing.Linear.None)

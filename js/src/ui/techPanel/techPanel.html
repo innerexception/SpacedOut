@@ -1,21 +1,21 @@
 <div class="inner-panel">
     <img class="well research-label" src="./js/res/img/icon_tech.png" />
     <div class="research-levels">
-        <div><img src="./js/res/img/icon-range.png"/>{{player.range}}</div>
-        <div><img src="./js/res/img/icon-speed.png"/>{{player.speed}}</div>
-        <div><img src="./js/res/img/icon-shield.png"/>{{player.shield}}</div>
-        <div><img src="./js/res/img/icon-weapon.png"/>{{player.weapon}}</div>
-        <div><img src="./js/res/img/icon-mini.png"/>{{player.mini}}</div>
+        <div><img src="./js/res/img/icon-range.png"/>{{player.techs.range.level}}</div>
+        <div><img src="./js/res/img/icon-speed.png"/>{{player.techs.speed.level}}</div>
+        <div><img src="./js/res/img/icon-shield.png"/>{{player.techs.shield.level}}</div>
+        <div><img src="./js/res/img/icon-weapon.png"/>{{player.techs.weapon.level}}</div>
+        <div><img src="./js/res/img/icon-mini.png"/>{{player.techs.mini.level}}</div>
         <div><img src="./js/res/img/icon-radical.png"/>X</div>
     </div>
     <div class="research-summary">
         <div class="slider-panel">
-            <input type="range" on-change="onRangeSpendingChanged" />
-            <input type="range" on-change="onSpeedSpendingChanged" />
-            <input type="range" on-change="onShieldSpendingChanged" />
-            <input type="range" on-change="onWeaponSpendingChanged" />
-            <input type="range" on-change="onMiniSpendingChanged" />
-            <input type="range" on-change="onRadicalSpendingChanged" />
+            <input type="range" value="{{player.techs.range.rate}}" on-change="onRangeSpendingChanged" />
+            <input type="range" value="{{player.techs.speed.rate}}" on-change="onSpeedSpendingChanged" />
+            <input type="range" value="{{player.techs.shield.rate}}" on-change="onShieldSpendingChanged" />
+            <input type="range" value="{{player.techs.weapon.rate}}" on-change="onWeaponSpendingChanged" />
+            <input type="range" value="{{player.techs.mini.rate}}" on-change="onMiniSpendingChanged" />
+            <input type="range" value="{{player.techs.radical.rate}}" on-change="onRadicalSpendingChanged" />
         </div>
         <div class="slider-icons-panel">
             <img style="padding-left:29px;" src="./js/res/img/icon-range.png"/>

@@ -11,7 +11,7 @@ define(['worldGen'], function(worldGen){
        this.gravity = gravity;
        this.owner = null;
        this.metal = metal;
-       this.metalChange = 0;
+       this.miningChange = 0;
        this.gameInstance = gameInstance;
        this.sprites = this._getPlanetSprites(temp, gravity, metal, position);
        this.bannerSprite = null;
@@ -27,14 +27,29 @@ define(['worldGen'], function(worldGen){
            this.owner = player;
            if(this.population === 0) this._setPopulation(7500);
            this.bannerSprite = this.gameInstance.add.sprite(this.position.x-10, this.position.y-10, this.name+'_banner');
+           //TODO: colonization animation here
            return this;
+       },
+       setTerraformPercent: function(percent){
+           this.terraformPercent = percent;
+           this.tempChange = ((this.terraformPercent/100) * ((this.budgetPercent/100) * this.owner.moneyIncome)) /1000; // = Total terra cash / cash per degree of change
+           this.miningPercent = 100-percent;
+           this.miningChange = (this.miningPercent/100) * (this.budgetPercent/100 * this.owner.moneyIncome); //1:1 metal extraction rate
+       },
+       refreshResources: function(){
+           this.temp += this.tempChange;
+           this.metal -= this.miningChange;
+           this.populationGrowth = this.temp <= 72 ? (this.temp/72) * 1000 : (72/this.temp)*1000;
+           this.population += this.populationGrowth;
+           this._setPopulation(this.population);
        },
        _setPopulation: function(number){
            this.population = number;
-           this.income = number * 2.5;
+           var oldIncome = this.income;
+           this.income = number * 0.5;
+           this.incomeGrowth = (this.income / oldIncome).toFixed(0);
        },
        _onPlanetClick: function(){
-           //make it active with halo around it plz kthxbai
            this.gameInstance.planetClickedSignal.dispatch(this);
        },
        _getPlanetSprites: function(temp, gravity, metal, position){

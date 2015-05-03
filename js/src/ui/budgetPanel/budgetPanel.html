@@ -1,14 +1,9 @@
 <div class="inner-panel">
     <div class="budget-label"><img src="{{player.bannerPath}}"/></div>
-    <div class="top-sliders">
-        <div>
-            <img src="./js/res/img/icon_budget.png" />
-            <input id="capitalSlider" type="range" on-change="onCapitalBudgetChanged"/>
-        </div>
-        <div>
-            <img src="./js/res/img/icon_tech.png" />
-            <input id="techSlider" type="range" on-change="onTechBudgetChanged"/>
-        </div>
+    <div class="budget-balance-slider">
+        <img src="./js/res/img/icon_budget.png" />
+        <input id="planetBalanceSlider" type="range" value="{{player.techRate}}" on-change="onBudgetBalanceChanged"/>
+        <img src="./js/res/img/icon_tech.png" />
     </div>
     <div class="well planet-well">
         <div class="budget-label"><img src="./js/res/img/icon-gravity.png" /></div>

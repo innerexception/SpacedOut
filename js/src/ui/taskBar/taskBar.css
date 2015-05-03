@@ -1,9 +1,8 @@
 #taskBar{
     transition: top 600ms;
     position: absolute;
-    left: 30%;
-    top: -80px;
-    width: 325px !important;
+    left: 25%;
+    top: -75px;
 }
 #taskBar:hover{
     top: 8%;

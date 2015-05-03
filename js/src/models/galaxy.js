@@ -43,9 +43,31 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
                }
            }
        },
-       endTurnClicked: function() {
-
+       onEndTurn: function() {
+           //TODO: update ship moves and battles, metal income rates and savings, terra rates, money income and savings, tech levels and increases
+           this.clientPlayer.getIncome();
+           this.clientPlayer.refreshTechs();
+           this.updateShips();
+           this.resolveCombats();
        },
+
+       updateShips: function(){
+           _.each(this.ships, function(ship){
+               if(ship.destination){
+                   ship.distanceToDestination -= ship.speed;
+                   if(ship.distanceToDestination <= 0){
+                       ship.setLocation(ship.destination);
+                   }
+               }
+           });
+       },
+
+       resolveCombats: function(){
+           _.each(this.planets, function(planet){
+               planet.resolveCombat();
+           });
+       },
+
        planetClicked: function() {
 
        },
@@ -73,8 +95,7 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
            var player = new Player(homeWorld, name, isAi, difficulty);
 
            //get initial ships
-           player.ships = this._getInitialShips(homeWorld, player, difficulty);
-           this.ships = this.ships.concat(player.ships);
+           this.ships = this.ships.concat(this._getInitialShips(homeWorld, player, difficulty));
            return player;
        },
        generatePlanets: function(shape, size, spread){
