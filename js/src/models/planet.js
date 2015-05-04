@@ -74,7 +74,7 @@ define(['worldGen'], function(worldGen){
        },
        _onPlanetClick: function(){
            this.gameInstance.planetClickedSignal.dispatch(this);
-           this.gameInstance.planetDragStarted = this.selectedFleet;
+           this.gameInstance.planetDragStartedFleet = this.selectedFleet;
        },
        _getPlanetSprites: function(temp, gravity, metal, position){
            //Grab updated canvas from generator

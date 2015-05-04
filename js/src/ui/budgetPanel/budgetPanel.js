@@ -58,6 +58,9 @@ function(Ractive, budgetPanelTemplate){
                 if(!this.isVisible) this.transitionTo();
                 else this.transitionFrom();
             }
+        },
+        refreshPlayer: function(){
+            this._ractive.set('player', this.galaxy.clientPlayer);
         }
     };
 

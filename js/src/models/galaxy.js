@@ -13,12 +13,15 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
                 this.gameInstance.make.sprite(0, 0, 'bigstar')],
             stars: []
         };
+        this.gameInstance.shipPathContext = this.gameInstance.add.graphics();
    };
 
    galaxy.prototype = {
        update: function() {
-           if(this.gameInstance.planetDragStarted){
-               //TODO draw arrow from planet to cursor
+           if(this.gameInstance.planetDragStartedFleet){
+               this.drawLine(this.planetDragStartedFleet.location.position.x, this.planetDragStartedFleet.location.position.y,
+                             this.gameInstance.input.mousePointer.position.x, this.gameInstance.input.mousePointer.position.y,
+                             this.gameInstance.shipPathContext, true);
            }
            if(this.StarField.stars.length > 0){
                for (var i = 0; i < 300; i++)
@@ -46,13 +49,23 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
                }
            }
        },
-
-       endShipDrag: function() {
-           //TODO
-           //if this.input.mousePointer.position overlaps any planet sprite
-           //this.planetDragStarted.setDestination(//planet you were over);
+       drawLine: function(x1, y1, x2, y2, context, clear){
+           if(clear) context.clear();
+           context.lineStyle(3, 0xff0000, 0.5);
+           context.moveTo(x1, y1);
+           context.lineTo(x2, y2);
        },
+       endShipDrag: function() {
+           var destinationPlanet = _.filter(this.planets, function(planet){
+               return planet.sprites[0].getBounds().contains(
+                   this.gameInstance.input.mousePointer.position.x,
+                   this.gameInstance.input.mousePointer.position.y);
+           }, this)[0];
 
+           if(destinationPlanet) this.gameInstance.planetDragStartedFleet.setDestination(destinationPlanet);
+
+           this.gameInstance.planetDragStartedFleet = null;
+       },
        onEndTurn: function(panel) {
            if(panel==='end'){
                this.clientPlayer.getIncomeAndResearch();

@@ -51,6 +51,21 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             if(this.galaxy) {
                 this.galaxy.update();
                 this.galaxy.isScrolling = false;
+                var pointerPosition = this.gameInstance.input.mousePointer.position;
+                var camera = this.gameInstance.camera;
+
+                if(pointerPosition.x >= 775 && camera.x <= 1000){
+                    camera.x+=5;
+                }
+                if(pointerPosition.y >= 575 && camera.y <= 1000){
+                    camera.y+=5;
+                }
+                if(pointerPosition.x < 35 && camera.x > 0){
+                    camera.x-=5;
+                }
+                if(pointerPosition.y < 35 && camera.y > 0){
+                    camera.y-=5;
+                }
             }
         },
 
@@ -74,19 +89,10 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
 
         mousePanStop: function(){
             this.startMapDrag = false;
-            this.planetDragDoneSignal.dispatch();
+            if(this.planetDragStartedFleet) this.planetDragDoneSignal.dispatch();
         },
 
         mousePan: function(){
-            if(this.startMapDrag){
-                if(this.camera.lastX > this.input.mousePointer.position.x) this.camera.x = this.camera.x+3;
-                else this.camera.x = this.camera.x-3;
-                this.camera.lastX = this.input.mousePointer.position.x;
-
-                if(this.camera.lastY > this.input.mousePointer.position.y) this.camera.y = this.camera.y+3;
-                else this.camera.y = this.camera.y-3;
-                this.camera.lastY = this.input.mousePointer.position.y;
-            }
             //console.log(this.input.mousePointer.position.x + 'x '+ this.input.mousePointer.position.y + 'y');
         },
 
