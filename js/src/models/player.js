@@ -46,27 +46,28 @@ define(['lodash'], function(_){
            this.refreshTechs();
        },
        refreshTechs: function(){
-           var techMoney = this.moneyIncome * (this.techRate /100);
-           this.money = this.moneyIncome - techMoney;
+           var techMoney = this.moneyIncome * (this.techRate / 100);
+           this.money += this.moneyIncome * (this.cashRate / 100);
            _.forOwn(this.techs, function(tech, name){
                tech.progress += (techMoney * (tech.rate/100)) / 500;  //500 per point
                if(tech.progress >= 100){
                    tech.progress = 0;
                    tech.level++;
-                   this.galaxy.messageSignal.dispatch('You discovered: '+this.getTechName(name, tech.level));
+                   this.galaxy.gameInstance.messageSignal.dispatch('You discovered: '+this.getTechName(name, tech.level));
                }
            }, this);
        },
        setTechPercent: function(percent){
-           this.techRate = percent;
-           this.cashRate = 100-percent;
-           console.log('techrate is now '+percent + ' cashrate is now '+this.cashRate);
+           this.setPlanetBudgetPercent('techRate', percent);
+       },
+       setCashPercent: function(percent){
+           this.setPlanetBudgetPercent('cashRate', percent);
        },
        setPlanetBudgetPercent: function(planet, percent){
            var delta = 100-percent;
            var planets = this.getPlanets();
-           var subtractions = parseFloat((delta / (planets.length-1)).toFixed(1));
-           var leftOvers = delta % planets.length-1;
+           var subtractions = parseFloat((delta / (planets.length+1)).toFixed(1));
+           var leftOvers = delta % planets.length+1; //length-1 plus the two sliders
 
            if(subtractions > 0){
                _.each(planets, function(planetObj){
@@ -76,22 +77,42 @@ define(['lodash'], function(_){
                        planetObj.refreshTerraformNumbers();
                    }
                }, this);
-               if(planet !== this.homeWorld && leftOvers !== 0){
-                   //Excess goes to the homeworld
-                   this.homeWorld.budgetPercent += leftOvers;
-                   this.homeWorld.budgetAmount = Math.round(this.moneyIncome * (this.homeWorld.budgetPercent/100));
+               if(leftOvers !== 0){
+                   //Then goes to cash
+                   this.cashRate += leftOvers;
                }
-               else if(delta % planets.length !== 0){
-                   //Then goes to random planet
-                   planet.budgetPercent += leftOvers;
+
+               if(planet === 'techRate'){
+                   this.techRate = percent;
+                   this.cashRate = subtractions;
+                   this.lastTechRate = percent;
                }
-               planet.lastRate = planet.budgetPercent;
-               planet.budgetAmount = Math.round(this.moneyIncome * (planet.budgetPercent/100));
+               else if(planet === 'cashRate'){
+                   this.cashRate = percent;
+                   this.techRate = subtractions;
+                   this.lastCashRate = percent;
+               }
+               else{
+                   this.cashRate = subtractions;
+                   this.techRate = subtractions;
+                   planet.lastRate = planet.budgetPercent;
+                   planet.budgetAmount = Math.round(this.moneyIncome * (planet.budgetPercent/100));
+                   planet.refreshTerraformNumbers();
+               }
            }
            else{
-               planet.budgetPercent = planet.lastRate
+               if(planet === 'techRate'){
+                   this.techRate = this.lastTechRate;
+               }
+               else if(planet === 'cashRate'){
+                   this.cashRate = this.lastCashRate;
+               }
+               else{
+                   planet.budgetPercent = planet.lastRate;
+                   planet.refreshTerraformNumbers();
+               }
            }
-           planet.refreshTerraformNumbers();
+
        },
        getTechName: function(name, level){
            //TODO

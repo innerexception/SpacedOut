@@ -22,13 +22,20 @@ function(Ractive, budgetPanelTemplate){
         var self = this;
 
         this._ractive.on({
-            onBudgetBalanceChanged: function(event){
+            onCapitalBudgetChanged: function(event){
+                self._ractive.data.player.setCashPercent(event.node.value);
+                self._ractive.set('player', galaxy.clientPlayer);
+                self._ractive.set('planets', galaxy.clientPlayer.getPlanets());
+            },
+            onTechBudgetChanged: function(event){
                 self._ractive.data.player.setTechPercent(event.node.value);
                 self._ractive.set('player', galaxy.clientPlayer);
+                self._ractive.set('planets', galaxy.clientPlayer.getPlanets());
             },
             onPlanetBudgetChanged: function(event){
                 galaxy.clientPlayer.setPlanetBudgetPercent(event.context, event.node.value);
                 self._ractive.set('planets', galaxy.clientPlayer.getPlanets());
+                self._ractive.set('player', galaxy.clientPlayer);
             }
         })
     };

@@ -54,10 +54,9 @@
     height: 25px;
 }
 
-.budget-panel .top-sliders input{
+.budget-panel .top-sliders div{
     display: inline-block;
     vertical-align: middle;
-    width: 73%;
 }
 
 .budget-label{
