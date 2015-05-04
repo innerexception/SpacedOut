@@ -20,6 +20,7 @@ define(['worldGen'], function(worldGen){
        this.budgetPercent = 0;
        this.budgetAmount = 0;
        this.fleets = [];
+       this.selectedFleet = null;
    };
    planet.prototype = {
        setNewOwner: function(player){
@@ -49,6 +50,11 @@ define(['worldGen'], function(worldGen){
            this._setPopulationGrowth();
            this.gameInstance.planetUpdatedSignal.dispatch(this);
        },
+       setSelectedFleet: function(fleetId){
+           this.selectedFleet = _.filter(this.fleets, function(fleet){
+               return fleet.id === fleetId;
+           })[0];
+       },
        extractResources: function(){
            this.temp = parseFloat((this.tempChange + this.temp).toFixed(1));
            this.metal -= this.miningChange;
@@ -68,6 +74,7 @@ define(['worldGen'], function(worldGen){
        },
        _onPlanetClick: function(){
            this.gameInstance.planetClickedSignal.dispatch(this);
+           this.gameInstance.planetDragStarted = this.selectedFleet;
        },
        _getPlanetSprites: function(temp, gravity, metal, position){
            //Grab updated canvas from generator

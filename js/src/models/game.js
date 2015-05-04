@@ -3,27 +3,6 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
     function(Phaser, _, Candy, BudgetPanel, GameSetupModal,
              MessagePanel, PlanetPanel, TechPanel, Galaxy, TaskBarPanel, ShipBuilderPanel){
 
-    ////Shitty Globals for Google WebFonts
-    ////  The Google WebFont Loader will look for this object, so create it before loading the script.
-    //WebFontConfig = {
-    //    //  'active' means all requested fonts have finished loading
-    //    //  We set a 1 second delay before calling 'createText'.
-    //    //  For some reason if we don't the browser cannot render the text the first time it's created.
-    //    active: function () {
-    //        window.setTimeout(function(){window.fontLibraryReady = true; console.log('fonts loaded!')}, 1000);
-    //    },
-    //
-    //    //  The Google Fonts we want to load (specify as many as you like in the array)
-    //    google: {
-    //        families: ['Press Start 2P']
-    //    }
-    //};
-    //WebFont.load({
-    //    google: {
-    //        families: ['Press Start 2P']
-    //    }
-    //});
-
     var OutSpacedApp = function(h, w, mode, targetElement){
         var loadingSignal = new Phaser.Signal();
         loadingSignal.add(this.appLoad, this);
@@ -47,8 +26,6 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             //Load all assets here
             this.load.image('alphaMask', 'js/res/img/alphaMask.png');
             this.load.image('tinystar', 'js/res/img/tinyStar.png');
-           //  Load the Google WebFont Loader script
-            //this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
         },
 
         phaserLoad: function () {
@@ -64,11 +41,6 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             var that = this;
             window.setTimeout(function(){
                 that.setUpIntro();}, 1000);
-            //
-            //var that = this;
-            //this.fontInterval = window.setInterval(function(){
-            //    if(window.fontLibraryReady)that.setUpIntro();
-            //}, 500);
         },
 
         update: function () {
@@ -102,6 +74,7 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
 
         mousePanStop: function(){
             this.startMapDrag = false;
+            this.planetDragDoneSignal.dispatch();
         },
 
         mousePan: function(){
@@ -155,6 +128,8 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.gameInstance.messageSignal.add(this.messagePanel.onMessageRecieved, this.messagePanel);
             this.gameInstance.planetUpdatedSignal = new Phaser.Signal();
             this.gameInstance.planetUpdatedSignal.add(this.planetPanel.refreshPanel, this.planetPanel);
+            this.gameInstance.planetDragDoneSignal = new Phaser.Signal();
+            this.gameInstance.planetDragDoneSignal.add(this.galaxy.endShipDrag, this.galaxy);
             console.log('init panels done.');
             this.inGame = true;
             this.gameInstance.camera.focusOnXY(1000,1000);

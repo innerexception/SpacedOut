@@ -116,6 +116,7 @@ define(['lodash'], function(_){
        },
        getTechName: function(name, level){
            //TODO
+           return this.Constants.TechNames[name][level];
        },
        getPlanets: function(){
            return _.filter(this.galaxy.planets, function(planet){
@@ -179,5 +180,41 @@ define(['lodash'], function(_){
            return locked;
        }
    };
+
+   player.prototype.Constants = {
+       TechNames: {
+           range: {
+               1: 'external tanks',
+               2: 'solar sail',
+               3: 'fuel scoop'
+           },
+           speed: {
+               1: 'afterburner',
+               2: 'ion drive',
+               3: 'nuclear drive'
+           },
+           shield: {
+               1: 'ablative plating',
+               2: 'reactive hull',
+               3: 'ceramic reflective armor'
+           },
+           weapon: {
+               1: 'gatling gun',
+               2: 'rail gun',
+               3: 'emp gun'
+           },
+           mini: {
+               1: 'nano transistors',
+               2: 'probability matrix',
+               3: 'gel packs'
+           },
+           radical: {
+               1: 'bio ship',
+               2: 'tech bump',
+               3: 'armageddon'
+           }
+       }
+   };
+
    return player;
 });

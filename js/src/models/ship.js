@@ -34,6 +34,14 @@ define(['lodash'], function(_){
                this.spriteGroup.destroy(true);
            }
        },
+       setDestination: function(planet){
+           this.destination = planet;
+           this.distanceToDestination = this.galaxy.gameInstance.physics.arcade.distanceBetween(this.location.sprites[0], planet.sprites[0]);
+           this._startTravel();
+       },
+       _startTravel: function(){
+           //TODO add warp out animation
+       },
        setLocation: function(planet){
            this.destination = null;
            this.distanceToDestination = null;

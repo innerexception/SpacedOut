@@ -26,7 +26,7 @@ define(['ractive', 'rv!/spacedout/js/src/ui/planetPanel/planetPanel.html', 'css!
                     self._ractive.data.planet.setTerraformPercent(event.node.value);
                 },
                 onFleetSelected: function(event){
-                    console.log('fleet selected...');
+                    self._ractive.data.planet.setSelectedFleet(event.node.attribute['data-id']);
                 }
             })
         };

@@ -17,6 +17,9 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
 
    galaxy.prototype = {
        update: function() {
+           if(this.gameInstance.planetDragStarted){
+               //TODO draw arrow from planet to cursor
+           }
            if(this.StarField.stars.length > 0){
                for (var i = 0; i < 300; i++)
                {
@@ -43,9 +46,15 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
                }
            }
        },
+
+       endShipDrag: function() {
+           //TODO
+           //if this.input.mousePointer.position overlaps any planet sprite
+           //this.planetDragStarted.setDestination(//planet you were over);
+       },
+
        onEndTurn: function(panel) {
            if(panel==='end'){
-               //TODO: update ship moves and battles, metal income rates and savings, terra rates, money income and savings, tech levels and increases
                this.clientPlayer.getIncomeAndResearch();
                this.updateShips();
                this.resolveCombats();
@@ -67,13 +76,6 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
            _.each(this.planets, function(planet){
                planet.resolveCombat();
            });
-       },
-
-       beginShipDrag: function() {
-
-       },
-       endShipDrag: function() {
-
        },
 
        initializePlayer: function(name, isAi, difficulty){

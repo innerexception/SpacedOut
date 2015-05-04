@@ -46,7 +46,6 @@ function(Ractive, budgetPanelTemplate){
             this.isVisible = false;
             this._dom.className = this._dom.className.replace('budgetPanelIn', '');
             this._dom.className = [this._dom.className, 'budgetPanelOut'].join(" ");
-
         },
         transitionTo: function(){
             this.isVisible = true;
