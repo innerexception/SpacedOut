@@ -6,6 +6,7 @@ define(['lodash'], function(_){
        this.galaxy = galaxy;
        this.moneyIncome = 7500;
        this.metalIncome = 0;
+       this.fleets = [];
        //set initial resources / rates / techs
        switch(difficulty){
            case 0:

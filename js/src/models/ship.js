@@ -1,6 +1,7 @@
 define(['lodash'], function(_){
    var ship = function(planet, player, type, range, speed, weapon, shield, gameInstance){
         this.type = type;
+        this.id = 'ship_'+Math.random();
         this.range = range;
         this.speed = speed;
         this.weapon = weapon;
@@ -10,7 +11,7 @@ define(['lodash'], function(_){
         this.gameInstance = gameInstance;
         this.destination = null;
         this.distanceToDestination = null;
-        this._setLocation(planet);
+        this.setLocation(planet);
    };
 
    ship.prototype = {
@@ -33,14 +34,6 @@ define(['lodash'], function(_){
                this.spriteGroup.tween.destroy();
                this.spriteGroup.destroy(true);
            }
-       },
-       setDestination: function(planet){
-           this.destination = planet;
-           this.distanceToDestination = this.galaxy.gameInstance.physics.arcade.distanceBetween(this.location.sprites[0], planet.sprites[0]);
-           this._startTravel();
-       },
-       _startTravel: function(){
-           //TODO add warp out animation
        },
        setLocation: function(planet){
            this.destination = null;
@@ -71,7 +64,6 @@ define(['lodash'], function(_){
            this.spriteGroup.tween.start();
            this.orbitIn = true;
            this.location = planet;
-           planet.fleets.push(this);
        },
        _onOrbitComplete: function(target, tween){
            if(this.orbitIn){

@@ -16,7 +16,7 @@
         <img src="./js/res/img/icon-terraform.png" />
     </div>
     <div class="well fleet-well">
-        Fleets
+        <div on-click="onFleetsExpand">Fleets</div>
         <div class="list-group">
             {{#planet.fleets:i}}
                 {{>fleetItem}}
@@ -28,6 +28,6 @@
 
 <!-- {{>fleetItem}} -->
 <div class="well">
-    <div data-id="{{id}}" on-click="onFleetSelected">{{type}}</div>
+    <div data-id="{{id}}" class="{{isSelected ? 'selected-fleet' : ''}}" on-dblclick="onFleetSplit" on-click="onFleetSelected">{{name}}</div>
 </div>
 <!-- {{/fleetItem}} -->

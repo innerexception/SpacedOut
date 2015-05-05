@@ -17,6 +17,7 @@ require.config({
         'player': 'src/models/player',
         'ship': 'src/models/ship',
         'galaxy': 'src/models/galaxy',
+        'fleet': 'src/models/fleet',
 
         'gameSetupModal': 'src/ui/gameSetupModal/gameSetupModal',
         'messagePanel': 'src/ui/messagePanel/messagePanel',

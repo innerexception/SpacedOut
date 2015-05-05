@@ -93,7 +93,7 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
         },
 
         mousePan: function(){
-            //console.log(this.input.mousePointer.position.x + 'x '+ this.input.mousePointer.position.y + 'y');
+            //console.log(this.input.worldX + 'x '+ this.input.worldY + 'y');
         },
 
         mouseZoom: function(){
@@ -105,6 +105,7 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
                 this.camera.scale.x -= 0.005;
                 this.camera.scale.y -= 0.005;
             }
+            console.log(this.camera.scale.x + ', '+this.camera.scale.y);
         },
 
         galaxyInitFinished: function(){
@@ -138,7 +139,7 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.gameInstance.planetDragDoneSignal.add(this.galaxy.endShipDrag, this.galaxy);
             console.log('init panels done.');
             this.inGame = true;
-            this.gameInstance.camera.focusOnXY(1000,1000);
+            this.gameInstance.camera.focusOnXY(0,0);
             this.gameInstance.camera.scale.x = 0.6;
             this.gameInstance.camera.scale.y = 0.6;
             this.taskBarPanel._dom.children[1].style.display = 'inherit';
