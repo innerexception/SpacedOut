@@ -94,50 +94,40 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                    this.gameInstance.input.mousePointer.position.x,
                    this.gameInstance.input.mousePointer.position.y);
            }, this)[0];
-
            this.gameInstance.shipPathContext.clear();
-
            if(destinationPlanet) this.gameInstance.planetDragStartedFleet.setDestination(destinationPlanet);
-
-           this.gameInstance.planetDragStartedFleet = null;
        },
        onEndTurn: function(panel) {
            if(panel==='end'){
                this.clientPlayer.getIncomeAndResearch();
-               this.updateShips();
+               this.updateFleets();
                this.resolveCombats();
            }
        },
-       onZoomToggle: function(panel){
-           if(panel === 'zoom'){
-               //lol
-               if(this.gameInstance.stageGroup.scale.x === 0.5){
-                   this.gameInstance.stageGroup.scale.setTo(1);
-               }
-               else if(this.gameInstance.stageGroup.scale.x === 1){
-                   this.gameInstance.stageGroup.scale.setTo(1.5);
-               }
-               else{
-                   this.gameInstance.stageGroup.scale.setTo(0.5);
-               }
-               var bounds       = this.gameInstance.stageGroup.bounds;
-               var cameraBounds = this.gameInstance.camera.bounds;
-               cameraBounds.x      = bounds.width  * (1 - this.gameInstance.stageGroup.scale.x) / 2;
-               cameraBounds.y      = bounds.height * (1 - this.gameInstance.stageGroup.scale.y) / 2;
-               cameraBounds.width  = bounds.width  * this.gameInstance.stageGroup.scale.x;
-               cameraBounds.height = bounds.height * this.gameInstance.stageGroup.scale.y;
-               console.log(this.gameInstance.camera.scale.x + ', '+this.gameInstance.camera.scale.y);
-               this.gameInstance.camera.focusOnXY(0,0);
-           }
-       },
-       updateShips: function(){
-           _.each(this.ships, function(ship){
-               if(ship.destination){
-                   ship.distanceToDestination -= ship.speed;
-                   if(ship.distanceToDestination <= 0){
-                       ship.setLocation(ship.destination);
+       updateFleets: function(){
+           _.each(this.planets, function(planet){
+               _.each(planet.fleets, function(fleet){
+                   if(fleet.destination) fleet.distanceToDestination -= fleet.speed;
+                   _.each(fleet.ships, function (ship) {
+                       ship.drawAtLocation(fleet.destination.position.x - fleet.distanceToDestination,
+                                           fleet.destination.position.y - fleet.distanceToDestination,
+                                           {orbit: !fleet.destination || fleet.distanceToDestination <= 0,
+                                            warpIn: fleet.destination && fleet.distanceToDestination <= 0,
+                                            move: fleet.distanceToDestination > 0,
+                                            warpOut: fleet.queuedForTravel});
+                   });
+                   if(fleet.destination && fleet.distanceToDestination <= 0){
+                       fleet.setLocation(fleet.destination);
+                       delete fleet.destination;
+                       fleet.distanceToDestination=0;
                    }
-               }
+                   if(fleet.queuedForTravel){
+                       //Just left planet
+                       fleet.location.removeFleet(fleet);
+                       fleet.location = null;
+                   }
+                   fleet.queuedForTravel = false;
+               });
            });
        },
 

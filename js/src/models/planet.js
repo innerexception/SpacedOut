@@ -113,6 +113,8 @@ define(['worldGen'], function(worldGen){
 
            lightSprite.inputEnabled = true;
            lightSprite.events.onInputDown.add(this._onPlanetClick, this);
+           lightSprite.events.onInputOver.add(this._onPlanetDragOver, this);
+           lightSprite.events.onInputOut.add(this._onPlanetDragOut, this);
 
            //Create sprite mask
            if(this.mask) {
@@ -140,6 +142,16 @@ define(['worldGen'], function(worldGen){
            sprite2.tween.start();
 
            return [sprite, sprite2, lightSprite];
+       },
+       _onPlanetDragOver: function(){
+           if(this.gameInstance.planetDragStartedFleet){
+               //TODO draw halo over targeted planet
+           }
+       },
+       _onPlanetDragOut: function() {
+           if (this.gameInstance.planetDragStartedFleet) {
+               //TODO hide halo
+           }
        },
        _setPopulationGrowth: function(){
            this.populationGrowth = Math.round((this.temp <= 72 ? (this.temp/72) * 100 : (72/this.temp)*100));
