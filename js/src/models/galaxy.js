@@ -58,18 +58,20 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            var pos = context.toLocal({x:x1, y:y1});
            var pos2 = context.toLocal({x:x2, y:y2});
            var scaleCoef = 1;
-           if(this.gameInstance.stageGroup.scale.x === 0.5){
-               scaleCoef = 2;
-           }
-           else if(this.gameInstance.stageGroup.scale.x === 1.5){
-               scaleCoef = 0.66;
-           }
+
+           //if(this.gameInstance.stageGroup.scale.x === 0.5){
+           //    scaleCoef = 2;
+           //}
+           //else if(this.gameInstance.stageGroup.scale.x === 1.5){
+           //    scaleCoef = 0.66;
+           //}
+
+           scaleCoef = 1/this.gameInstance.stageGroup.scale.x;
 
            x1 = pos.x - (scaleCoef*this.gameInstance.camera.x);
            y1 = pos.y - (scaleCoef*this.gameInstance.camera.y);
            x2 = pos2.x - (scaleCoef*this.gameInstance.camera.x);
            y2 = pos2.y - (scaleCoef*this.gameInstance.camera.y);
-
 
            //
            //if(this.gameInstance.stageGroup.scale.x === 0.5){
@@ -118,13 +120,14 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                else{
                    this.gameInstance.stageGroup.scale.setTo(0.5);
                }
-               //var bounds       = this.gameInstance.stageGroup.bounds;
-               //var cameraBounds = this.gameInstance.camera.bounds;
-               //cameraBounds.x      = bounds.width  * (1 - this.gameInstance.stageGroup.scale.x) / 2;
-               //cameraBounds.y      = bounds.height * (1 - this.gameInstance.stageGroup.scale.y) / 2;
-               //cameraBounds.width  = bounds.width  * this.gameInstance.stageGroup.scale.x;
-               //cameraBounds.height = bounds.height * this.gameInstance.stageGroup.scale.y;
-               //console.log(this.gameInstance.camera.scale.x + ', '+this.gameInstance.camera.scale.y);
+               var bounds       = this.gameInstance.stageGroup.bounds;
+               var cameraBounds = this.gameInstance.camera.bounds;
+               cameraBounds.x      = bounds.width  * (1 - this.gameInstance.stageGroup.scale.x) / 2;
+               cameraBounds.y      = bounds.height * (1 - this.gameInstance.stageGroup.scale.y) / 2;
+               cameraBounds.width  = bounds.width  * this.gameInstance.stageGroup.scale.x;
+               cameraBounds.height = bounds.height * this.gameInstance.stageGroup.scale.y;
+               console.log(this.gameInstance.camera.scale.x + ', '+this.gameInstance.camera.scale.y);
+               this.gameInstance.camera.focusOnXY(0,0);
            }
        },
        updateShips: function(){

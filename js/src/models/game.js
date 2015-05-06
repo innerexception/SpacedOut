@@ -54,16 +54,16 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
                 var pointerPosition = this.gameInstance.input.mousePointer.position;
                 var camera = this.gameInstance.camera;
 
-                if(pointerPosition.x >= 775 && camera.x <= 1000){
+                if(pointerPosition.x >= (this.gameInstance.camera.view.width - 100) && camera.x <= this.gameInstance.stageGroup.width/2){
                     camera.x+=5;
                 }
-                if(pointerPosition.y >= 575 && camera.y <= 1000){
+                if(pointerPosition.y >= (this.gameInstance.camera.view.height - 100) && camera.y <= this.gameInstance.stageGroup.height/2){
                     camera.y+=5;
                 }
-                if(pointerPosition.x < 35 && camera.x > 0){
+                if(pointerPosition.x < (35) && camera.x > 0){
                     camera.x-=5;
                 }
-                if(pointerPosition.y < 35 && camera.y > 0){
+                if(pointerPosition.y < (35) && camera.y > 0){
                     camera.y-=5;
                 }
             }
@@ -94,7 +94,7 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
         },
 
         mousePan: function(){
-            console.log(this.input.worldX + 'x '+ this.input.worldY + 'y');
+            console.log(this.input.x + 'x '+ this.input.y + 'y');
         },
 
         mouseZoom: function(){
