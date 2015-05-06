@@ -51,14 +51,31 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             if(this.galaxy) {
                 this.galaxy.update();
                 this.galaxy.isScrolling = false;
+                var pointerPosition = this.gameInstance.input.mousePointer.position;
+                var camera = this.gameInstance.camera;
+
+                if(pointerPosition.x >= 775 && camera.x <= 1000){
+                    camera.x+=5;
+                }
+                if(pointerPosition.y >= 575 && camera.y <= 1000){
+                    camera.y+=5;
+                }
+                if(pointerPosition.x < 35 && camera.x > 0){
+                    camera.x-=5;
+                }
+                if(pointerPosition.y < 35 && camera.y > 0){
+                    camera.y-=5;
+                }
             }
         },
 
         setUpIntro: function () {
-            window.clearInterval(this.fontInterval);
 
             var galaxyInitFinishedSignal = new Phaser.Signal();
             galaxyInitFinishedSignal.add(this.galaxyInitFinished, this);
+
+            this.gameInstance.stageGroup = this.gameInstance.add.group();
+            this.gameInstance.stageGroup.bounds = Phaser.Rectangle.clone(this.gameInstance.world.bounds);
 
             this.galaxy = new Galaxy(this.gameInstance, galaxyInitFinishedSignal);
             this.gameSetupModal = new GameSetupModal(this.galaxy);
@@ -73,32 +90,28 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
         },
 
         mousePanStop: function(){
-            this.startMapDrag = false;
-            this.planetDragDoneSignal.dispatch();
+            if(this.planetDragStartedFleet) this.planetDragDoneSignal.dispatch();
         },
 
         mousePan: function(){
-            if(this.startMapDrag){
-                if(this.camera.lastX > this.input.mousePointer.position.x) this.camera.x = this.camera.x+3;
-                else this.camera.x = this.camera.x-3;
-                this.camera.lastX = this.input.mousePointer.position.x;
-
-                if(this.camera.lastY > this.input.mousePointer.position.y) this.camera.y = this.camera.y+3;
-                else this.camera.y = this.camera.y-3;
-                this.camera.lastY = this.input.mousePointer.position.y;
-            }
-            //console.log(this.input.mousePointer.position.x + 'x '+ this.input.mousePointer.position.y + 'y');
+            console.log(this.input.worldX + 'x '+ this.input.worldY + 'y');
         },
 
         mouseZoom: function(){
-            if(this.input.mouse.wheelDelta === 1 && this.camera.scale.x < 2){
-                this.camera.scale.x += 0.005;
-                this.camera.scale.y += 0.005;
+            if(this.input.mouse.wheelDelta === 1 && this.stageGroup.scale.x < 2){
+                this.stageGroup.scale.x += 0.005;
+                this.stageGroup.scale.y += 0.005;
             }
-            else if(this.camera.scale.x > 0.5){
-                this.camera.scale.x -= 0.005;
-                this.camera.scale.y -= 0.005;
+            else if(this.stageGroup.scale.x > 0.5){
+                this.stageGroup.scale.x -= 0.005;
+                this.stageGroup.scale.y -= 0.005;
             }
+            var bounds       = this.stageGroup.bounds;
+            var cameraBounds = this.camera.bounds;
+            cameraBounds.x      = bounds.width  * (1 - this.stageGroup.scale.x) / 2;
+            cameraBounds.y      = bounds.height * (1 - this.stageGroup.scale.y) / 2;
+            cameraBounds.width  = bounds.width  * this.stageGroup.scale.x;
+            cameraBounds.height = bounds.height * this.stageGroup.scale.y;
         },
 
         galaxyInitFinished: function(){
@@ -132,9 +145,7 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.gameInstance.planetDragDoneSignal.add(this.galaxy.endShipDrag, this.galaxy);
             console.log('init panels done.');
             this.inGame = true;
-            this.gameInstance.camera.focusOnXY(1000,1000);
-            this.gameInstance.camera.scale.x = 0.6;
-            this.gameInstance.camera.scale.y = 0.6;
+            this.gameInstance.camera.focusOnXY(0,0);
             this.taskBarPanel._dom.children[1].style.display = 'inherit';
         },
 

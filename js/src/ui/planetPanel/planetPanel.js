@@ -26,7 +26,12 @@ define(['ractive', 'rv!/spacedout/js/src/ui/planetPanel/planetPanel.html', 'css!
                     self._ractive.data.planet.setTerraformPercent(event.node.value);
                 },
                 onFleetSelected: function(event){
-                    self._ractive.data.planet.setSelectedFleet(event.node.attribute['data-id']);
+                    self._ractive.data.planet.setSelectedFleet(event.context);
+                },
+                onFleetSplit: function(event){
+                    self._ractive.data.planet.fleets.push(event.context.splitFleet());
+                    if(event.context.ships.length <= 0) self._ractive.data.planet.removeFleet(event.context);
+                    self._ractive.set('planet.fleets', self._ractive.data.planet.fleets);
                 }
             })
         };

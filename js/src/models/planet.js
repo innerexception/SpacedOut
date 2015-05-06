@@ -50,10 +50,18 @@ define(['worldGen'], function(worldGen){
            this._setPopulationGrowth();
            this.gameInstance.planetUpdatedSignal.dispatch(this);
        },
-       setSelectedFleet: function(fleetId){
+       setSelectedFleet: function(fleetObj){
            this.selectedFleet = _.filter(this.fleets, function(fleet){
-               return fleet.id === fleetId;
+               if(fleet.id !== fleetObj.id) fleet.isSelected = false;
+               return fleet.id === fleetObj.id;
            })[0];
+           this.selectedFleet.isSelected = true;
+           this.gameInstance.planetUpdatedSignal.dispatch(this);
+       },
+       removeFleet: function(fleetObj){
+           this.fleets = _.filter(this.fleets, function(fleet){
+               return fleet.id !== fleetObj.id;
+           });
        },
        extractResources: function(){
            this.temp = parseFloat((this.tempChange + this.temp).toFixed(1));
@@ -74,7 +82,7 @@ define(['worldGen'], function(worldGen){
        },
        _onPlanetClick: function(){
            this.gameInstance.planetClickedSignal.dispatch(this);
-           this.gameInstance.planetDragStarted = this.selectedFleet;
+           this.gameInstance.planetDragStartedFleet = this.selectedFleet;
        },
        _getPlanetSprites: function(temp, gravity, metal, position){
            //Grab updated canvas from generator
@@ -84,7 +92,7 @@ define(['worldGen'], function(worldGen){
                this.sprites[2].destroy();
            }
 
-           var spriteGroup = this.gameInstance.add.group();
+           var spriteGroup = this.gameInstance.add.group(this.gameInstance.stageGroup);
 
            var bmd = this.gameInstance.add.bitmapData(100,100);
 

@@ -1,4 +1,4 @@
-define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
+define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fleet){
    var galaxy = function(gameInstance, signal){
         this.dom = document.getElementById('center-panel');
         this.planets = [];
@@ -13,12 +13,19 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
                 this.gameInstance.make.sprite(0, 0, 'bigstar')],
             stars: []
         };
+       this.gameInstance.shipPathContext = this.gameInstance.add.graphics(0,0, this.gameInstance.stageGroup);
    };
 
    galaxy.prototype = {
+       write: function(){
+           console.log('ffff x: '+this.input.mousePointer.position.x);
+       },
        update: function() {
-           if(this.gameInstance.planetDragStarted){
-               //TODO draw arrow from planet to cursor
+           var fleet = this.gameInstance.planetDragStartedFleet;
+           if(fleet){
+               this.drawLine(fleet.location.sprites[2].world.x, fleet.location.sprites[2].world.y,
+                             this.gameInstance.input.worldX, this.gameInstance.input.worldY,
+                             this.gameInstance.shipPathContext, true);
            }
            if(this.StarField.stars.length > 0){
                for (var i = 0; i < 300; i++)
@@ -46,11 +53,26 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
                }
            }
        },
+       drawLine: function(x1, y1, x2, y2, context, clear){
+           if(clear) context.clear();
+           context.lineStyle(3, 0xff0000, 0.5);
+           context.moveTo(x1, y1);
+           context.lineTo(x2, y2);
+           console.log('line from: '+x1 + ', '+y1+' to x: '+x2+' y: '+y2);
 
+       },
        endShipDrag: function() {
-           //TODO
-           //if this.input.mousePointer.position overlaps any planet sprite
-           //this.planetDragStarted.setDestination(//planet you were over);
+           var destinationPlanet = _.filter(this.planets, function(planet){
+               return planet.sprites[0].getBounds().contains(
+                   this.gameInstance.input.mousePointer.position.x,
+                   this.gameInstance.input.mousePointer.position.y);
+           }, this)[0];
+
+           this.gameInstance.shipPathContext.clear();
+
+           if(destinationPlanet) this.gameInstance.planetDragStartedFleet.setDestination(destinationPlanet);
+
+           this.gameInstance.planetDragStartedFleet = null;
        },
 
        onEndTurn: function(panel) {
@@ -58,6 +80,16 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
                this.clientPlayer.getIncomeAndResearch();
                this.updateShips();
                this.resolveCombats();
+           }
+           //lol
+           if(this.gameInstance.stageGroup.scale.x === 0.5){
+               this.gameInstance.stageGroup.scale.setTo(1);
+           }
+           else if(this.gameInstance.stageGroup.scale.x === 1){
+               this.gameInstance.stageGroup.scale.setTo(1.5);
+           }
+           else{
+               this.gameInstance.stageGroup.scale.setTo(0.5);
            }
        },
 
@@ -105,7 +137,8 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
            var player = new Player(homeWorld, name, isAi, difficulty, this);
 
            //get initial ships
-           this.ships = this.ships.concat(this._getInitialShips(homeWorld, player, difficulty));
+           player.fleets.push(this._getInitialFleet(homeWorld, player, difficulty));
+           this.ships = this.ships.concat(player.fleets[0].ships);
            return player;
        },
        generatePlanets: function(shape, size, spread){
@@ -122,7 +155,7 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
                this._selectionHaloSprite.x = planet.position.x-20;
            }
            else{
-               this._selectionHaloSprite = this.gameInstance.add.sprite(planet.position.x-20, planet.position.y-20, 'halo');
+               this._selectionHaloSprite = this.gameInstance.add.sprite(planet.position.x-20, planet.position.y-20, 'halo', null, this.gameInstance.stageGroup);
            }
        },
 
@@ -139,15 +172,15 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
            this.finishedSignal.dispatch();
        },
        _initStarField: function(){
-           this.gameInstance.add.sprite(0, 0, this.StarField.texture);
+           this.gameInstance.add.sprite(0, 0, this.StarField.texture, null, this.gameInstance.stageGroup);
 
            var texture1 = this.gameInstance.add.renderTexture(this.gameInstance.world.width, this.gameInstance.world.height, 'texture1');
            var texture2 = this.gameInstance.add.renderTexture(this.gameInstance.world.width, this.gameInstance.world.height, 'texture2');
            var texture3 = this.gameInstance.add.renderTexture(this.gameInstance.world.width, this.gameInstance.world.height, 'texture3');
 
-           this.gameInstance.add.sprite(0, 0, texture1);
-           this.gameInstance.add.sprite(0, 0, texture2);
-           this.gameInstance.add.sprite(0, 0, texture3);
+           this.gameInstance.add.sprite(0, 0, texture1, null, this.gameInstance.stageGroup);
+           this.gameInstance.add.sprite(0, 0, texture2, null, this.gameInstance.stageGroup);
+           this.gameInstance.add.sprite(0, 0, texture3, null, this.gameInstance.stageGroup);
 
            var t = texture1;
            var s = 0.05;
@@ -181,7 +214,7 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
                temp, gravity, metal,
                this._getNextPlanetPosition());
        },
-       _getInitialShips: function(homeworld, player, difficulty){
+       _getInitialFleet: function(homeworld, player, difficulty){
            var ships = [];
            switch(difficulty){
                case 0:
@@ -197,7 +230,7 @@ define(['planet', 'player', 'ship'], function(Planet, Player, Ship){
                    ships.push(new Ship(homeworld, player, 'scout', 9, 2, 1, 0, this.gameInstance));
                    break;
            }
-           return ships;
+           return new Fleet(ships, homeworld, this);
        },
 
        _getNextPlanetPosition: function(){

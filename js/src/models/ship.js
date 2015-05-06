@@ -1,6 +1,7 @@
 define(['lodash'], function(_){
    var ship = function(planet, player, type, range, speed, weapon, shield, gameInstance){
         this.type = type;
+        this.id = 'ship_'+Math.random();
         this.range = range;
         this.speed = speed;
         this.weapon = weapon;
@@ -10,7 +11,7 @@ define(['lodash'], function(_){
         this.gameInstance = gameInstance;
         this.destination = null;
         this.distanceToDestination = null;
-        this._setLocation(planet);
+        this.setLocation(planet);
    };
 
    ship.prototype = {
@@ -71,7 +72,6 @@ define(['lodash'], function(_){
            this.spriteGroup.tween.start();
            this.orbitIn = true;
            this.location = planet;
-           planet.fleets.push(this);
        },
        _onOrbitComplete: function(target, tween){
            if(this.orbitIn){
