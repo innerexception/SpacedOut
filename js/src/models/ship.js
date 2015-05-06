@@ -16,7 +16,7 @@ define(['lodash'], function(_){
 
    ship.prototype = {
        _createShipSpriteGroup: function(x, y, scale){
-           this.spriteGroup = this.gameInstance.add.group();
+           this.spriteGroup = this.gameInstance.add.group(this.gameInstance.stageGroup);
            this.spriteGroup.create(0,0,this.type+'_range_'+this.range);
            this.spriteGroup.create(10,0,this.type+'_speed_'+this.speed);
            this.spriteGroup.create(20,0,this.type+'_shield_'+this.shield);

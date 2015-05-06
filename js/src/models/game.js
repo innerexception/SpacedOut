@@ -106,13 +106,6 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
                 this.stageGroup.scale.x -= 0.005;
                 this.stageGroup.scale.y -= 0.005;
             }
-            var bounds       = this.stageGroup.bounds;
-            var cameraBounds = this.camera.bounds;
-            cameraBounds.x      = bounds.width  * (1 - this.stageGroup.scale.x) / 2;
-            cameraBounds.y      = bounds.height * (1 - this.stageGroup.scale.y) / 2;
-            cameraBounds.width  = bounds.width  * this.stageGroup.scale.x;
-            cameraBounds.height = bounds.height * this.stageGroup.scale.y;
-            console.log(this.camera.scale.x + ', '+this.camera.scale.y);
         },
 
         galaxyInitFinished: function(){
@@ -138,6 +131,7 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.gameInstance.panelToggleSignal.add(this.messagePanel.toggle, this.messagePanel);
             this.gameInstance.panelToggleSignal.add(this.shipBuilderPanel.toggle, this.shipBuilderPanel);
             this.gameInstance.panelToggleSignal.add(this.galaxy.onEndTurn, this.galaxy);
+            this.gameInstance.panelToggleSignal.add(this.galaxy.onZoomToggle, this.galaxy);
             this.gameInstance.messageSignal = new Phaser.Signal();
             this.gameInstance.messageSignal.add(this.messagePanel.onMessageRecieved, this.messagePanel);
             this.gameInstance.planetUpdatedSignal = new Phaser.Signal();

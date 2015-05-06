@@ -54,6 +54,32 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            }
        },
        drawLine: function(x1, y1, x2, y2, context, clear){
+
+           var pos = context.toLocal({x:x1, y:y1});
+           var pos2 = context.toLocal({x:x2, y:y2});
+           var scaleCoef = 1;
+           if(this.gameInstance.stageGroup.scale.x === 0.5){
+               scaleCoef = 2;
+           }
+           else if(this.gameInstance.stageGroup.scale.x === 1.5){
+               scaleCoef = 0.66;
+           }
+
+           x1 = pos.x - (scaleCoef*this.gameInstance.camera.x);
+           y1 = pos.y - (scaleCoef*this.gameInstance.camera.y);
+           x2 = pos2.x - (scaleCoef*this.gameInstance.camera.x);
+           y2 = pos2.y - (scaleCoef*this.gameInstance.camera.y);
+
+
+           //
+           //if(this.gameInstance.stageGroup.scale.x === 0.5){
+           //    //747x, 332y world point requires this transform on x1, y1 to provide correct graphics object coords: (1490, 659)
+           //    //x1 += 370 + 370;
+           //    //x2 += 370 + 370;
+           //    //y1 += 163 + 163;
+           //    //y2 += 163 + 163;
+           //}
+
            if(clear) context.clear();
            context.lineStyle(3, 0xff0000, 0.5);
            context.moveTo(x1, y1);
@@ -62,20 +88,7 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
        },
        endShipDrag: function() {
            var destinationPlanet = _.filter(this.planets, function(planet){
-               return planet.sprites[0].getBounds().contains(
-                   this.gameInstance.input.mousePointer.position.x,
-                   this.gameInstance.input.mousePointer.position.y);
-           }, this)[0];
-
-           this.gameInstance.shipPathContext.clear();
-
-           if(destinationPlanet) this.gameInstance.planetDragStartedFleet.setDestination(destinationPlanet);
-
-           this.gameInstance.planetDragStartedFleet = null;
-       },
-       endShipDrag: function() {
-           var destinationPlanet = _.filter(this.planets, function(planet){
-               return planet.sprites[0].getBounds().contains(
+               return planet.sprites[2].getBounds().contains(
                    this.gameInstance.input.mousePointer.position.x,
                    this.gameInstance.input.mousePointer.position.y);
            }, this)[0];
@@ -92,18 +105,28 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                this.updateShips();
                this.resolveCombats();
            }
-           //lol
-           if(this.gameInstance.stageGroup.scale.x === 0.5){
-               this.gameInstance.stageGroup.scale.setTo(1);
-           }
-           else if(this.gameInstance.stageGroup.scale.x === 1){
-               this.gameInstance.stageGroup.scale.setTo(1.5);
-           }
-           else{
-               this.gameInstance.stageGroup.scale.setTo(0.5);
+       },
+       onZoomToggle: function(panel){
+           if(panel === 'zoom'){
+               //lol
+               if(this.gameInstance.stageGroup.scale.x === 0.5){
+                   this.gameInstance.stageGroup.scale.setTo(1);
+               }
+               else if(this.gameInstance.stageGroup.scale.x === 1){
+                   this.gameInstance.stageGroup.scale.setTo(1.5);
+               }
+               else{
+                   this.gameInstance.stageGroup.scale.setTo(0.5);
+               }
+               //var bounds       = this.gameInstance.stageGroup.bounds;
+               //var cameraBounds = this.gameInstance.camera.bounds;
+               //cameraBounds.x      = bounds.width  * (1 - this.gameInstance.stageGroup.scale.x) / 2;
+               //cameraBounds.y      = bounds.height * (1 - this.gameInstance.stageGroup.scale.y) / 2;
+               //cameraBounds.width  = bounds.width  * this.gameInstance.stageGroup.scale.x;
+               //cameraBounds.height = bounds.height * this.gameInstance.stageGroup.scale.y;
+               //console.log(this.gameInstance.camera.scale.x + ', '+this.gameInstance.camera.scale.y);
            }
        },
-
        updateShips: function(){
            _.each(this.ships, function(ship){
                if(ship.destination){

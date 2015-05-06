@@ -33,6 +33,9 @@ define(['ractive', 'rv!/spacedout/js/src/ui/taskBar/taskBar.html', 'css!/spacedo
                 },
                 onEndTurnClicked: function(event){
                     self.galaxy.gameInstance.panelToggleSignal.dispatch('end');
+                },
+                onZoomClicked: function(event){
+                    self.galaxy.gameInstance.panelToggleSignal.dispatch('zoom');
                 }
             })
         };

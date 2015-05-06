@@ -29,7 +29,7 @@ define(['worldGen'], function(worldGen){
            this.owner = player;
            if(this.population === 0) this._setPopulation(7500);
            this.setTerraformPercent(50);
-           this.bannerSprite = this.gameInstance.add.sprite(this.position.x-10, this.position.y-10, this.name+'_banner');
+           this.bannerSprite = this.gameInstance.add.sprite(this.position.x-10, this.position.y-10, this.name+'_banner', null, this.gameInstance.stageGroup);
            //TODO: colonization animation here
            return this;
        },
@@ -118,7 +118,7 @@ define(['worldGen'], function(worldGen){
            if(this.mask) {
                delete this.mask;
            }
-           this.mask = this.gameInstance.add.graphics(position.x, position.y);
+           this.mask = this.gameInstance.add.graphics(position.x, position.y, this.gameInstance.stageGroup);
            //	Shapes drawn to the Graphics object must be filled.
            this.mask.beginFill(0xffffff);
            //	Here we'll draw a circle
