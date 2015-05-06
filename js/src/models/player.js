@@ -45,6 +45,7 @@ define(['lodash'], function(_){
                }
            }, this);
            this.refreshTechs();
+           this.galaxy.budgetPanel.refreshPlayer();
        },
        refreshTechs: function(){
            var techMoney = this.moneyIncome * (this.techRate / 100);
@@ -116,7 +117,6 @@ define(['lodash'], function(_){
 
        },
        getTechName: function(name, level){
-           //TODO
            return this.Constants.TechNames[name][level];
        },
        getPlanets: function(){

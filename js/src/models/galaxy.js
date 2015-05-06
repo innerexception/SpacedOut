@@ -59,7 +59,6 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            context.moveTo(x1, y1);
            context.lineTo(x2, y2);
            console.log('line from: '+x1 + ', '+y1+' to x: '+x2+' y: '+y2);
-
        },
        endShipDrag: function() {
            var destinationPlanet = _.filter(this.planets, function(planet){
@@ -74,7 +73,19 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
 
            this.gameInstance.planetDragStartedFleet = null;
        },
+       endShipDrag: function() {
+           var destinationPlanet = _.filter(this.planets, function(planet){
+               return planet.sprites[0].getBounds().contains(
+                   this.gameInstance.input.mousePointer.position.x,
+                   this.gameInstance.input.mousePointer.position.y);
+           }, this)[0];
 
+           this.gameInstance.shipPathContext.clear();
+
+           if(destinationPlanet) this.gameInstance.planetDragStartedFleet.setDestination(destinationPlanet);
+
+           this.gameInstance.planetDragStartedFleet = null;
+       },
        onEndTurn: function(panel) {
            if(panel==='end'){
                this.clientPlayer.getIncomeAndResearch();

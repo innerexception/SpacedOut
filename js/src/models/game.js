@@ -112,6 +112,7 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             cameraBounds.y      = bounds.height * (1 - this.stageGroup.scale.y) / 2;
             cameraBounds.width  = bounds.width  * this.stageGroup.scale.x;
             cameraBounds.height = bounds.height * this.stageGroup.scale.y;
+            console.log(this.camera.scale.x + ', '+this.camera.scale.y);
         },
 
         galaxyInitFinished: function(){
