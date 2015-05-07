@@ -28,7 +28,7 @@
 
 <!-- {{>fleetItem}} -->
 <div class="well">
-    <div data-id="{{id}}" class="{{isSelected ? 'selected-fleet' : ''}}" on-dblclick="onFleetSplit" on-click="onFleetSelected">{{name}}</div>
+    <div class="{{isSelected ? 'selected-fleet' : ''}} {{queuedForTravel ? 'traveling' : ''}} {{inTransit ? 'hidden' : ''}}" on-dblclick="onFleetSplit" on-click="onFleetSelected">{{name}}</div>
 </div>
 <!-- {{/fleetItem}} -->
 

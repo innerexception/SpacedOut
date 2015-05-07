@@ -9,19 +9,16 @@ define(['lodash'], function(_){
         this.spriteGroup = null;
         this.owner = player;
         this.gameInstance = gameInstance;
-        this.destination = null;
-        this.distanceToDestination = null;
-        this.drawAtLocation(planet.position.x, planet.position.y, true);
+        this.drawAtLocation(planet.position.x, planet.position.y, {orbit: true, create: true});
    };
 
    ship.prototype = {
        drawAtLocation: function(x, y, options){
-           this._destroySpritesAndGroup();
-
-           //draws the ship warping in and orbiting the planet
-           this._createShipSpriteGroup(x-20,
-               y+(Math.random()*60), 0.2);
-
+           if(options.create){
+               this._destroySpritesAndGroup();
+               this._createShipSpriteGroup(x-20,
+                   y+(Math.random()*60), 0.2);
+           }
            if(options.warpIn && options.orbit){
                this._playWarpInAndOrbit(this.spriteGroup, x, y);
            }
@@ -51,7 +48,7 @@ define(['lodash'], function(_){
        },
        _destroySpritesAndGroup: function(){
            if(this.spriteGroup){
-               this.spriteGroup.tween.destroy();
+               if(this.spriteGroup.tween) delete this.spriteGroup.tween;
                this.spriteGroup.destroy(true);
            }
        },
@@ -86,6 +83,10 @@ define(['lodash'], function(_){
        _playMove: function(spriteGroup, x, y){
            //TODO
            console.log('running move animation on a ship');
+           spriteGroup.tween.stop();
+           spriteGroup.tween = this.gameInstance.add.tween(spriteGroup)
+               .to({x: x, y: y}, 1000, Phaser.Easing.Linear.None);
+           spriteGroup.tween.start();
        }
    };
 

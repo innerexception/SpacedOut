@@ -21,8 +21,8 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            console.log('ffff x: '+this.input.mousePointer.position.x);
        },
        update: function() {
-           var fleet = this.gameInstance.planetDragStartedFleet;
-           if(fleet){
+           var fleet = this.gameInstance.planetDragFleet;
+           if(this.gameInstance.dragSessionId){
                this.drawLine(fleet.location.sprites[2].world.x, fleet.location.sprites[2].world.y,
                              this.gameInstance.input.worldX, this.gameInstance.input.worldY,
                              this.gameInstance.shipPathContext, true);
@@ -53,11 +53,23 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                }
            }
        },
-       drawLine: function(x1, y1, x2, y2, context, clear){
-
+       getTransformedCoords: function(x1, y1, x2, y2, context){
            var pos = context.toLocal({x:x1, y:y1});
            var pos2 = context.toLocal({x:x2, y:y2});
-           var scaleCoef = 1;
+           var scaleCoef = 1/this.gameInstance.stageGroup.scale.x;
+
+           x1 = pos.x - (scaleCoef*this.gameInstance.camera.x);
+           y1 = pos.y - (scaleCoef*this.gameInstance.camera.y);
+           x2 = pos2.x - (scaleCoef*this.gameInstance.camera.x);
+           y2 = pos2.y - (scaleCoef*this.gameInstance.camera.y);
+
+           return {x1:x1, y1:y1, x2:x2, y2:y2};
+
+       },
+       drawLine: function(x1, y1, x2, y2, context, clear){
+
+           var pos = this.getTransformedCoords(x1, y1, x2, y2, context);
+
 
            //if(this.gameInstance.stageGroup.scale.x === 0.5){
            //    scaleCoef = 2;
@@ -65,13 +77,6 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            //else if(this.gameInstance.stageGroup.scale.x === 1.5){
            //    scaleCoef = 0.66;
            //}
-
-           scaleCoef = 1/this.gameInstance.stageGroup.scale.x;
-
-           x1 = pos.x - (scaleCoef*this.gameInstance.camera.x);
-           y1 = pos.y - (scaleCoef*this.gameInstance.camera.y);
-           x2 = pos2.x - (scaleCoef*this.gameInstance.camera.x);
-           y2 = pos2.y - (scaleCoef*this.gameInstance.camera.y);
 
            //
            //if(this.gameInstance.stageGroup.scale.x === 0.5){
@@ -84,9 +89,8 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
 
            if(clear) context.clear();
            context.lineStyle(3, 0xff0000, 0.5);
-           context.moveTo(x1, y1);
-           context.lineTo(x2, y2);
-           console.log('line from: '+x1 + ', '+y1+' to x: '+x2+' y: '+y2);
+           context.moveTo(pos.x1, pos.y1);
+           context.lineTo(pos.x2, pos.y2);
        },
        endShipDrag: function() {
            var destinationPlanet = _.filter(this.planets, function(planet){
@@ -95,7 +99,14 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                    this.gameInstance.input.mousePointer.position.y);
            }, this)[0];
            this.gameInstance.shipPathContext.clear();
-           if(destinationPlanet) this.gameInstance.planetDragStartedFleet.setDestination(destinationPlanet);
+           if(destinationPlanet.id != this.gameInstance.planetDragFleet.location.id) {
+               this.gameInstance.planetDragFleet.setDestination(destinationPlanet);
+           }
+           else {
+               this.gameInstance.planetDragFleet.queuedForTravel = false;
+               this.gameInstance.planetDragFleet.unSetDestination();
+           }
+           this.gameInstance.dragSessionId = null;
        },
        onEndTurn: function(panel) {
            if(panel==='end'){
@@ -109,8 +120,11 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                _.each(planet.fleets, function(fleet){
                    if(fleet.destination) fleet.distanceToDestination -= fleet.speed;
                    _.each(fleet.ships, function (ship) {
-                       ship.drawAtLocation(fleet.destination.position.x - fleet.distanceToDestination,
-                                           fleet.destination.position.y - fleet.distanceToDestination,
+                       var position = fleet.destination ? fleet.destination.position : fleet.location.position;
+                       var offSet = fleet.distanceToDestination || 0;
+                       //if(fleet.destination) console.log('drawn with offset of '+ offSet+ ' and original pos of x '+position.x + ' y '+position.y);
+                       ship.drawAtLocation(position.x - offSet,
+                                           position.y - offSet,
                                            {orbit: !fleet.destination || fleet.distanceToDestination <= 0,
                                             warpIn: fleet.destination && fleet.distanceToDestination <= 0,
                                             move: fleet.distanceToDestination > 0,
@@ -123,8 +137,7 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                    }
                    if(fleet.queuedForTravel){
                        //Just left planet
-                       fleet.location.removeFleet(fleet);
-                       fleet.location = null;
+                       fleet.inTransit = true;
                    }
                    fleet.queuedForTravel = false;
                });
@@ -245,16 +258,16 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            var ships = [];
            switch(difficulty){
                case 0:
-                   ships.push(new Ship(homeworld, player, 'scout', 9, 2, 1, 0, this.gameInstance));
-                   ships.push(new Ship(homeworld, player, 'scout', 9, 2, 1, 0, this.gameInstance));
-                   ships.push(new Ship(homeworld, player, 'colony', 6, 1, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'scout', 9, 20, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'scout', 9, 20, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'colony', 6, 10, 1, 0, this.gameInstance));
                    break;
                case 1:
-                   ships.push(new Ship(homeworld, player, 'scout', 9, 2, 1, 0, this.gameInstance));
-                   ships.push(new Ship(homeworld, player, 'scout', 9, 2, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'scout', 9, 20, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'scout', 9, 20, 1, 0, this.gameInstance));
                    break;
                case 2:
-                   ships.push(new Ship(homeworld, player, 'scout', 9, 2, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'scout', 9, 20, 1, 0, this.gameInstance));
                    break;
            }
            return new Fleet(ships, homeworld, this);

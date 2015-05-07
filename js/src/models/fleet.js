@@ -5,6 +5,8 @@ define(['lodash'], function(_){
         this.id = 'fleet_'+Math.random();
         this.name = this._getNextFleetName();
         this.location = planet;
+        this.inTransit = false;
+        this.queuedForTravel = false;
         planet.fleets.push(this);
         this.galaxy = galaxy;
     };
@@ -30,11 +32,19 @@ define(['lodash'], function(_){
             this.distanceToDestination = this.galaxy.gameInstance.physics.arcade.distanceBetween(this.location.sprites[2], planet.sprites[2]);
             this.destination = planet;
             this.queuedForTravel = true;
+            this.galaxy.gameInstance.planetUpdatedSignal.dispatch(this.location);
             console.log('fleet '+this.name + ' set destination '+planet.name + ' of distance '+ this.distanceToDestination);
+        },
+        unSetDestination: function(){
+            this.distanceToDestination = null;
+            this.destination = null;
+            this.queuedForTravel = false;
+            this.galaxy.gameInstance.planetUpdatedSignal.dispatch(this.location);
         },
         setLocation: function(planet){
             this.location.removeFleet(this);
             this.location = planet;
+            this.inTransit = false;
             planet.fleets.push(this);
         },
         _getNextFleetName: function(){

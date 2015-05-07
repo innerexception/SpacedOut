@@ -60,3 +60,12 @@
     width: 50%;
     margin-bottom: 5px;
 }
+.selected-fleet{
+    background-color: black;
+}
+.traveling{
+    font-style: italic;
+}
+.hidden{
+    display: none;
+}

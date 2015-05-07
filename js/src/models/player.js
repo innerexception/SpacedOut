@@ -45,7 +45,7 @@ define(['lodash'], function(_){
                }
            }, this);
            this.refreshTechs();
-           this.galaxy.budgetPanel.refreshPlayer();
+           this.galaxy.gameInstance.budgetUpdatedSignal.dispatch();
        },
        refreshTechs: function(){
            var techMoney = this.moneyIncome * (this.techRate / 100);

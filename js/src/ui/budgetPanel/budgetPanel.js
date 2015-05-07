@@ -1,6 +1,7 @@
 define(['ractive', 'rv!/spacedout/js/src/ui/budgetPanel/budgetPanel.html', 'css!/spacedout/js/src/ui/budgetPanel/budgetPanel'],
 function(Ractive, budgetPanelTemplate){
     var budgetPanel = function(galaxy){
+        this.galaxy = galaxy;
         var targetDiv = document.createElement('div');
         targetDiv.id = 'budgetPanel';
         targetDiv.className = 'container budget-panel budgetPanelOut';

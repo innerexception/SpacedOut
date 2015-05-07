@@ -1,6 +1,7 @@
 define(['worldGen'], function(worldGen){
    var planet = function(gameInstance, name, temp, gravity, metal, position){
        this.position = position;
+       this.id = 'planet_'+Math.random();
        this.name = name;
        this.temp = parseInt(temp);
        this.tempChange = 0;
@@ -82,7 +83,10 @@ define(['worldGen'], function(worldGen){
        },
        _onPlanetClick: function(){
            this.gameInstance.planetClickedSignal.dispatch(this);
-           this.gameInstance.planetDragStartedFleet = this.selectedFleet;
+           if(this.selectedFleet) {
+               this.gameInstance.dragSessionId = Math.random() + '_drag';
+               this.gameInstance.planetDragFleet = this.selectedFleet;
+           }
        },
        _getPlanetSprites: function(temp, gravity, metal, position){
            //Grab updated canvas from generator
@@ -144,12 +148,12 @@ define(['worldGen'], function(worldGen){
            return [sprite, sprite2, lightSprite];
        },
        _onPlanetDragOver: function(){
-           if(this.gameInstance.planetDragStartedFleet){
+           if(this.gameInstance.planetDragFleet){
                //TODO draw halo over targeted planet
            }
        },
        _onPlanetDragOut: function() {
-           if (this.gameInstance.planetDragStartedFleet) {
+           if (this.gameInstance.planetDragFleet) {
                //TODO hide halo
            }
        },

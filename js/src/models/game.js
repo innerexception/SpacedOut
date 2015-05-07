@@ -90,11 +90,11 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
         },
 
         mousePanStop: function(){
-            if(this.planetDragStartedFleet) this.planetDragDoneSignal.dispatch();
+            if(this.dragSessionId) this.planetDragDoneSignal.dispatch();
         },
 
         mousePan: function(){
-            console.log(this.input.x + 'x '+ this.input.y + 'y');
+            //console.log(this.input.x + 'x '+ this.input.y + 'y');
         },
 
         mouseZoom: function(){
@@ -131,11 +131,12 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.gameInstance.panelToggleSignal.add(this.messagePanel.toggle, this.messagePanel);
             this.gameInstance.panelToggleSignal.add(this.shipBuilderPanel.toggle, this.shipBuilderPanel);
             this.gameInstance.panelToggleSignal.add(this.galaxy.onEndTurn, this.galaxy);
-            this.gameInstance.panelToggleSignal.add(this.galaxy.onZoomToggle, this.galaxy);
             this.gameInstance.messageSignal = new Phaser.Signal();
             this.gameInstance.messageSignal.add(this.messagePanel.onMessageRecieved, this.messagePanel);
             this.gameInstance.planetUpdatedSignal = new Phaser.Signal();
             this.gameInstance.planetUpdatedSignal.add(this.planetPanel.refreshPanel, this.planetPanel);
+            this.gameInstance.budgetUpdatedSignal = new Phaser.Signal();
+            this.gameInstance.budgetUpdatedSignal.add(this.budgetPanel.refreshPlayer, this.budgetPanel);
             this.gameInstance.planetDragDoneSignal = new Phaser.Signal();
             this.gameInstance.planetDragDoneSignal.add(this.galaxy.endShipDrag, this.galaxy);
             console.log('init panels done.');
