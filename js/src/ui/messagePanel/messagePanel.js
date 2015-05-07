@@ -46,7 +46,8 @@ define(['ractive', 'rv!/spacedout/js/src/ui/messagePanel/messagePanel.html', 'cs
                 }
             },
             onMessageRecieved: function(message){
-                this._ractive.set('messages', this._ractive.data.messages.push({text: message}));
+                this._ractive.data.messages.push({text: message});
+                this._ractive.set('messages', this._ractive.data.messages);
             }
         };
 

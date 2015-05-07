@@ -61,6 +61,7 @@ function(Ractive, budgetPanelTemplate){
             }
         },
         refreshPlayer: function(){
+            this._ractive.set('planets', this.galaxy.clientPlayer.getPlanets());
             this._ractive.set('player', this.galaxy.clientPlayer);
         }
     };

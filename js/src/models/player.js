@@ -32,7 +32,7 @@ define(['lodash'], function(_){
        };
        this.techRate = 30;
        this.cashRate = 70;
-       this.homeWorld = homeWorld.setNewOwner(this);
+       this.homeWorld = homeWorld.setNewOwner(this, 100000);
    };
    player.prototype = {
        getIncomeAndResearch: function(){
@@ -49,7 +49,7 @@ define(['lodash'], function(_){
        },
        refreshTechs: function(){
            var techMoney = this.moneyIncome * (this.techRate / 100);
-           this.money += this.moneyIncome * (this.cashRate / 100);
+           this.money += Math.round(this.moneyIncome * (this.cashRate / 100));
            _.forOwn(this.techs, function(tech, name){
                tech.progress += (techMoney * (tech.rate/100)) / 500;  //500 per point
                if(tech.progress >= 100){

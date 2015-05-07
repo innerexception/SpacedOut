@@ -1,6 +1,10 @@
 define(['lodash'], function(_){
    var ship = function(planet, player, type, range, speed, weapon, shield, gameInstance){
         this.type = type;
+        if(type === this.Constants.ShipTypes.Colony && planet.population > 7500){
+            this.colonists = 7500;
+            planet._setPopulation(planet.population - 7500);
+        }
         this.id = 'ship_'+Math.random();
         this.range = ((range * 0.3) * this.Constants.TechStats.rangeBase) + this.Constants.TechStats.rangeBase;
         this.speed = ((speed * 0.3) * this.Constants.TechStats.speedBase) + this.Constants.TechStats.speedBase;

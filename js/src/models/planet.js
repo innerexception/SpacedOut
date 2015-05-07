@@ -25,6 +25,7 @@ define(['worldGen'], function(worldGen){
    };
    planet.prototype = {
        setNewOwner: function(player, population){
+           if(!population) console.log("WARNING! NO POPULATION SENT TO setNewOwner!");
            if(this.bannerSprite)this.bannerSprite.destroy();
            //draw the player banner on the planet top left
            this.owner = player;
@@ -32,6 +33,8 @@ define(['worldGen'], function(worldGen){
            this.setTerraformPercent(50);
            this.bannerSprite = this.gameInstance.add.sprite(this.position.x-10, this.position.y-10, this.name+'_banner', null, this.gameInstance.stageGroup);
            //TODO: colonization animation here
+           this.gameInstance.planetUpdatedSignal && this.gameInstance.planetUpdatedSignal.dispatch(this);
+           this.gameInstance.budgetUpdatedSignal && this.gameInstance.budgetUpdatedSignal.dispatch();
            return this;
        },
        setTerraformPercent: function(percent){
