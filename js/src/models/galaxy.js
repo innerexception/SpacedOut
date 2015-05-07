@@ -118,13 +118,13 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                    if(fleet.destination) fleet.distanceToDestination -= fleet.speed;
                    _.each(fleet.ships, function (ship) {
 
-                       var nextX = fleet.location.position.x;
-                       var nextY = fleet.location.position.y;
+                       var nextX = fleet.location.getCenterPoint().x;
+                       var nextY = fleet.location.getCenterPoint().y;
                        if(fleet.destination){
-                           var x2 = fleet.location.position.x;
-                           var x1 = fleet.destination.position.x;
-                           var y2 = fleet.location.position.y;
-                           var y1 = fleet.destination.position.y;
+                           var x2 = fleet.location.getCenterPoint().x;
+                           var x1 = fleet.destination.getCenterPoint().x;
+                           var y2 = fleet.location.getCenterPoint().y;
+                           var y1 = fleet.destination.getCenterPoint().y;
                            var d = fleet.distanceToDestination;
                            var dp = fleet.totalDistanceToTravel;
 

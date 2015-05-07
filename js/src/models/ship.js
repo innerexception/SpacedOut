@@ -63,13 +63,14 @@ define(['lodash'], function(_){
            }
        },
        _playOrbit: function(spriteGroup, x, y){
-           spriteGroup.tween = this.gameInstance.add.tween(spriteGroup)
+           spriteGroup.orbitTween && spriteGroup.orbitTween.stop();
+           spriteGroup.orbitTween = this.gameInstance.add.tween(spriteGroup)
                .to({x: x, y: y+(Math.random()*-40) }, 5000, Phaser.Easing.Linear.None)
                .to({x: x-40, y: y+(Math.random()*-40) }, 5000, Phaser.Easing.Linear.None)
                .to({x: x, y: y }, 5000, Phaser.Easing.Linear.None)
                .loop();
-           spriteGroup.tween.onChildComplete.add(this._onOrbitComplete, this);
-           spriteGroup.tween.start();
+           spriteGroup.orbitTween.onChildComplete.add(this._onOrbitComplete, this);
+           spriteGroup.orbitTween.start();
            this.orbitIn = true;
            console.log('running orbit animation on a ship');
        },
@@ -84,10 +85,11 @@ define(['lodash'], function(_){
        _playMove: function(spriteGroup, x, y){
            //TODO
            console.log('running move animation on a ship');
-           spriteGroup.tween.stop();
-           spriteGroup.tween = this.gameInstance.add.tween(spriteGroup)
+           spriteGroup.orbitTween && spriteGroup.orbitTween.stop();
+           spriteGroup.moveTween && spriteGroup.moveTween.stop();
+           spriteGroup.moveTween = this.gameInstance.add.tween(spriteGroup)
                .to({x: x, y: y}, 1000, Phaser.Easing.Linear.None);
-           spriteGroup.tween.start();
+           spriteGroup.moveTween.start();
        }
    };
 
