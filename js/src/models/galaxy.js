@@ -53,23 +53,11 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                }
            }
        },
-       getTransformedCoords: function(x1, y1, x2, y2, context){
-           var pos = context.toLocal({x:x1, y:y1});
-           var pos2 = context.toLocal({x:x2, y:y2});
-           var scaleCoef = 1/this.gameInstance.stageGroup.scale.x;
-
-           x1 = pos.x - (scaleCoef*this.gameInstance.camera.x);
-           y1 = pos.y - (scaleCoef*this.gameInstance.camera.y);
-           x2 = pos2.x - (scaleCoef*this.gameInstance.camera.x);
-           y2 = pos2.y - (scaleCoef*this.gameInstance.camera.y);
-
-           return {x1:x1, y1:y1, x2:x2, y2:y2};
-
-       },
        drawLine: function(x1, y1, x2, y2, context, clear){
 
-           var pos = this.getTransformedCoords(x1, y1, x2, y2, context);
-
+           var pos = context.toLocal({x:x1, y:y1});
+           var pos2 = context.toLocal({x:x2, y:y2});
+           var scaleCoef = 1;
 
            //if(this.gameInstance.stageGroup.scale.x === 0.5){
            //    scaleCoef = 2;
@@ -77,6 +65,13 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            //else if(this.gameInstance.stageGroup.scale.x === 1.5){
            //    scaleCoef = 0.66;
            //}
+
+           scaleCoef = 1/this.gameInstance.stageGroup.scale.x;
+
+           x1 = pos.x - (scaleCoef*this.gameInstance.camera.x);
+           y1 = pos.y - (scaleCoef*this.gameInstance.camera.y);
+           x2 = pos2.x - (scaleCoef*this.gameInstance.camera.x);
+           y2 = pos2.y - (scaleCoef*this.gameInstance.camera.y);
 
            //
            //if(this.gameInstance.stageGroup.scale.x === 0.5){
@@ -89,8 +84,8 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
 
            if(clear) context.clear();
            context.lineStyle(3, 0xff0000, 0.5);
-           context.moveTo(pos.x1, pos.y1);
-           context.lineTo(pos.x2, pos.y2);
+           context.moveTo(x1, y1);
+           context.lineTo(x2, y2);
        },
        endShipDrag: function() {
            var destinationPlanet = _.filter(this.planets, function(planet){
@@ -98,14 +93,16 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                    this.gameInstance.input.mousePointer.position.x,
                    this.gameInstance.input.mousePointer.position.y);
            }, this)[0];
-           this.gameInstance.shipPathContext.clear();
-           if(destinationPlanet.id != this.gameInstance.planetDragFleet.location.id) {
-               this.gameInstance.planetDragFleet.setDestination(destinationPlanet);
+           if(destinationPlanet){
+               if(destinationPlanet.id != this.gameInstance.planetDragFleet.location.id) {
+                   this.gameInstance.planetDragFleet.setDestination(destinationPlanet);
+               }
            }
            else {
                this.gameInstance.planetDragFleet.queuedForTravel = false;
                this.gameInstance.planetDragFleet.unSetDestination();
            }
+           this.gameInstance.shipPathContext.clear();
            this.gameInstance.dragSessionId = null;
        },
        onEndTurn: function(panel) {
@@ -121,13 +118,13 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                    if(fleet.destination) fleet.distanceToDestination -= fleet.speed;
                    _.each(fleet.ships, function (ship) {
 
-                       var nextX = fleet.location.position.x;
-                       var nextY = fleet.location.position.y;
+                       var nextX = fleet.location.getCenterPoint().x;
+                       var nextY = fleet.location.getCenterPoint().y;
                        if(fleet.destination){
-                           var x2 = fleet.location.position.x;
-                           var x1 = fleet.destination.position.x;
-                           var y2 = fleet.location.position.y;
-                           var y1 = fleet.destination.position.y;
+                           var x2 = fleet.location.getCenterPoint().x;
+                           var x1 = fleet.destination.getCenterPoint().x;
+                           var y2 = fleet.location.getCenterPoint().y;
+                           var y1 = fleet.destination.getCenterPoint().y;
                            var d = fleet.distanceToDestination;
                            var dp = fleet.totalDistanceToTravel;
 

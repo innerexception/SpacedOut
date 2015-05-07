@@ -9,15 +9,15 @@ define(['lodash'], function(_){
         this.spriteGroup = null;
         this.owner = player;
         this.gameInstance = gameInstance;
-        this.drawAtLocation(planet.position.x, planet.position.y, {orbit: true, create: true});
+        this.drawAtLocation(planet.getCenterPoint().x, planet.getCenterPoint().y, {orbit: true, create: true});
    };
 
    ship.prototype = {
        drawAtLocation: function(x, y, options){
            if(options.create){
                this._destroySpritesAndGroup();
-               this._createShipSpriteGroup(x-20,
-                   y+(Math.random()*60), 0.2);
+               this._createShipSpriteGroup(x-40,
+                   y+(Math.random()*-40), 0.2);
            }
            if(options.warpIn && options.orbit){
                this._playWarpInAndOrbit(this.spriteGroup, x, y);
@@ -64,8 +64,9 @@ define(['lodash'], function(_){
        },
        _playOrbit: function(spriteGroup, x, y){
            spriteGroup.tween = this.gameInstance.add.tween(spriteGroup)
-               .to({x: x+40, y: y+(Math.random()*60) }, 10000, Phaser.Easing.Linear.None)
-               .to({x: x-20, y: y+(Math.random()*60) }, 10000, Phaser.Easing.Linear.None)
+               .to({x: x, y: y+(Math.random()*-40) }, 5000, Phaser.Easing.Linear.None)
+               .to({x: x-40, y: y+(Math.random()*-40) }, 5000, Phaser.Easing.Linear.None)
+               .to({x: x, y: y }, 5000, Phaser.Easing.Linear.None)
                .loop();
            spriteGroup.tween.onChildComplete.add(this._onOrbitComplete, this);
            spriteGroup.tween.start();
