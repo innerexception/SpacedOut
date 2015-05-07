@@ -46,6 +46,7 @@ define(['lodash'], function(_){
             this.location.removeFleet(this);
             this.location = planet;
             this.inTransit = false;
+            this.isSelected = false;
             planet.fleets.push(this);
         },
         _getNextFleetName: function(){

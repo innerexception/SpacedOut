@@ -74,6 +74,9 @@ define(['worldGen'], function(worldGen){
        resolveCombat: function(){
            //TODO
        },
+       getCenterPoint: function(){
+           return {x: this.position.x + this.sprites[2].width/2, y:this.position.y+ this.sprites[2].height/2}
+       },
        _setPopulation: function(number){
            this.population = number;
            var oldIncome = this.income;
