@@ -17,9 +17,6 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
    };
 
    galaxy.prototype = {
-       write: function(){
-           console.log('ffff x: '+this.input.mousePointer.position.x);
-       },
        update: function() {
            var fleet = this.gameInstance.planetDragFleet;
            if(this.gameInstance.dragSessionId){

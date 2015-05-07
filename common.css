@@ -7,7 +7,7 @@
 
 div{
     font-family: 'Press Start 2P';
-    font-size: 12px;
+    font-size: 10px;
 }
 
 #appRoot{
@@ -28,4 +28,8 @@ div{
     background-color: gray !important;
     padding: 5px !important;
     margin-bottom: 5px !important;
+}
+
+.inline{
+    display: inline-block;
 }

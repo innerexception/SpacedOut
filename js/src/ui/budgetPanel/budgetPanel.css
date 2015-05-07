@@ -16,7 +16,12 @@
 }
 
 .planet-well{
-    height: 77%;
+    height: 68%;
+}
+
+.planet-well .list-group{
+    overflow-y: scroll;
+    max-height: 80%;
 }
 
 .planet-well .list-group img{
@@ -49,9 +54,18 @@
     margin-bottom: 10px;
 }
 
+.top-sliders{
+    margin-bottom: 10px;
+}
+
 .budget-panel .top-sliders img{
     display: inline-block;
-    height: 25px;
+    height: 20px;
+}
+
+.budget-panel .top-sliders input{
+    width: 75%;
+    display: inline-block;
 }
 
 .budget-panel .top-sliders div{
@@ -66,6 +80,11 @@
     width: 35px;
 }
 
+.top-budget-labels img{
+    display: inline-block;
+    width: 20px;
+}
+
 .budget-label img{
     width: 35px;
 }
@@ -73,4 +92,13 @@
 .planet-thumb{
     -webkit-clip-path: circle(37% at 50% 50%);
     width: 50%;
+}
+
+.player-banner{
+    width: 40px !important;
+    margin-bottom: 10px;
+}
+
+.player-counters{
+    width: 66%;
 }

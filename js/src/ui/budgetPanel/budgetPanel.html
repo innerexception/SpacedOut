@@ -1,14 +1,20 @@
 <div class="inner-panel">
-    <div class="budget-label"><img src="{{player.bannerPath}}"/></div>
+    <div class="top-budget-labels">
+        <div class="inline">
+            <img class="player-banner" src="{{player.bannerPath}}"/>
+        </div>
+        <div class="inline player-counters">
+            <div class="inline">
+                <img class="inline" src="./js/res/img/icon-metal.png" />
+                <div class="inline">: {{player.metal}}</div>
+            </div>
+            <div class="inline">
+                <img class="inline" src="./js/res/img/icon_budget.png" />
+                <div class="inline">: {{player.money}}</div>
+            </div>
+        </div>
+    </div>
     <div class="top-sliders">
-        <div>
-            <img src="./js/res/img/icon-metal.png" />
-            <div>: {{player.metal}}</div>
-        </div>
-        <div>
-            <img src="./js/res/img/icon_budget.png" />
-            <div>: {{player.money}}</div>
-        </div>
         <div>
             <img src="./js/res/img/icon_budget.png" />
             <input id="capitalSlider" type="range" value="{{player.cashRate}}" on-change="onCapitalBudgetChanged" on-input="onCapitalBudgetChanged"/>

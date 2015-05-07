@@ -97,6 +97,14 @@ define(['lodash'], function(_){
        TechStats: {
            rangeBase: 150,
            speedBase: 30
+       },
+       ShipTypes: {
+           Colony: 'colony',
+           Scout: 'scout',
+           Fighter: 'fighter',
+           Tanker: 'tanker',
+           Dreadnaught: 'dread',
+           Platform: 'platform'
        }
    };
 

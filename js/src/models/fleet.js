@@ -51,6 +51,13 @@ define(['lodash'], function(_){
             this.inTransit = false;
             this.isSelected = false;
             planet.fleets.push(this);
+            var colonyShip = _.filter(this.ships, function(ship){
+                return ship.type === ship.Constants.ShipTypes.Colony;
+            })[0];
+            if(colonyShip && !planet.owner){
+                planet.setNewOwner(colonyShip.owner, colonyShip.colonists);
+                colonyShip.colonists = 0;
+            }
         },
         _getNextFleetName: function(){
             return this.Constants.FleetNames[Math.round(Math.random()*this.Constants.FleetNames.length-1)];

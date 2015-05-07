@@ -24,11 +24,11 @@ define(['worldGen'], function(worldGen){
        this.selectedFleet = null;
    };
    planet.prototype = {
-       setNewOwner: function(player){
+       setNewOwner: function(player, population){
            if(this.bannerSprite)this.bannerSprite.destroy();
            //draw the player banner on the planet top left
            this.owner = player;
-           if(this.population === 0) this._setPopulation(7500);
+           if(this.population === 0) this._setPopulation(population);
            this.setTerraformPercent(50);
            this.bannerSprite = this.gameInstance.add.sprite(this.position.x-10, this.position.y-10, this.name+'_banner', null, this.gameInstance.stageGroup);
            //TODO: colonization animation here
