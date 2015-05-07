@@ -27,10 +27,8 @@
 
 
 <!-- {{>fleetItem}} -->
-<div class="well">
-    <div class="{{isSelected ? 'selected-fleet' : ''}} {{queuedForTravel ? 'traveling' : ''}} {{inTransit ? 'hidden' : ''}}" on-dblclick="onFleetSplit" on-click="onFleetSelected">{{name}}</div>
+<div class="well {{inTransit ? 'hidden' : ''}}">
+    <div class="{{isSelected ? 'selected-fleet' : ''}} {{queuedForTravel ? 'traveling' : ''}}" on-dblclick="onFleetSplit" on-click="onFleetSelected">{{name}}</div>
 </div>
 <!-- {{/fleetItem}} -->
 
-<!--fleetToolTip
-<div></div>

@@ -2,6 +2,7 @@ define(['lodash'], function(_){
     var fleet = function(ships, planet, galaxy){
         this.ships = ships;
         this.speed = this._getMaxFleetSpeed();
+        this.range = this._getMaxFleetRange();
         this.id = 'fleet_'+Math.random();
         this.name = this._getNextFleetName();
         this.location = planet;
@@ -14,12 +15,14 @@ define(['lodash'], function(_){
         addShip: function(ship){
             this.ships.push(ship);
             this.speed = this._getMaxFleetSpeed();
+            this.range = this._getMaxFleetRange();
         },
         removeShip: function(shipObj){
             this.ships = _.filter(this.ships, function(ship){
                 return ship.id !== shipObj.id;
             });
             this.speed = this._getMaxFleetSpeed();
+            this.range = this._getMaxFleetRange();
         },
         splitFleet: function(){
             var halfArr;
@@ -58,6 +61,13 @@ define(['lodash'], function(_){
                 if(ship.speed > fleetSpeed) fleetSpeed = ship.speed;
             });
             return fleetSpeed;
+        },
+        _getMaxFleetRange: function(){
+            var fleetRange = 0;
+            _.each(this.ships, function(ship){
+                if(ship.range > fleetRange) fleetRange = ship.range;
+            });
+            return fleetRange;
         }
     };
 

@@ -25,7 +25,7 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            if(this.gameInstance.dragSessionId){
                this.drawLine(fleet.location.sprites[2].world.x, fleet.location.sprites[2].world.y,
                              this.gameInstance.input.worldX, this.gameInstance.input.worldY,
-                             this.gameInstance.shipPathContext, true);
+                             this.gameInstance.shipPathContext, true, fleet.range);
            }
            if(this.StarField.stars.length > 0){
                for (var i = 0; i < 300; i++)
@@ -53,18 +53,11 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                }
            }
        },
-       drawLine: function(x1, y1, x2, y2, context, clear){
+       drawLine: function(x1, y1, x2, y2, context, clear, range){
 
            var pos = context.toLocal({x:x1, y:y1});
            var pos2 = context.toLocal({x:x2, y:y2});
            var scaleCoef = 1;
-
-           //if(this.gameInstance.stageGroup.scale.x === 0.5){
-           //    scaleCoef = 2;
-           //}
-           //else if(this.gameInstance.stageGroup.scale.x === 1.5){
-           //    scaleCoef = 0.66;
-           //}
 
            scaleCoef = 1/this.gameInstance.stageGroup.scale.x;
 
@@ -73,29 +66,41 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            x2 = pos2.x - (scaleCoef*this.gameInstance.camera.x);
            y2 = pos2.y - (scaleCoef*this.gameInstance.camera.y);
 
-           //
-           //if(this.gameInstance.stageGroup.scale.x === 0.5){
-           //    //747x, 332y world point requires this transform on x1, y1 to provide correct graphics object coords: (1490, 659)
-           //    //x1 += 370 + 370;
-           //    //x2 += 370 + 370;
-           //    //y1 += 163 + 163;
-           //    //y2 += 163 + 163;
-           //}
+           var color = 0x00ff00;
+           if(Math.sqrt(Math.pow((x2-x1), 2)+Math.pow((y2-y1), 2)) > range){
+               color = 0xff0000;
+               context.fleetOutOfRange = true;
+           }
+           else{
+               context.fleetOutOfRange = false;
+           }
 
            if(clear) context.clear();
-           context.lineStyle(3, 0xff0000, 0.5);
+           context.lineStyle(3, color, 0.5);
            context.moveTo(x1, y1);
            context.lineTo(x2, y2);
+
+           context.lineStyle(3, 0xFFFFFF, 0.3);
+           context.beginFill(0x00FF00, 0.1);
+           context.drawCircle(x1, y1, range*2);
+           context.endFill();
+
        },
        endShipDrag: function() {
-           var destinationPlanet = _.filter(this.planets, function(planet){
-               return planet.sprites[2].getBounds().contains(
-                   this.gameInstance.input.mousePointer.position.x,
-                   this.gameInstance.input.mousePointer.position.y);
-           }, this)[0];
-           if(destinationPlanet){
-               if(destinationPlanet.id != this.gameInstance.planetDragFleet.location.id) {
-                   this.gameInstance.planetDragFleet.setDestination(destinationPlanet);
+           if(!this.gameInstance.shipPathContext.fleetOutOfRange){
+               var destinationPlanet = _.filter(this.planets, function(planet){
+                   return planet.sprites[2].getBounds().contains(
+                       this.gameInstance.input.mousePointer.position.x,
+                       this.gameInstance.input.mousePointer.position.y);
+               }, this)[0];
+               if(destinationPlanet){
+                   if(destinationPlanet.id != this.gameInstance.planetDragFleet.location.id) {
+                       this.gameInstance.planetDragFleet.setDestination(destinationPlanet);
+                   }
+               }
+               else {
+                   this.gameInstance.planetDragFleet.queuedForTravel = false;
+                   this.gameInstance.planetDragFleet.unSetDestination();
                }
            }
            else {
@@ -148,8 +153,9 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                        fleet.inTransit = true;
                    }
                    fleet.queuedForTravel = false;
-               });
-           });
+                   this.gameInstance.planetUpdatedSignal.dispatch(fleet.location);
+               }, this);
+           }, this);
        },
 
        resolveCombats: function(){
@@ -266,16 +272,16 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            var ships = [];
            switch(difficulty){
                case 0:
-                   ships.push(new Ship(homeworld, player, 'scout', 9, 20, 1, 0, this.gameInstance));
-                   ships.push(new Ship(homeworld, player, 'scout', 9, 20, 1, 0, this.gameInstance));
-                   ships.push(new Ship(homeworld, player, 'colony', 6, 10, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'scout', 1, 1, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'scout', 1, 1, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'colony', 1, 1, 1, 0, this.gameInstance));
                    break;
                case 1:
-                   ships.push(new Ship(homeworld, player, 'scout', 9, 20, 1, 0, this.gameInstance));
-                   ships.push(new Ship(homeworld, player, 'scout', 9, 20, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'scout', 1, 1, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'scout', 1, 1, 1, 0, this.gameInstance));
                    break;
                case 2:
-                   ships.push(new Ship(homeworld, player, 'scout', 9, 20, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'scout', 1, 1, 1, 0, this.gameInstance));
                    break;
            }
            return new Fleet(ships, homeworld, this);

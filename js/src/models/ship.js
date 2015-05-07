@@ -2,8 +2,8 @@ define(['lodash'], function(_){
    var ship = function(planet, player, type, range, speed, weapon, shield, gameInstance){
         this.type = type;
         this.id = 'ship_'+Math.random();
-        this.range = range;
-        this.speed = speed;
+        this.range = ((range * 0.3) * this.Constants.TechStats.rangeBase) + this.Constants.TechStats.rangeBase;
+        this.speed = ((speed * 0.3) * this.Constants.TechStats.speedBase) + this.Constants.TechStats.speedBase;
         this.weapon = weapon;
         this.shield = shield;
         this.spriteGroup = null;
@@ -90,6 +90,13 @@ define(['lodash'], function(_){
            spriteGroup.moveTween = this.gameInstance.add.tween(spriteGroup)
                .to({x: x, y: y}, 1000, Phaser.Easing.Linear.None);
            spriteGroup.moveTween.start();
+       }
+   };
+
+   ship.prototype.Constants= {
+       TechStats: {
+           rangeBase: 150,
+           speedBase: 30
        }
    };
 
