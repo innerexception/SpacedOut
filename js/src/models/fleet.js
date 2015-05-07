@@ -30,6 +30,7 @@ define(['lodash'], function(_){
         },
         setDestination: function(planet){
             this.distanceToDestination = this.galaxy.gameInstance.physics.arcade.distanceBetween(this.location.sprites[2], planet.sprites[2]);
+            this.totalDistanceToTravel = this.distanceToDestination;
             this.destination = planet;
             this.queuedForTravel = true;
             this.galaxy.gameInstance.planetUpdatedSignal.dispatch(this.location);

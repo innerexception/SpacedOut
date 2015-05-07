@@ -120,11 +120,22 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                _.each(planet.fleets, function(fleet){
                    if(fleet.destination) fleet.distanceToDestination -= fleet.speed;
                    _.each(fleet.ships, function (ship) {
-                       var position = fleet.destination ? fleet.destination.position : fleet.location.position;
-                       var offSet = fleet.distanceToDestination || 0;
-                       //if(fleet.destination) console.log('drawn with offset of '+ offSet+ ' and original pos of x '+position.x + ' y '+position.y);
-                       ship.drawAtLocation(position.x - offSet,
-                                           position.y - offSet,
+
+                       var nextX = fleet.location.position.x;
+                       var nextY = fleet.location.position.y;
+                       if(fleet.destination){
+                           var x2 = fleet.location.position.x;
+                           var x1 = fleet.destination.position.x;
+                           var y2 = fleet.location.position.y;
+                           var y1 = fleet.destination.position.y;
+                           var d = fleet.distanceToDestination;
+                           var dp = fleet.totalDistanceToTravel;
+
+                           //get latest point between destination and origin
+                           nextX = x1 + (((d*x2) - (d*x1))/dp);
+                           nextY = y1 + (((d*y2) - (d*y1))/dp);
+                       }
+                       ship.drawAtLocation(nextX, nextY,
                                            {orbit: !fleet.destination || fleet.distanceToDestination <= 0,
                                             warpIn: fleet.destination && fleet.distanceToDestination <= 0,
                                             move: fleet.distanceToDestination > 0,
