@@ -12,5 +12,8 @@
 
 .game-setup{
     position: absolute;
-    left: 100px;
+}
+
+button {
+    font-size: 10px !important;
 }

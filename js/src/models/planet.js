@@ -82,9 +82,6 @@ define(['worldGen'], function(worldGen){
            this._setPopulation(this.population);
            this.gameInstance.planetUpdatedSignal.dispatch(this);
        },
-       resolveCombat: function(){
-           //TODO
-       },
        getCenterPoint: function(){
            return {x: this.position.x + this.sprites[2].width/2, y:this.position.y+ this.sprites[2].height/2}
        },
@@ -113,7 +110,7 @@ define(['worldGen'], function(worldGen){
            worldGen.generateWorldCanvas(bmd.canvas, temp, gravity, metal);
            this.surfaceImagePath = bmd.canvas.toDataURL();
 
-           var scaleFactor = this.isExplored ? Math.max(gravity/4, 0.3) : 1;
+           var scaleFactor = this.isExplored ? Math.max(gravity/4, 0.3) : 0.5;
 
            var sprite = this.gameInstance.add.sprite(position.x, position.y, bmd, null, spriteGroup);
            sprite.scale.setTo(scaleFactor);

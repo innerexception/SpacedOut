@@ -36,6 +36,10 @@ define(['lodash'], function(_){
                this._playMove(this.spriteGroup, x, y);
            }
        },
+       fireLazerAt: function(targetShip){
+           //TODO FIRIN MA LAZER
+
+       },
        _createShipSpriteGroup: function(x, y, scale){
            this.spriteGroup = this.gameInstance.add.group(this.gameInstance.stageGroup);
            this.spriteGroup.create(0,0,this.type+'_range_'+this.range);
