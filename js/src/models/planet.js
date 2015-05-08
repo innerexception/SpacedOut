@@ -28,7 +28,7 @@ define(['worldGen'], function(worldGen){
        setNewOwner: function(player, population, clientPlayer, isHumanHomeworld){
            if(!population) console.log("WARNING! NO POPULATION SENT TO setNewOwner!");
            if(this.bannerSprite)this.bannerSprite.destroy();
-           if((clientPlayer && player.name === clientPlayer.name) || isHumanHomeworld){
+           if((clientPlayer && player === clientPlayer) || isHumanHomeworld){
                this.setIsExplored(true);
            }
            //draw the player banner on the planet top left

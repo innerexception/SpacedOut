@@ -60,62 +60,7 @@ define(['lodash'], function(_){
                 }
             }, this);
 
-            this._resolveCombat(combatQueue);
-        },
-        _resolveCombat: function(fleets){
-            //TODO zoom to area
-            this.galaxy.gameInstance.stageGroup.combatPanTween = this.galaxy.gameInstance.add.tween(this.galaxy.gameInstance.camera)
-                .to({ x: fleets[0].location.getCenterPoint().x, y: fleets[0].location.getCenterPoint().y }, 2000);
-            this.galaxy.gameInstance.stageGroup.combatZoomTween = this.galaxy.gameInstance.add.tween(this.galaxy.gameInstance.stageGroup.scale)
-                .to({ x: 3, y: 3 }, 2000);
-
-            //line up fleets
-            var friendlyFleets = _.filter(fleets, function(fleet){
-                return fleet.ships[0].owner === this.galaxy.clientPlayer;
-            }, this);
-            _.each(friendlyFleets, function(fleet){
-                _.each(fleet.ships, function(ship){
-                    //TODO tween ship in from the left of the camera view
-                });
-            });
-
-
-            var enemyFleets = _.filter(fleets, function(fleet){
-                return fleet.ships[0].owner !== this.galaxy.clientPlayer;
-            }, this);
-            _.each(enemyFleets, function(fleet){
-                _.each(fleet.ships, function(ship){
-                    //TODO tween ship in from the right of the camera view
-                });
-            });
-
-
-            //fleets fire in rounds, remove casualties
-            while(enemyFleets.length > 0 && friendlyFleets.length > 0){
-                if(friendlyFleets[0].speed > enemyFleets[0].speed){
-                    _.each(friendlyFleets, function(friendlyFleet){
-                        friendlyFleet._fireAt(enemyFleets);
-                    });
-                    _.each(enemyFleets, function(enemyFleets){
-                        enemyFleets._fireAt(friendlyFleets);
-                    });
-                }
-                else{
-                    _.each(enemyFleets, function(enemyFleets){
-                        enemyFleets._fireAt(friendlyFleets);
-                    });
-                    _.each(friendlyFleets, function(friendlyFleet){
-                        friendlyFleet._fireAt(enemyFleets);
-                    });
-                }
-            }
-
-        },
-        _fireAt: function(targetFleets){
-            //TODO shoot at a random fleet ship until they are all dead or you run out of ships. One shot per ship.
-            _.each(this.ships, function(ship){
-                ship.fireLazerAt(targetShip);
-            });
+            this.galaxy.resolveCombat(combatQueue);
         },
         _checkForColonization: function(){
             var colonyShip = _.filter(this.ships, function(ship){

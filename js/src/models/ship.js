@@ -13,7 +13,9 @@ define(['lodash'], function(_){
         this.spriteGroup = null;
         this.owner = player;
         this.gameInstance = gameInstance;
+        this.hp = 3;
         this.drawAtLocation(planet.getCenterPoint().x, planet.getCenterPoint().y, {orbit: true, create: true});
+        this.laserGroup = this.gameInstance.add.group(this.gameInstance.stageGroup);
    };
 
    ship.prototype = {
@@ -36,9 +38,38 @@ define(['lodash'], function(_){
                this._playMove(this.spriteGroup, x, y);
            }
        },
-       fireLazerAt: function(targetShip){
-           //TODO FIRIN MA LAZER
+       fireLazerAt: function(targetShip, combatGroups){
+           var laser = this.laserGroup.create(this.spriteGroup.x, this.spriteGroup.y, 'lazerShot');
+           var shotTween = this.gameInstance.add.tween(laser)
+               .to({x: targetShip.spriteGroup.x, y: targetShip.spriteGroup.y}, 1000, Phaser.Easing.Linear.None);
+           shotTween.onComplete.addOnce(this._hitShip(targetShip, laser, combatGroups));
+           shotTween.start();
+       },
+       _hitShip: function(ship, laserSprite, combatGroups){
+           laserSprite.destroy();
+           var explosion = ship.spriteGroup.create(ship.spriteGroup.x, ship.spriteGroup.y, 'explosion');
+           var explosionTween = this.gameInstance.add.tween(explosion)
+               .to({x: ship.spriteGroup.x+20, y: ship.spriteGroup.y+10});
+           explosionTween.onComplete.addOnce(function(){ this.destroy();}.bind(explosion));
+           ship.hp -= 1;
 
+           if(ship.hp <= 0){
+               //remove from combatGroup list
+               if(combatGroups.friendlyTurn){
+                   //this must be from the enemy list
+                   combatGroups.enemy = _.filter(combatGroups.enemy, function(shipObj){
+                       return shipObj === ship;
+                   });
+               }
+               else{
+                   //must be in friendly group
+                   combatGroups.friendly = _.filter(combatGroups.friendly, function(shipObj){
+                       return shipObj === ship;
+                   });
+               }
+           }
+
+           this.gameInstance.shipHitSignal.dispatch(combatGroups);
        },
        _createShipSpriteGroup: function(x, y, scale){
            this.spriteGroup = this.gameInstance.add.group(this.gameInstance.stageGroup);
@@ -103,8 +134,8 @@ define(['lodash'], function(_){
 
    ship.prototype.Constants= {
        TechStats: {
-           rangeBase: 150,
-           speedBase: 30
+           rangeBase: 1500,
+           speedBase: 300
        },
        ShipTypes: {
            Colony: 'colony',

@@ -111,7 +111,6 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            if(panel==='end'){
                this.clientPlayer.getIncomeAndResearch();
                this.updateFleets();
-               this.resolveCombats();
            }
        },
        updateFleets: function(){
@@ -154,13 +153,82 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                }, this);
            }, this);
        },
+       resolveCombat: function(fleets){
 
-       resolveCombats: function(){
-           _.each(this.planets, function(planet){
-               planet.resolveCombat();
+           this.gameInstance.stageGroup.combatPanTween = this.gameInstance.add.tween(this.gameInstance.camera)
+               .to({ x: fleets[0].location.getCenterPoint().x, y: fleets[0].location.getCenterPoint().y }, 2000);
+           this.gameInstance.stageGroup.combatZoomTween = this.gameInstance.add.tween(this.gameInstance.stageGroup.scale)
+               .to({ x: 3, y: 3 }, 2000);
+
+           //line up fleets
+           var friendlyFleets = _.filter(fleets, function(fleet){
+               return fleet.ships[0].owner === this.clientPlayer;
+           }, this);
+           _.each(friendlyFleets, function(fleet){
+               _.each(fleet.ships, function(ship){
+                   //TODO tween ship in from the left of the camera view
+               });
            });
-       },
 
+
+           var enemyFleets = _.filter(fleets, function(fleet){
+               return fleet.ships[0].owner !== this.clientPlayer;
+           }, this);
+           _.each(enemyFleets, function(fleet){
+               _.each(fleet.ships, function(ship){
+                   //TODO tween ship in from the right of the camera view
+               });
+           });
+
+           var friendlyShips=[];
+           _.each(friendlyFleets, function(fleet){
+               friendlyShips.concat(fleet.ships);
+           });
+           var enemyShips=[];
+           _.each(enemyFleets, function(fleet){
+               enemyShips.concat(fleet.ships);
+           });
+           var combatGroups = {
+               friendly: friendlyShips,
+               enemy: enemyShips,
+               friendlyIndex: 0,
+               friendlyTurn: true,
+               enemyIndex: 0
+           };
+           //This will be re-called each time a hit is completed.
+           this._salvo(combatGroups);
+       },
+       _salvo: function(combatGroups){
+           if(combatGroups.friendly.length > 0 && combatGroups.enemy.length > 0){
+               if(combatGroups.friendlyIndex < combatGroups.friendly.length && combatGroups.friendlyTurn){
+                   combatGroups.friendly[combatGroups.friendlyIndex].fireLazerAt(combatGroups.enemy[0], combatGroups); //ships should move to top when destroyed
+                   combatGroups.friendlyIndex++;
+               }
+               else {
+                   combatGroups.friendlyIndex = 0;
+                   combatGroups.friendlyTurn = false;
+               }
+
+               if(combatGroups.enemyIndex < combatGroups.enemy.length && !combatGroups.friendlyTurn){
+                   combatGroups.enemy[combatGroups.enemyIndex].fireLazerAt(combatGroups.friendly[0], combatGroups);
+                   combatGroups.enemyIndex++;
+               }
+               else {
+                   combatGroups.friendlyTurn = true;
+                   combatGroups.enemyIndex = 0;
+               }
+           }
+           else if(combatGroups.friendly.length <= 0){
+               //TODO run loss event
+               //this.gameInstance.combatLostSignal.dispatch();
+               console.log('u mad?');
+           }
+           else if(combatGroups.enemy.length <= 0){
+               //TODO run victory event
+               //this.gameInstance.combatWonSignal.dispatch();
+               console.log('a winner is you');
+           }
+       },
        initializePlayer: function(name, isAi, difficulty){
 
            //set homeworld. each homeworld should be mapSize/numPlayers away from other homeworlds
@@ -380,7 +448,12 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
             max: 20000
         },
         PlayerNames: [
-            'Yojimbo'
+            'Yojimbo',
+            'Chairman',
+            'Genralissimo',
+            'CEO',
+            'Lord',
+            'Prime Minister'
         ],
         PlanetNames: [
             'Phil',

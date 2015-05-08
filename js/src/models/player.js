@@ -38,7 +38,7 @@ define(['lodash'], function(_){
        getIncomeAndResearch: function(){
            this.moneyIncome = 0;
            _.each(this.galaxy.planets, function(planet){
-               if(planet.owner && planet.owner.name === this.name){
+               if(planet.owner && planet.owner === this){
                    this.moneyIncome += planet.income;
                    this.metal += planet.miningChange;
                    planet.extractResources();
@@ -121,7 +121,7 @@ define(['lodash'], function(_){
        },
        getPlanets: function(){
            return _.filter(this.galaxy.planets, function(planet){
-               return planet.owner && planet.owner.name === this.name;
+               return planet.owner && planet.owner === this;
            }, this);
        },
        setIndividualTechRate: function(type, percent){

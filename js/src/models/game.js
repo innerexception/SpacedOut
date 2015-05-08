@@ -27,6 +27,8 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.load.image('alphaMask', 'js/res/img/alphaMask.png');
             this.load.image('tinystar', 'js/res/img/tinyStar.png');
             this.load.image('unexploredMask', 'js/res/img/unexploredMask.png');
+            this.load.image('lazerShot', 'js/res/img/lazerShot.png');
+            this.load.image('explosion', 'js/res/img/explosion.png');
         },
 
         phaserLoad: function () {
@@ -140,6 +142,8 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.gameInstance.budgetUpdatedSignal.add(this.budgetPanel.refreshPlayer, this.budgetPanel);
             this.gameInstance.planetDragDoneSignal = new Phaser.Signal();
             this.gameInstance.planetDragDoneSignal.add(this.galaxy.endShipDrag, this.galaxy);
+            this.gameInstance.shipHitSignal = new Phaser.Signal();
+            this.gameInstance.shipHitSignal.add(this.galaxy._salvo, this.galaxy);
             console.log('init panels done.');
             this.inGame = true;
             this.gameInstance.camera.focusOnXY(0,0);
