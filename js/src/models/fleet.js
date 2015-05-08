@@ -72,7 +72,7 @@ define(['lodash'], function(_){
             }
         },
         _getNextFleetName: function(){
-            return this.Constants.FleetNames[Math.round(Math.random()*this.Constants.FleetNames.length-1)];
+            return this.Constants.FleetNames[Math.round(Math.random()*(this.Constants.FleetNames.length-1))];
         },
         _getMaxFleetSpeed: function(){
             var fleetSpeed = 0;

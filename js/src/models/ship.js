@@ -42,34 +42,37 @@ define(['lodash'], function(_){
            var laser = this.laserGroup.create(this.spriteGroup.x, this.spriteGroup.y, 'lazerShot');
            var shotTween = this.gameInstance.add.tween(laser)
                .to({x: targetShip.spriteGroup.x, y: targetShip.spriteGroup.y}, 1000, Phaser.Easing.Linear.None);
-           shotTween.onComplete.addOnce(this._hitShip(targetShip, laser, combatGroups));
+           this._combatGroups = combatGroups;
+           this._targetShip = targetShip;
+           this._laserSprite = laser;
+           shotTween.onComplete.addOnce(this._hitShip, this);
            shotTween.start();
        },
-       _hitShip: function(ship, laserSprite, combatGroups){
-           laserSprite.destroy();
-           var explosion = ship.spriteGroup.create(ship.spriteGroup.x, ship.spriteGroup.y, 'explosion');
+       _hitShip: function(){
+           this._laserSprite.destroy();
+           var explosion = this._targetShip.spriteGroup.create(this._targetShip.spriteGroup.x, this._targetShip.spriteGroup.y, 'explosion');
            var explosionTween = this.gameInstance.add.tween(explosion)
-               .to({x: ship.spriteGroup.x+20, y: ship.spriteGroup.y+10});
+               .to({x: this._targetShip.spriteGroup.x+20, y: this._targetShip.spriteGroup.y+10});
            explosionTween.onComplete.addOnce(function(){ this.destroy();}.bind(explosion));
-           ship.hp -= 1;
-
-           if(ship.hp <= 0){
+           this._targetShip.hp -= 1;
+           debugger;
+           if(this._targetShip.hp <= 0){
                //remove from combatGroup list
-               if(combatGroups.friendlyTurn){
+               if(this._combatGroups.friendlyTurn){
                    //this must be from the enemy list
-                   combatGroups.enemy = _.filter(combatGroups.enemy, function(shipObj){
+                   this._combatGroups.enemy = _.filter(this._combatGroups.enemy, function(shipObj){
                        return shipObj === ship;
                    });
                }
                else{
                    //must be in friendly group
-                   combatGroups.friendly = _.filter(combatGroups.friendly, function(shipObj){
+                   this._combatGroups.friendly = _.filter(this._combatGroups.friendly, function(shipObj){
                        return shipObj === ship;
                    });
                }
            }
 
-           this.gameInstance.shipHitSignal.dispatch(combatGroups);
+           this.gameInstance.shipHitSignal.dispatch(this._combatGroups);
        },
        _createShipSpriteGroup: function(x, y, scale){
            this.spriteGroup = this.gameInstance.add.group(this.gameInstance.stageGroup);

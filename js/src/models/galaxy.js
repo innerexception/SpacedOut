@@ -154,40 +154,48 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            }, this);
        },
        resolveCombat: function(fleets){
-
+           console.log('combat initiated.');
+           this._combatFleets = fleets;
            this.gameInstance.stageGroup.combatPanTween = this.gameInstance.add.tween(this.gameInstance.camera)
                .to({ x: fleets[0].location.getCenterPoint().x, y: fleets[0].location.getCenterPoint().y }, 2000);
            this.gameInstance.stageGroup.combatZoomTween = this.gameInstance.add.tween(this.gameInstance.stageGroup.scale)
                .to({ x: 3, y: 3 }, 2000);
+           this.gameInstance.stageGroup.combatZoomTween.onComplete.addOnce(this._combatCameraReady, this);
+           this.gameInstance.stageGroup.combatPanTween.start();
+           this.gameInstance.stageGroup.combatZoomTween.start();
+       },
+       _combatCameraReady: function(){
 
-           //line up fleets
+           console.log('combat camera ready.');
+           var fleets=this._combatFleets;
+
            var friendlyFleets = _.filter(fleets, function(fleet){
                return fleet.ships[0].owner === this.clientPlayer;
            }, this);
+           var friendlyShips=[];
            _.each(friendlyFleets, function(fleet){
-               _.each(fleet.ships, function(ship){
-                   //TODO tween ship in from the left of the camera view
-               });
+               friendlyShips = friendlyShips.concat(fleet.ships);
            });
-
-
            var enemyFleets = _.filter(fleets, function(fleet){
                return fleet.ships[0].owner !== this.clientPlayer;
            }, this);
-           _.each(enemyFleets, function(fleet){
-               _.each(fleet.ships, function(ship){
-                   //TODO tween ship in from the right of the camera view
-               });
-           });
-
-           var friendlyShips=[];
-           _.each(friendlyFleets, function(fleet){
-               friendlyShips.concat(fleet.ships);
-           });
            var enemyShips=[];
            _.each(enemyFleets, function(fleet){
-               enemyShips.concat(fleet.ships);
+               enemyShips = enemyShips.concat(fleet.ships);
            });
+
+           //line up fleets
+           _.each(friendlyShips, function(ship, i){
+               var tween = this.gameInstance.add.tween(ship)
+                   .to({x: fleets[0].location.getCenterPoint().x, y: fleets[0].location.getCenterPoint().y + i }, 1000);
+               tween.start();
+           }, this);
+           _.each(enemyShips, function(ship, i){
+               var tween = this.gameInstance.add.tween(ship)
+                   .to({x: fleets[0].location.getCenterPoint().x+20, y: fleets[0].location.getCenterPoint().y + i }, 1000);
+               tween.start();
+           }, this);
+
            var combatGroups = {
                friendly: friendlyShips,
                enemy: enemyShips,
@@ -201,6 +209,7 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
        _salvo: function(combatGroups){
            if(combatGroups.friendly.length > 0 && combatGroups.enemy.length > 0){
                if(combatGroups.friendlyIndex < combatGroups.friendly.length && combatGroups.friendlyTurn){
+                   console.log('friendly is firing');
                    combatGroups.friendly[combatGroups.friendlyIndex].fireLazerAt(combatGroups.enemy[0], combatGroups); //ships should move to top when destroyed
                    combatGroups.friendlyIndex++;
                }
@@ -210,6 +219,7 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                }
 
                if(combatGroups.enemyIndex < combatGroups.enemy.length && !combatGroups.friendlyTurn){
+                   console.log('enemy is firing');
                    combatGroups.enemy[combatGroups.enemyIndex].fireLazerAt(combatGroups.friendly[0], combatGroups);
                    combatGroups.enemyIndex++;
                }
@@ -457,7 +467,12 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
         ],
         PlanetNames: [
             'Phil',
-            'Murray'
+            'Murray',
+            'Catnip',
+            'Catfood',
+            'Snuggles',
+            'Purrs',
+            'Pile'
         ]
    };
 
