@@ -26,6 +26,7 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             //Load all assets here
             this.load.image('alphaMask', 'js/res/img/alphaMask.png');
             this.load.image('tinystar', 'js/res/img/tinyStar.png');
+            this.load.image('unexploredMask', 'js/res/img/unexploredMask.png');
         },
 
         phaserLoad: function () {

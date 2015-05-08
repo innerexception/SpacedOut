@@ -48,6 +48,7 @@ define(['lodash'], function(_){
         setLocation: function(planet){
             this.location.removeFleet(this);
             this.location = planet;
+            if(this.ships[0].owner === this.galaxy.clientPlayer) planet.setIsExplored(true);
             this.inTransit = false;
             this.isSelected = false;
             planet.fleets.push(this);
@@ -55,7 +56,7 @@ define(['lodash'], function(_){
                 return ship.type === ship.Constants.ShipTypes.Colony;
             })[0];
             if(colonyShip && !planet.owner){
-                planet.setNewOwner(colonyShip.owner, colonyShip.colonists);
+                planet.setNewOwner(colonyShip.owner, colonyShip.colonists, this.galaxy.clientPlayer);
                 colonyShip.colonists = 0;
             }
         },

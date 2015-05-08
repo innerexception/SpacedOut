@@ -9,6 +9,7 @@ define(['worldGen'], function(worldGen){
        this.populationGrowth = 0;
        this.income = 0;
        this.incomeGrowth = 0;
+       this.isExplored = false;
        this.gravity = parseFloat(gravity);
        this.owner = null;
        this.metal = parseInt(metal);
@@ -24,9 +25,12 @@ define(['worldGen'], function(worldGen){
        this.selectedFleet = null;
    };
    planet.prototype = {
-       setNewOwner: function(player, population){
+       setNewOwner: function(player, population, clientPlayer, isHumanHomeworld){
            if(!population) console.log("WARNING! NO POPULATION SENT TO setNewOwner!");
            if(this.bannerSprite)this.bannerSprite.destroy();
+           if((clientPlayer && player.name === clientPlayer.name) || isHumanHomeworld){
+               this.setIsExplored(true);
+           }
            //draw the player banner on the planet top left
            this.owner = player;
            if(this.population === 0) this._setPopulation(population);
@@ -36,6 +40,10 @@ define(['worldGen'], function(worldGen){
            this.gameInstance.planetUpdatedSignal && this.gameInstance.planetUpdatedSignal.dispatch(this);
            this.gameInstance.budgetUpdatedSignal && this.gameInstance.budgetUpdatedSignal.dispatch();
            return this;
+       },
+       setIsExplored: function(value){
+           this.isExplored = value;
+           this.sprites = this._getPlanetSprites(this.temp, this.gravity, this.metal, this.position);
        },
        setTerraformPercent: function(percent){
            this.terraformPercent = percent;
@@ -95,21 +103,17 @@ define(['worldGen'], function(worldGen){
            }
        },
        _getPlanetSprites: function(temp, gravity, metal, position){
-           //Grab updated canvas from generator
-           if(this.sprites){
-               this.sprites[0].destroy();
-               this.sprites[1].destroy();
-               this.sprites[2].destroy();
-           }
 
+           if(this.spriteGroup) this.spriteGroup.destroy(true);
            var spriteGroup = this.gameInstance.add.group(this.gameInstance.stageGroup);
+           this.spriteGroup = spriteGroup;
 
            var bmd = this.gameInstance.add.bitmapData(100,100);
 
            worldGen.generateWorldCanvas(bmd.canvas, temp, gravity, metal);
            this.surfaceImagePath = bmd.canvas.toDataURL();
 
-           var scaleFactor = Math.max(gravity/4, 0.3);
+           var scaleFactor = this.isExplored ? Math.max(gravity/4, 0.3) : 1;
 
            var sprite = this.gameInstance.add.sprite(position.x, position.y, bmd, null, spriteGroup);
            sprite.scale.setTo(scaleFactor);
@@ -118,7 +122,7 @@ define(['worldGen'], function(worldGen){
            sprite2.scale.setTo(scaleFactor);
 
            //Add 'light' source
-           var lightSprite = this.gameInstance.add.sprite(position.x, position.y, 'alphaMask', null, spriteGroup);
+           var lightSprite = this.gameInstance.add.sprite(position.x, position.y, this.isExplored ? 'alphaMask' : 'unexploredMask', null, spriteGroup);
            lightSprite.scale.setTo(scaleFactor);
 
            lightSprite.inputEnabled = true;

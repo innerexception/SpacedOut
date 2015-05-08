@@ -32,7 +32,7 @@ define(['lodash'], function(_){
        };
        this.techRate = 30;
        this.cashRate = 70;
-       this.homeWorld = homeWorld.setNewOwner(this, 100000);
+       this.homeWorld = homeWorld.setNewOwner(this, 100000, this.galaxy.clientPlayer, !this.isAi);
    };
    player.prototype = {
        getIncomeAndResearch: function(){
