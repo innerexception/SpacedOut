@@ -4,6 +4,7 @@ define(['phaser', 'ractive', 'rv!/spacedout/js/src/ui/battleModal/battleModal.ht
             var targetDiv = document.createElement('div');
             targetDiv.id = 'battleModalContainer';
             targetDiv.className = 'container battle-modal-panel battleModalOut';
+            this.galaxy = galaxy;
             galaxy.dom.appendChild(targetDiv);
             this._dom = targetDiv;
 
@@ -15,18 +16,19 @@ define(['phaser', 'ractive', 'rv!/spacedout/js/src/ui/battleModal/battleModal.ht
                 }
             });
 
-            this.gameInstance = new Phaser.Game('83', '86', Phaser.AUTO, 'battleModal',{
+            this.gameInstance = new Phaser.Game(749, 496, Phaser.AUTO, 'battleModal',{
                 preload: this.preload,
                 create: this.phaserLoad,
                 update: this.update
             });
-
+            this.gameInstance.shipHitSignal = new Phaser.Signal();
+            this.gameInstance.shipHitSignal.add(this._salvo, this);
         };
 
         battleModal.prototype = {
             update: function() {
                 if(this.StarField && this.StarField.stars.length > 0){
-                    for (var i = 0; i < 300; i++)
+                    for (var i = 0; i < 200; i++)
                     {
                         //  Update the stars y position based on its speed
                         this.StarField.stars[i].y += this.StarField.stars[i].speed;
@@ -67,9 +69,143 @@ define(['phaser', 'ractive', 'rv!/spacedout/js/src/ui/battleModal/battleModal.ht
             startBattle: function(fleets){
                 this.transitionTo();
                 var location = fleets[0].location;
-                this.generatePlanetImage(location);
+                this._generatePlanetImage(location);
+                this._marshallFleets(fleets);
             },
-            generatePlanetImage: function(location){
+            _marshallFleets: function(fleets){
+
+                console.log('arranging ships...');
+
+                var friendlyFleets = _.filter(fleets, function(fleet){
+                    return fleet.ships[0].owner === this.galaxy.clientPlayer;
+                }, this);
+                var friendlyShips=[];
+                _.each(friendlyFleets, function(fleet){
+                    friendlyShips = friendlyShips.concat(fleet.ships);
+                });
+                var enemyFleets = _.filter(fleets, function(fleet){
+                    return fleet.ships[0].owner !== this.galaxy.clientPlayer;
+                }, this);
+                var enemyShips=[];
+                _.each(enemyFleets, function(fleet){
+                    enemyShips = enemyShips.concat(fleet.ships);
+                });
+
+                //line up fleets
+                _.each(friendlyShips, function(ship, i){
+                    ship.battleSpriteGroup = ship._createShipSpriteGroup(0,100+(i*40), 1, this.gameInstance);
+                    var tween = this.gameInstance.add.tween(ship.battleSpriteGroup)
+                        .to({x: 40}, 1000);
+                    tween.start();
+                }, this);
+                _.each(enemyShips, function(ship, i){
+                    ship.battleSpriteGroup = ship._createShipSpriteGroup(this.gameInstance.world.width, 100+i*40, 1, this.gameInstance);
+                    var tween = this.gameInstance.add.tween(ship.battleSpriteGroup)
+                        .to({x: this.gameInstance.world.width - 100}, 1000);
+                    tween.start();
+                }, this);
+
+                var combatGroups = {
+                    friendly: friendlyShips,
+                    enemy: enemyShips,
+                    friendlyIndex: 0,
+                    friendlyTurn: true,
+                    enemyIndex: 0
+                };
+                //This will be re-called each time a hit is completed.
+                this._salvo(combatGroups);
+            },
+            _salvo: function(combatGroups){
+                if(combatGroups.friendly.length > 0 && combatGroups.enemy.length > 0){
+                    if(combatGroups.friendlyIndex < combatGroups.friendly.length && combatGroups.friendlyTurn){
+                        console.log('friendly is firing');
+                        this._fireLazerAt(combatGroups.friendly[combatGroups.friendlyIndex], combatGroups.enemy[0], combatGroups); //ships should move to top when destroyed
+                        combatGroups.friendlyIndex++;
+                        return;
+                    }
+                    else if(combatGroups.friendlyIndex >= combatGroups.friendly.length){
+                        combatGroups.friendlyIndex = 0;
+                        combatGroups.friendlyTurn = false;
+                        this._salvo(combatGroups);
+                        return;
+                    }
+
+                    if(combatGroups.enemyIndex < combatGroups.enemy.length && !combatGroups.friendlyTurn){
+                        console.log('enemy is firing');
+                        this._fireLazerAt(combatGroups.enemy[combatGroups.enemyIndex], combatGroups.friendly[0], combatGroups, 180);
+                        combatGroups.enemyIndex++;
+                        return;
+                    }
+                    else if(combatGroups.enemyIndex >= combatGroups.enemy.length){
+                        combatGroups.friendlyTurn = true;
+                        combatGroups.enemyIndex = 0;
+                        this._salvo(combatGroups);
+                        return;
+                    }
+                }
+                else if(combatGroups.friendly.length <= 0){
+                    //TODO run loss event
+                    //this.gameInstance.combatLostSignal.dispatch();
+                    console.log('u mad?');
+                    _.each(combatGroups.enemy, function(enemyFleet){
+                        enemyFleet._checkForColonization();
+                    });
+                    this.galaxy.gameInstance.planetUpdatedSignal.dispatch(combatGroups.enemy[0].location);
+                    this.galaxy.gameInstance.budgetUpdatedSignal.dispatch();
+                }
+                else if(combatGroups.enemy.length <= 0){
+                    //TODO run victory event
+                    //this.gameInstance.combatWonSignal.dispatch();
+                    console.log('a winner is you');
+                    _.each(combatGroups.friendly, function(friendlyFleet){
+                        friendlyFleet._checkForColonization();
+                    });
+                    this.galaxy.gameInstance.planetUpdatedSignal.dispatch(combatGroups.friendly[0].location);
+                    this.galaxy.gameInstance.budgetUpdatedSignal.dispatch();
+                }
+            },
+            _fireLazerAt: function(sourceShip, targetShip, combatGroups, rotate){
+                if(!sourceShip.laserGroup) sourceShip.laserGroup = this.gameInstance.add.group(this.gameInstance.stageGroup);
+                var laser = sourceShip.laserGroup.create(sourceShip.battleSpriteGroup.x, sourceShip.battleSpriteGroup.y, 'lazerShot');
+                if(rotate) laser.angle = rotate;
+                var shotTween = this.gameInstance.add.tween(laser)
+                    .to({x: targetShip.battleSpriteGroup.x, y: targetShip.battleSpriteGroup.y}, 1000, Phaser.Easing.Linear.None);
+                sourceShip._combatGroups = combatGroups;
+                sourceShip._targetShip = targetShip;
+                sourceShip._laserSprite = laser;
+                sourceShip._phaserInstance = this.gameInstance;
+                shotTween.onComplete.addOnce(this._hitShip, sourceShip);
+                shotTween.start();
+            },
+            _hitShip: function(){
+                //THIS == souce ship instance
+                this._laserSprite.destroy();
+                //var explosion = this._targetShip.battleSpriteGroup.create(this._targetShip.battleSpriteGroup.x, this._targetShip.battleSpriteGroup.y, 'explosion');
+                //var explosionTween = this._phaserInstance.add.tween(explosion)
+                //    .to({x: this._targetShip.battleSpriteGroup.x+20, y: this._targetShip.battleSpriteGroup.y+10});
+                //explosionTween.onComplete.addOnce(function(){ console.log('clean up explosion'); this.destroy();}, explosion);
+                this._targetShip.hp -= 1;
+
+                if(this._targetShip.hp <= 0){
+                    //remove from combatGroup list
+                    if(this._combatGroups.friendlyTurn){
+                        //this must be from the enemy list
+                        this._combatGroups.enemy = _.filter(this._combatGroups.enemy, function(shipObj){
+                            return shipObj !== this._targetShip;
+                        }, this);
+                    }
+                    else{
+                        //must be in friendly group
+                        this._combatGroups.friendly = _.filter(this._combatGroups.friendly, function(shipObj){
+                            return shipObj !== this._targetShip;
+                        }, this);
+                    }
+                    this._targetShip._explodeAndDestroy(this._targetShip.battleSpriteGroup, this._phaserInstance);
+                }
+
+                this._phaserInstance.shipHitSignal.dispatch(this._combatGroups);
+            },
+            _generatePlanetImage: function(location){
 
                 var position = {x:0, y:200};
                 if(this.spriteGroup) this.spriteGroup.destroy(true);

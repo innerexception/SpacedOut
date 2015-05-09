@@ -65,8 +65,8 @@ define(['lodash'], function(_){
             var colonyShip = _.filter(this.ships, function(ship){
                 return ship.type === ship.Constants.ShipTypes.Colony;
             })[0];
-            if(colonyShip && !planet.owner){
-                planet.setNewOwner(colonyShip.owner, colonyShip.colonists, this.galaxy.clientPlayer);
+            if(colonyShip && !this.location.owner){
+                this.location.setNewOwner(colonyShip.owner, colonyShip.colonists, this.galaxy.clientPlayer);
                 colonyShip.colonists = 0;
             }
         },

@@ -15,15 +15,14 @@ define(['lodash'], function(_){
         this.gameInstance = gameInstance;
         this.hp = 3;
         this.drawAtLocation(planet.getCenterPoint().x, planet.getCenterPoint().y, {orbit: true, create: true});
-        this.laserGroup = this.gameInstance.add.group(this.gameInstance.stageGroup);
    };
 
    ship.prototype = {
        drawAtLocation: function(x, y, options){
            if(options.create){
                this._destroySpritesAndGroup();
-               this._createShipSpriteGroup(x-40,
-                   y+(Math.random()*-40), 0.2);
+               this.spriteGroup = this._createShipSpriteGroup(x-40,
+                   y+(Math.random()*-40), 0.2, this.gameInstance);
            }
            if(options.warpIn && options.orbit){
                this._playWarpInAndOrbit(this.spriteGroup, x, y);
@@ -38,55 +37,31 @@ define(['lodash'], function(_){
                this._playMove(this.spriteGroup, x, y);
            }
        },
-       fireLazerAt: function(targetShip, combatGroups){
-           var laser = this.laserGroup.create(this.spriteGroup.x, this.spriteGroup.y, 'lazerShot');
-           var shotTween = this.gameInstance.add.tween(laser)
-               .to({x: targetShip.spriteGroup.x, y: targetShip.spriteGroup.y}, 1000, Phaser.Easing.Linear.None);
-           this._combatGroups = combatGroups;
-           this._targetShip = targetShip;
-           this._laserSprite = laser;
-           shotTween.onComplete.addOnce(this._hitShip, this);
-           shotTween.start();
-       },
-       _hitShip: function(){
-           this._laserSprite.destroy();
-           var explosion = this._targetShip.spriteGroup.create(this._targetShip.spriteGroup.x, this._targetShip.spriteGroup.y, 'explosion');
-           var explosionTween = this.gameInstance.add.tween(explosion)
-               .to({x: this._targetShip.spriteGroup.x+20, y: this._targetShip.spriteGroup.y+10});
-           explosionTween.onComplete.addOnce(function(){ this.destroy();}.bind(explosion));
-           this._targetShip.hp -= 1;
-           debugger;
-           if(this._targetShip.hp <= 0){
-               //remove from combatGroup list
-               if(this._combatGroups.friendlyTurn){
-                   //this must be from the enemy list
-                   this._combatGroups.enemy = _.filter(this._combatGroups.enemy, function(shipObj){
-                       return shipObj !== this._targetShip;
-                   }, this);
-               }
-               else{
-                   //must be in friendly group
-                   this._combatGroups.friendly = _.filter(this._combatGroups.friendly, function(shipObj){
-                       return shipObj !== this._targetShip;
-                   }, this);
-               }
-           }
-
-           this.gameInstance.shipHitSignal.dispatch(this._combatGroups);
-       },
-       _createShipSpriteGroup: function(x, y, scale){
-           this.spriteGroup = this.gameInstance.add.group(this.gameInstance.stageGroup);
-           this.spriteGroup.create(0,0,this.type+'_range_'+this.range);
-           this.spriteGroup.create(10,0,this.type+'_speed_'+this.speed);
-           this.spriteGroup.create(20,0,this.type+'_shield_'+this.shield);
-           this.spriteGroup.create(40,0,this.type+'_weapon_'+this.weapon);
+       _createShipSpriteGroup: function(x, y, scale, phaserInstance){
+           var spriteGroup = phaserInstance.add.group(phaserInstance.stageGroup);
+           spriteGroup.create(0,0,this.type+'_range_'+this.range);
+           spriteGroup.create(10,0,this.type+'_speed_'+this.speed);
+           spriteGroup.create(20,0,this.type+'_shield_'+this.shield);
+           spriteGroup.create(40,0,this.type+'_weapon_'+this.weapon);
            if(scale){
-               this.spriteGroup.scale.y = scale;
-               this.spriteGroup.scale.x = scale;
+               spriteGroup.scale.y = scale;
+               spriteGroup.scale.x = scale;
            }
-           this.spriteGroup.x = x;
-           this.spriteGroup.y = y;
-           return this.spriteGroup;
+           spriteGroup.x = x;
+           spriteGroup.y = y;
+
+           spriteGroup.explode = this._explodeAndDestroy;
+
+           return spriteGroup;
+       },
+       _explodeAndDestroy: function(spriteGroup, phaserInstance){
+           var explodeSprite = phaserInstance.add.sprite(spriteGroup.x, spriteGroup.y, 'explosion', null, phaserInstance.stageGroup);
+           explodeSprite.alpha = 0;
+           explodeSprite.tween = phaserInstance.add.tween(explodeSprite)
+               .to({alpha: 1}, 500)
+               .to({alpha: 0}, 500);
+           explodeSprite.tween.start();
+           spriteGroup.destroy(true);
        },
        _destroySpritesAndGroup: function(){
            if(this.spriteGroup){
