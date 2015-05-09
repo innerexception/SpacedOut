@@ -146,8 +146,6 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.gameInstance.budgetUpdatedSignal.add(this.budgetPanel.refreshPlayer, this.budgetPanel);
             this.gameInstance.planetDragDoneSignal = new Phaser.Signal();
             this.gameInstance.planetDragDoneSignal.add(this.galaxy.endShipDrag, this.galaxy);
-            this.gameInstance.shipHitSignal = new Phaser.Signal();
-            this.gameInstance.shipHitSignal.add(this.galaxy._salvo, this.galaxy);
             this.gameInstance.battleModalSignal = new Phaser.Signal();
             this.gameInstance.battleModalSignal.add(this.battleModal.startBattle, this.battleModal);
             console.log('init panels done.');

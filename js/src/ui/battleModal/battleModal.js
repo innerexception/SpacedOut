@@ -1,5 +1,5 @@
-define(['worldGen', 'phaser', 'ractive', 'rv!/spacedout/js/src/ui/battleModal/battleModal.html', 'css!/spacedout/js/src/ui/battleModal/battleModal'],
-    function(worldGen, Phaser, Ractive, battleModalTemplate){
+define(['phaser', 'ractive', 'rv!/spacedout/js/src/ui/battleModal/battleModal.html', 'css!/spacedout/js/src/ui/battleModal/battleModal'],
+    function(Phaser, Ractive, battleModalTemplate){
         var battleModal = function(galaxy){
             var targetDiv = document.createElement('div');
             targetDiv.id = 'battleModalContainer';
@@ -15,7 +15,7 @@ define(['worldGen', 'phaser', 'ractive', 'rv!/spacedout/js/src/ui/battleModal/ba
                 }
             });
 
-            this.gameInstance = new Phaser.Game(800, 600, Phaser.AUTO, 'battleModal',{
+            this.gameInstance = new Phaser.Game('83', '86', Phaser.AUTO, 'battleModal',{
                 preload: this.preload,
                 create: this.phaserLoad,
                 update: this.update
@@ -39,18 +39,23 @@ define(['worldGen', 'phaser', 'ractive', 'rv!/spacedout/js/src/ui/battleModal/ba
             },
             startBattle: function(fleets){
                 this.transitionTo();
-                this.gameInstance.stageGroup = this.gameInstance.add.group();
+                var location = fleets[0].location;
+                this.generatePlanetImage(location);
+            },
+            generatePlanetImage: function(location){
 
+                var position = {x:0, y:200};
                 if(this.spriteGroup) this.spriteGroup.destroy(true);
                 var spriteGroup = this.gameInstance.add.group(this.gameInstance.stageGroup);
                 this.spriteGroup = spriteGroup;
 
                 var bmd = this.gameInstance.add.bitmapData(100,100);
 
-                worldGen.generateWorldCanvas(bmd.canvas, temp, gravity, metal);
-                this.surfaceImagePath = bmd.canvas.toDataURL();
+                var img = new Image();
+                img.src = location.surfaceImagePath;
+                bmd.canvas.getContext('2d').drawImage(img, 0, 0);
 
-                var scaleFactor = this.isExplored ? Math.max(gravity/4, 0.3) : 0.5;
+                var scaleFactor = 5;
 
                 var sprite = this.gameInstance.add.sprite(position.x, position.y, bmd, null, spriteGroup);
                 sprite.scale.setTo(scaleFactor);
@@ -59,13 +64,8 @@ define(['worldGen', 'phaser', 'ractive', 'rv!/spacedout/js/src/ui/battleModal/ba
                 sprite2.scale.setTo(scaleFactor);
 
                 //Add 'light' source
-                var lightSprite = this.gameInstance.add.sprite(position.x, position.y, this.isExplored ? 'alphaMask' : 'unexploredMask', null, spriteGroup);
+                var lightSprite = this.gameInstance.add.sprite(position.x, position.y, 'alphaMask', null, spriteGroup);
                 lightSprite.scale.setTo(scaleFactor);
-
-                lightSprite.inputEnabled = true;
-                lightSprite.events.onInputDown.add(this._onPlanetClick, this);
-                lightSprite.events.onInputOver.add(this._onPlanetDragOver, this);
-                lightSprite.events.onInputOut.add(this._onPlanetDragOut, this);
 
                 //Create sprite mask
                 if(this.mask) {
@@ -75,7 +75,7 @@ define(['worldGen', 'phaser', 'ractive', 'rv!/spacedout/js/src/ui/battleModal/ba
                 //	Shapes drawn to the Graphics object must be filled.
                 this.mask.beginFill(0xffffff);
                 //	Here we'll draw a circle
-                this.mask.drawCircle(50*scaleFactor, 50*scaleFactor, 50*scaleFactor);
+                this.mask.drawCircle(50*scaleFactor, 50*scaleFactor, 100*scaleFactor);
                 //	And apply it to the Sprite
                 spriteGroup.mask = this.mask;
 
@@ -91,18 +91,18 @@ define(['worldGen', 'phaser', 'ractive', 'rv!/spacedout/js/src/ui/battleModal/ba
                     .to({x: position.x-(100*scaleFactor)}, 10, Phaser.Easing.Linear.None)
                     .loop();
                 sprite2.tween.start();
-
             },
             preload: function () {
                 //Load all assets here
                 this.load.image('lazerShot', 'js/res/img/lazerShot.png');
                 this.load.image('explosion', 'js/res/img/explosion.png');
+                this.load.image('alphaMask', 'js/res/img/alphaMask.png');
+                this.load.image('tinystar', 'js/res/img/tinyStar.png');
             },
             phaserLoad: function () {
                 //1st time load
                 this.world.setBounds(0, 0, 500, 500);
-                //Camera init
-                this.physics.startSystem(Phaser.Physics.ARCADE);
+                this.stageGroup = this.add.group();
             }
         };
 

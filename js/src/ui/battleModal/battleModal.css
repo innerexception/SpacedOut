@@ -17,3 +17,8 @@
     top: 40%;
     z-index: 1;
 }
+
+#battle-modal {
+    height: 100%;
+    width: 100%;
+}

@@ -879,7 +879,7 @@ define([], function(){
   }
 
   var worldGen={};
-  worldGen.generateWorldCanvas = function(targetCanvas, temp, gravity, metal){
+  worldGen.generateWorldCanvas = function(targetCanvas, temp, gravity, metal, size){
     var water, ice, rotate, height, projection, palette;
     if(temp < 32) ice = Math.abs(temp-32);
     if(temp > 100) palette = 'barren';
@@ -890,7 +890,7 @@ define([], function(){
 
     worldGen.targetCanvas = targetCanvas;
 
-    new_world(water, ice, 100, 0, 'mercator', palette)
+    new_world(water, ice, size || 100, 0, 'mercator', palette)
   };
 
   return worldGen;

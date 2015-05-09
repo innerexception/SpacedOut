@@ -107,10 +107,10 @@ define(['worldGen'], function(worldGen){
 
            var bmd = this.gameInstance.add.bitmapData(100,100);
 
-           worldGen.generateWorldCanvas(bmd.canvas, temp, gravity, metal);
+           worldGen.generateWorldCanvas(bmd.canvas, temp, gravity, metal, 100);
            this.surfaceImagePath = bmd.canvas.toDataURL();
 
-           var scaleFactor = this.isExplored ? Math.max(gravity/4, 0.3) : 0.5;
+           var scaleFactor = (this.isExplored ? Math.max(gravity/4, 0.3) : 0.5)*0.8;
 
            var sprite = this.gameInstance.add.sprite(position.x, position.y, bmd, null, spriteGroup);
            sprite.scale.setTo(scaleFactor);
@@ -135,7 +135,7 @@ define(['worldGen'], function(worldGen){
            //	Shapes drawn to the Graphics object must be filled.
            this.mask.beginFill(0xffffff);
            //	Here we'll draw a circle
-           this.mask.drawCircle(50*scaleFactor, 50*scaleFactor, 50*scaleFactor);
+           this.mask.drawCircle(50*scaleFactor, 50*scaleFactor, 100*scaleFactor);
            //	And apply it to the Sprite
            spriteGroup.mask = this.mask;
 
