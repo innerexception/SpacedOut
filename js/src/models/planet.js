@@ -110,7 +110,7 @@ define(['worldGen'], function(worldGen){
            worldGen.generateWorldCanvas(bmd.canvas, temp, gravity, metal, 100);
            this.surfaceImagePath = bmd.canvas.toDataURL();
 
-           var scaleFactor = (this.isExplored ? Math.max(gravity/4, 0.3) : 0.5)*0.8;
+           var scaleFactor = (this.isExplored ? Math.max(gravity/6, 0.2) : 0.5);
 
            var sprite = this.gameInstance.add.sprite(position.x, position.y, bmd, null, spriteGroup);
            sprite.scale.setTo(scaleFactor);

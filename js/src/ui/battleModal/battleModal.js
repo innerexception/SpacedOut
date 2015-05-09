@@ -24,6 +24,33 @@ define(['phaser', 'ractive', 'rv!/spacedout/js/src/ui/battleModal/battleModal.ht
         };
 
         battleModal.prototype = {
+            update: function() {
+                if(this.StarField && this.StarField.stars.length > 0){
+                    for (var i = 0; i < 300; i++)
+                    {
+                        //  Update the stars y position based on its speed
+                        this.StarField.stars[i].y += this.StarField.stars[i].speed;
+
+                        if (this.StarField.stars[i].y > this.world.height)
+                        {
+                            //  Off the bottom of the screen? Then wrap around to the top
+                            this.StarField.stars[i].x = this.world.randomX;
+                            this.StarField.stars[i].y = -32;
+                        }
+
+                        if (i == 0 || i == 100 || i == 200)
+                        {
+                            //  If it's the first star of the layer then we clear the texture
+                            this.StarField.stars[i].texture.renderXY(this.StarField.star[0], this.StarField.stars[i].x, this.StarField.stars[i].y, true);
+                        }
+                        else
+                        {
+                            //  Otherwise just draw the star sprite where we need it
+                            this.StarField.stars[i].texture.renderXY(this.StarField.star[0], this.StarField.stars[i].x, this.StarField.stars[i].y, false);
+                        }
+                    }
+                }
+            },
             transitionFrom: function(){
                 this.isVisible = false;
                 //animate this component away
@@ -79,15 +106,14 @@ define(['phaser', 'ractive', 'rv!/spacedout/js/src/ui/battleModal/battleModal.ht
                 //	And apply it to the Sprite
                 spriteGroup.mask = this.mask;
 
-                var rotationalPeriod = (Math.random()*20000)+10000;
                 //Setup tweens for sprite behind mask
                 sprite.tween = this.gameInstance.add.tween(sprite)
-                    .to({x: position.x + (100*scaleFactor)}, rotationalPeriod, Phaser.Easing.Linear.None)
+                    .to({x: position.x + (100*scaleFactor)}, 20000, Phaser.Easing.Linear.None)
                     .to({x: position.x}, 10, Phaser.Easing.Linear.None)
                     .loop();
                 sprite.tween.start();
                 sprite2.tween = this.gameInstance.add.tween(sprite2)
-                    .to({x: position.x}, rotationalPeriod, Phaser.Easing.Linear.None)
+                    .to({x: position.x}, 20000, Phaser.Easing.Linear.None)
                     .to({x: position.x-(100*scaleFactor)}, 10, Phaser.Easing.Linear.None)
                     .loop();
                 sprite2.tween.start();
@@ -101,9 +127,45 @@ define(['phaser', 'ractive', 'rv!/spacedout/js/src/ui/battleModal/battleModal.ht
             },
             phaserLoad: function () {
                 //1st time load
-                this.world.setBounds(0, 0, 500, 500);
                 this.stageGroup = this.add.group();
+                this.StarField = {
+                    star: [this.make.sprite(0, 0, 'tinystar'),
+                        this.make.sprite(0, 0, 'star'),
+                        this.make.sprite(0, 0, 'bigstar')],
+                    stars: []
+                };
+                this.add.sprite(0, 0, this.StarField.texture, null, this.stageGroup);
+
+                var texture1 = this.add.renderTexture(this.world.width, this.world.height, 'texture1');
+                var texture2 = this.add.renderTexture(this.world.width, this.world.height, 'texture2');
+                var texture3 = this.add.renderTexture(this.world.width, this.world.height, 'texture3');
+
+                this.add.sprite(0, 0, texture1, null, this.stageGroup);
+                this.add.sprite(0, 0, texture2, null, this.stageGroup);
+                this.add.sprite(0, 0, texture3, null, this.stageGroup);
+
+                var t = texture1;
+                var s = 0.05;
+
+                //  100 sprites per layer
+                for (var i = 0; i < 200; i++)
+                {
+                    if (i == 100)
+                    {
+                        //  With each 100 stars we ramp up the speed a little and swap to the next texture
+                        s = 0.1;
+                        t = texture2;
+                    }
+                    else if (i == 200)
+                    {
+                        s = 0.2;
+                        t = texture3;
+                    }
+
+                    this.StarField.stars.push( { x: Math.random()*this.world.width, y: Math.random()*this.world.height, speed: s, texture: t });
+                }
             }
+
         };
 
         return battleModal;
