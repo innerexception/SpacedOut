@@ -53,14 +53,13 @@ define(['lodash'], function(_){
             this.isSelected = false;
             planet.fleets.push(this);
 
-            var combatQueue = [];
+            var hasCombat = false;
             _.each(planet.fleets, function(fleet){
-                if(fleet.owner != this.galaxy.clientPlayer){
-                    combatQueue.push(fleet);
+                if(fleet.ships[0].owner != this.galaxy.clientPlayer){
+                    hasCombat = true;
                 }
             }, this);
-
-            this.galaxy.resolveCombat(combatQueue);
+            if(hasCombat) this.galaxy.gameInstance.battleModalSignal.dispatch(planet.fleets);
         },
         _checkForColonization: function(){
             var colonyShip = _.filter(this.ships, function(ship){

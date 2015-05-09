@@ -61,14 +61,14 @@ define(['lodash'], function(_){
                if(this._combatGroups.friendlyTurn){
                    //this must be from the enemy list
                    this._combatGroups.enemy = _.filter(this._combatGroups.enemy, function(shipObj){
-                       return shipObj === ship;
-                   });
+                       return shipObj !== this._targetShip;
+                   }, this);
                }
                else{
                    //must be in friendly group
                    this._combatGroups.friendly = _.filter(this._combatGroups.friendly, function(shipObj){
-                       return shipObj === ship;
-                   });
+                       return shipObj !== this._targetShip;
+                   }, this);
                }
            }
 

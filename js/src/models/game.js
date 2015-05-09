@@ -1,7 +1,7 @@
 define(['phaser', 'lodash', 'candy', 'budgetPanel',
-    'gameSetupModal', 'messagePanel', 'planetPanel', 'techPanel', 'galaxy', 'taskBar', 'shipBuilder'],
+    'gameSetupModal', 'messagePanel', 'planetPanel', 'techPanel', 'galaxy', 'taskBar', 'shipBuilder', 'battleModal'],
     function(Phaser, _, Candy, BudgetPanel, GameSetupModal,
-             MessagePanel, PlanetPanel, TechPanel, Galaxy, TaskBarPanel, ShipBuilderPanel){
+             MessagePanel, PlanetPanel, TechPanel, Galaxy, TaskBarPanel, ShipBuilderPanel, BattleModal){
 
     var OutSpacedApp = function(h, w, mode, targetElement){
         var loadingSignal = new Phaser.Signal();
@@ -53,21 +53,22 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
         appUpdate: function(){
             if(this.galaxy) {
                 this.galaxy.update();
-                this.galaxy.isScrolling = false;
-                var pointerPosition = this.gameInstance.input.mousePointer.position;
-                var camera = this.gameInstance.camera;
+                if(!this.isInCombat) {
+                    var pointerPosition = this.gameInstance.input.mousePointer.position;
+                    var camera = this.gameInstance.camera;
 
-                if(pointerPosition.x >= (this.gameInstance.camera.view.width - 100) && camera.x <= this.gameInstance.stageGroup.width/2){
-                    camera.x+=5;
-                }
-                if(pointerPosition.y >= (this.gameInstance.camera.view.height - 100) && camera.y <= this.gameInstance.stageGroup.height/2){
-                    camera.y+=5;
-                }
-                if(pointerPosition.x < (35) && camera.x > 0){
-                    camera.x-=5;
-                }
-                if(pointerPosition.y < (35) && camera.y > 0){
-                    camera.y-=5;
+                    if (pointerPosition.x >= (this.gameInstance.camera.view.width - 100) && camera.x <= this.gameInstance.stageGroup.width / 2) {
+                        camera.x += 5;
+                    }
+                    if (pointerPosition.y >= (this.gameInstance.camera.view.height - 100) && camera.y <= this.gameInstance.stageGroup.height / 2) {
+                        camera.y += 5;
+                    }
+                    if (pointerPosition.x < (35) && camera.x > 0) {
+                        camera.x -= 5;
+                    }
+                    if (pointerPosition.y < (35) && camera.y > 0) {
+                        camera.y -= 5;
+                    }
                 }
             }
         },
@@ -101,13 +102,15 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
         },
 
         mouseZoom: function(){
-            if(this.input.mouse.wheelDelta === 1 && this.stageGroup.scale.x < 2){
-                this.stageGroup.scale.x += 0.005;
-                this.stageGroup.scale.y += 0.005;
-            }
-            else if(this.stageGroup.scale.x > 0.5){
-                this.stageGroup.scale.x -= 0.005;
-                this.stageGroup.scale.y -= 0.005;
+            if(!this.isInCombat){
+                if(this.input.mouse.wheelDelta === 1 && this.stageGroup.scale.x < 2){
+                    this.stageGroup.scale.x += 0.005;
+                    this.stageGroup.scale.y += 0.005;
+                }
+                else if(this.stageGroup.scale.x > 0.5){
+                    this.stageGroup.scale.x -= 0.005;
+                    this.stageGroup.scale.y -= 0.005;
+                }
             }
         },
 
@@ -124,6 +127,7 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.messagePanel = new MessagePanel(this.galaxy);
             this.shipBuilderPanel = new ShipBuilderPanel(this.galaxy);
             this.taskBarPanel = new TaskBarPanel(this.galaxy);
+            this.battleModal = new BattleModal(this.galaxy);
             this.gameInstance.planetClickedSignal = new Phaser.Signal();
             this.gameInstance.planetClickedSignal.add(this.planetPanel.onPlanetClicked, this.planetPanel);
             this.gameInstance.planetClickedSignal.add(this.galaxy.onPlanetClicked, this.galaxy);
@@ -144,6 +148,8 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.gameInstance.planetDragDoneSignal.add(this.galaxy.endShipDrag, this.galaxy);
             this.gameInstance.shipHitSignal = new Phaser.Signal();
             this.gameInstance.shipHitSignal.add(this.galaxy._salvo, this.galaxy);
+            this.gameInstance.battleModalSignal = new Phaser.Signal();
+            this.gameInstance.battleModalSignal.add(this.battleModal.startBattle, this.battleModal);
             console.log('init panels done.');
             this.inGame = true;
             this.gameInstance.camera.focusOnXY(0,0);

@@ -52,16 +52,13 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
        },
        drawLine: function(x1, y1, x2, y2, context, clear, range){
 
-           var pos = context.toLocal({x:x1, y:y1});
-           var pos2 = context.toLocal({x:x2, y:y2});
-           var scaleCoef = 1;
+           var pos = this.getTransformedCoords(x1, y1, context);
+           var pos2 = this.getTransformedCoords(x2, y2, context);
 
-           scaleCoef = 1/this.gameInstance.stageGroup.scale.x;
-
-           x1 = pos.x - (scaleCoef*this.gameInstance.camera.x);
-           y1 = pos.y - (scaleCoef*this.gameInstance.camera.y);
-           x2 = pos2.x - (scaleCoef*this.gameInstance.camera.x);
-           y2 = pos2.y - (scaleCoef*this.gameInstance.camera.y);
+           x1 = pos.x;
+           y1 = pos.y;
+           x2 = pos2.x;
+           y2 = pos2.y;
 
            var color = 0x00ff00;
            if(Math.sqrt(Math.pow((x2-x1), 2)+Math.pow((y2-y1), 2)) > range){
@@ -82,6 +79,15 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            context.drawCircle(x1, y1, range*2);
            context.endFill();
 
+       },
+       getTransformedCoords: function(x, y, context){
+           var pos = context.toLocal({x:x, y:y});
+           var scaleCoef = 1/this.gameInstance.stageGroup.scale.x;
+
+           x = pos.x - (scaleCoef*this.gameInstance.camera.x);
+           y = pos.y - (scaleCoef*this.gameInstance.camera.y);
+
+           return {x:x, y:y};
        },
        endShipDrag: function() {
            if(!this.gameInstance.shipPathContext.fleetOutOfRange){
@@ -153,17 +159,6 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                }, this);
            }, this);
        },
-       resolveCombat: function(fleets){
-           console.log('combat initiated.');
-           this._combatFleets = fleets;
-           this.gameInstance.stageGroup.combatPanTween = this.gameInstance.add.tween(this.gameInstance.camera)
-               .to({ x: fleets[0].location.getCenterPoint().x, y: fleets[0].location.getCenterPoint().y }, 2000);
-           this.gameInstance.stageGroup.combatZoomTween = this.gameInstance.add.tween(this.gameInstance.stageGroup.scale)
-               .to({ x: 3, y: 3 }, 2000);
-           this.gameInstance.stageGroup.combatZoomTween.onComplete.addOnce(this._combatCameraReady, this);
-           this.gameInstance.stageGroup.combatPanTween.start();
-           this.gameInstance.stageGroup.combatZoomTween.start();
-       },
        _combatCameraReady: function(){
 
            console.log('combat camera ready.');
@@ -232,11 +227,15 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                //TODO run loss event
                //this.gameInstance.combatLostSignal.dispatch();
                console.log('u mad?');
+               this.gameInstance.isInCombat = false;
+               this.gameInstance.planetUpdatedSignal.dispatch(combatGroups.enemy[0].location);
            }
            else if(combatGroups.enemy.length <= 0){
                //TODO run victory event
                //this.gameInstance.combatWonSignal.dispatch();
                console.log('a winner is you');
+               this.gameInstance.isInCombat = false;
+               this.gameInstance.planetUpdatedSignal.dispatch(combatGroups.friendly[0].location);
            }
        },
        initializePlayer: function(name, isAi, difficulty){
