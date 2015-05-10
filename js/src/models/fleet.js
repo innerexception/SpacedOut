@@ -46,11 +46,15 @@ define(['lodash'], function(_){
             this.galaxy.gameInstance.planetUpdatedSignal.dispatch(this.location);
         },
         setLocation: function(planet){
+            this.location.selectedFleet = null;
             this.location.removeFleet(this);
             this.location = planet;
             if(this.ships[0].owner === this.galaxy.clientPlayer) planet.setIsExplored(true);
             this.inTransit = false;
+            this.destination = null;
+            this.distanceToDestination = null;
             this.isSelected = false;
+            this.queuedForTravel = false;
             planet.fleets.push(this);
 
             var hasCombat = false;
@@ -60,6 +64,9 @@ define(['lodash'], function(_){
                 }
             }, this);
             if(hasCombat) this.galaxy.gameInstance.battleModalSignal.dispatch(planet.fleets);
+            else this._checkForColonization();
+            this.galaxy.gameInstance.planetUpdatedSignal && this.galaxy.gameInstance.planetUpdatedSignal.dispatch(this.location);
+            this.galaxy.gameInstance.budgetUpdatedSignal && this.galaxy.gameInstance.budgetUpdatedSignal.dispatch();
         },
         _checkForColonization: function(){
             var colonyShip = _.filter(this.ships, function(ship){

@@ -123,6 +123,9 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            _.each(this.planets, function(planet){
                _.each(planet.fleets, function(fleet){
                    if(fleet.destination) fleet.distanceToDestination -= fleet.speed;
+                   if(fleet.destination && fleet.distanceToDestination <= 0){
+                       fleet.setLocation(fleet.destination);
+                   }
                    _.each(fleet.ships, function (ship) {
 
                        var nextX = fleet.location.getCenterPoint().x;
@@ -145,11 +148,6 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
                                             move: fleet.distanceToDestination > 0,
                                             warpOut: fleet.queuedForTravel});
                    });
-                   if(fleet.destination && fleet.distanceToDestination <= 0){
-                       fleet.setLocation(fleet.destination);
-                       delete fleet.destination;
-                       fleet.distanceToDestination=0;
-                   }
                    if(fleet.queuedForTravel){
                        //Just left planet
                        fleet.inTransit = true;
