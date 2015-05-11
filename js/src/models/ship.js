@@ -42,7 +42,7 @@ define(['lodash'], function(_){
            spriteGroup.create(0,0,this.type+'_range_'+this.range);
            spriteGroup.create(10,0,this.type+'_speed_'+this.speed);
            spriteGroup.create(20,0,this.type+'_shield_'+this.shield);
-           spriteGroup.create(40,0,this.type+'_weapon_'+this.weapon);
+           spriteGroup.create(30,0,this.type+'_weapon_'+this.weapon);
            if(scale){
                spriteGroup.scale.y = scale;
                spriteGroup.scale.x = scale;
@@ -51,6 +51,13 @@ define(['lodash'], function(_){
            spriteGroup.y = y;
 
            spriteGroup.explode = this._explodeAndDestroy;
+
+           var bmd = this.gameInstance.make.bitmapData(80,40);
+           _.each(spriteGroup.children, function(child, i){
+               bmd.draw(child, i*10, 0);
+           });
+
+           spriteGroup.thumbnailPath = bmd.canvas.toDataURL();
 
            return spriteGroup;
        },

@@ -26,12 +26,10 @@ define(['ractive', 'rv!/spacedout/js/src/ui/planetPanel/planetPanel.html', 'css!
                     self._ractive.data.planet.setTerraformPercent(event.node.value);
                 },
                 onFleetSelected: function(event){
-                    self._ractive.data.planet.setSelectedFleet(event.context);
+                    if(event.context.ships[0].owner === self.galaxy.clientPlayer) self._ractive.data.planet.setSelectedFleet(event.context);
                 },
-                onFleetSplit: function(event){
-                    self._ractive.data.planet.fleets.push(event.context.splitFleet());
-                    if(event.context.ships.length <= 0) self._ractive.data.planet.removeFleet(event.context);
-                    self._ractive.set('planet.fleets', self._ractive.data.planet.fleets);
+                onFleetEdit: function(event){
+                    self.galaxy.gameInstance.fleetEditSignal.dispatch(self._ractive.data.planet);
                 }
             })
         };

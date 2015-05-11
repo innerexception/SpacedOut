@@ -1,0 +1,32 @@
+<div id="fleetModal" class="inner-panel">
+    <div class="fleet-list inline well">
+        {{#planet.fleets:i}}
+            {{>fleetItem}}
+        {{/planet.fleets}}
+    </div>
+    <div class="inline fleet-buttons">
+        <img src="./js/res/img/icon-right-arrow.png" />
+        <img src="./js/res/img/icon-left-arrow.png" />
+    </div>
+    <div class="new-fleet-list inline well">
+        <div class="well" on-mouseup="onNewFleetDrop">+ New Fleet</div>
+        {{#newFleets:i}}
+            {{>fleetItem}}
+        {{/newFleets}}
+    </div>
+</div>
+
+
+<!-- {{>fleetItem}} -->
+<div on-mouseup="onFleetDrop" class="well">
+    <div>{{name}}</div>
+    {{#ships:i}}
+        {{>shipItem}}
+    {{/ships}}
+</div>
+<!-- {{/fleetItem}} -->
+
+
+<!-- {{>shipItem}} -->
+<div>{{type}}</div><img class="ship-item" on-click="onShipSelected" src="{{spriteGroup.thumbnailPath}}" />
+<!-- {{/shipItem}} -->

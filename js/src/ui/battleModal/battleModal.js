@@ -166,6 +166,7 @@ define(['phaser', 'ractive', 'rv!/spacedout/js/src/ui/battleModal/battleModal.ht
                     });
                     this.galaxy.gameInstance.planetUpdatedSignal.dispatch(combatGroups.planet);
                     this.galaxy.gameInstance.budgetUpdatedSignal.dispatch();
+                    this.transitionFrom();
                 }
                 else if(combatGroups.enemy.length <= 0){
                     //TODO run victory event
@@ -185,6 +186,7 @@ define(['phaser', 'ractive', 'rv!/spacedout/js/src/ui/battleModal/battleModal.ht
                     });
                     this.galaxy.gameInstance.planetUpdatedSignal.dispatch(combatGroups.planet);
                     this.galaxy.gameInstance.budgetUpdatedSignal.dispatch();
+                    this.transitionFrom();
                 }
             },
             _fireLazerAt: function(sourceShip, targetShip, combatGroups, rotate){

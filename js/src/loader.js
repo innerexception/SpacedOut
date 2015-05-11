@@ -26,7 +26,8 @@ require.config({
         'budgetPanel': 'src/ui/budgetPanel/budgetPanel',
         'taskBar': 'src/ui/taskBar/taskBar',
         'shipBuilder' : 'src/ui/shipBuilder/shipBuilder',
-        'battleModal' : 'src/ui/battleModal/battleModal'
+        'battleModal' : 'src/ui/battleModal/battleModal',
+        'fleetManagerModal' : 'src/ui/fleetManagerModal/fleetManagerModal'
     },
     map: {
         '*': {

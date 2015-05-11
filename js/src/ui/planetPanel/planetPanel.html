@@ -16,7 +16,7 @@
         <img src="./js/res/img/icon-terraform.png" />
     </div>
     <div class="well fleet-well">
-        <div on-click="onFleetsExpand">Fleets</div>
+        <div>Fleets</div>
         <div class="list-group">
             {{#planet.fleets:i}}
                 {{>fleetItem}}
@@ -28,7 +28,7 @@
 
 <!-- {{>fleetItem}} -->
 <div class="well {{inTransit ? 'hidden' : ''}}">
-    <div class="{{isSelected ? 'selected-fleet' : ''}} {{queuedForTravel ? 'traveling' : ''}}" on-dblclick="onFleetSplit" on-click="onFleetSelected">{{name}}</div>
+    <div class="{{isSelected ? 'selected-fleet' : ''}} {{queuedForTravel ? 'traveling' : ''}}" on-dblclick="onFleetEdit" on-click="onFleetSelected">{{name}}</div>
 </div>
 <!-- {{/fleetItem}} -->
 

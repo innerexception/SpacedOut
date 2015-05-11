@@ -1,7 +1,7 @@
 define(['phaser', 'lodash', 'candy', 'budgetPanel',
-    'gameSetupModal', 'messagePanel', 'planetPanel', 'techPanel', 'galaxy', 'taskBar', 'shipBuilder', 'battleModal'],
-    function(Phaser, _, Candy, BudgetPanel, GameSetupModal,
-             MessagePanel, PlanetPanel, TechPanel, Galaxy, TaskBarPanel, ShipBuilderPanel, BattleModal){
+    'gameSetupModal', 'messagePanel', 'planetPanel', 'techPanel', 'galaxy', 'taskBar', 'shipBuilder', 'battleModal', 'fleetManagerModal'],
+    function(Phaser, _, Candy, BudgetPanel, GameSetupModal, MessagePanel, PlanetPanel, TechPanel, Galaxy,
+             TaskBarPanel, ShipBuilderPanel, BattleModal, FleetManagerModal){
 
     var OutSpacedApp = function(h, w, mode, targetElement){
         var loadingSignal = new Phaser.Signal();
@@ -128,9 +128,12 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.shipBuilderPanel = new ShipBuilderPanel(this.galaxy);
             this.taskBarPanel = new TaskBarPanel(this.galaxy);
             this.battleModal = new BattleModal(this.galaxy);
+            this.fleetManagerModal = new FleetManagerModal(this.galaxy);
             this.gameInstance.planetClickedSignal = new Phaser.Signal();
             this.gameInstance.planetClickedSignal.add(this.planetPanel.onPlanetClicked, this.planetPanel);
             this.gameInstance.planetClickedSignal.add(this.galaxy.onPlanetClicked, this.galaxy);
+            this.gameInstance.fleetEditSignal = new Phaser.Signal();
+            this.gameInstance.fleetEditSignal.add(this.fleetManagerModal.transitionTo, this.fleetManagerModal);
             this.gameInstance.panelToggleSignal = new Phaser.Signal();
             this.gameInstance.panelToggleSignal.add(this.planetPanel.toggle, this.planetPanel);
             this.gameInstance.panelToggleSignal.add(this.techPanel.toggle, this.techPanel);
