@@ -89,6 +89,11 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
 
            return {x:x, y:y};
        },
+       removeShip: function(shipObj){
+           this.ships = _.filter(this.ships, function(ship){
+               return ship.id !== shipObj.id;
+           });
+       },
        endShipDrag: function() {
            if(!this.gameInstance.shipPathContext.fleetOutOfRange){
                var destinationPlanet = _.filter(this.planets, function(planet){
