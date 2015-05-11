@@ -23,13 +23,13 @@ define(['ractive', 'rv!/spacedout/js/src/ui/planetPanel/planetPanel.html', 'css!
 
             this._ractive.on({
                 onPlanetGrowthChanged: function(event){
-                    self._ractive.data.planet.setTerraformPercent(event.node.value);
+                    self._ractive.get('planet').setTerraformPercent(event.node.value);
                 },
                 onFleetSelected: function(event){
-                    if(event.context.ships[0].owner === self.galaxy.clientPlayer) self._ractive.data.planet.setSelectedFleet(event.context);
+                    if(event.context.ships[0].owner === self.galaxy.clientPlayer) self._ractive.get('planet').setSelectedFleet(event.context);
                 },
                 onFleetEdit: function(event){
-                    self.galaxy.gameInstance.fleetEditSignal.dispatch(self._ractive.data.planet);
+                    self.galaxy.gameInstance.fleetEditSignal.dispatch(self._ractive.get('planet'));
                 }
             })
         };
@@ -58,7 +58,7 @@ define(['ractive', 'rv!/spacedout/js/src/ui/planetPanel/planetPanel.html', 'css!
                 if(!this.isVisible) this.transitionTo();
             },
             refreshPanel: function(planet){
-                if(this._ractive.data.planet === planet) this._ractive.set('planet', planet);
+                if(this._ractive.get('planet') === planet) this._ractive.set('planet', planet);
             }
         };
 

@@ -74,6 +74,7 @@ define(['worldGen'], function(worldGen){
            this.fleets = _.filter(this.fleets, function(fleet){
                return fleet.id !== fleetObj.id;
            });
+           this.gameInstance.planetUpdatedSignal.dispatch(this);
        },
        extractResources: function(){
            this.temp = parseFloat((this.tempChange + this.temp).toFixed(1));

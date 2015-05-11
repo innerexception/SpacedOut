@@ -21,21 +21,43 @@ define(['lodash', 'fleet', 'ractive', 'rv!/spacedout/js/src/ui/fleetManagerModal
             this._ractive.on({
                 onShipSelected: function(event){
                     self.dragShip = event.context;
-                },
-                onFleetDrop: function(event){
-                    if(self.dragShip)event.context.addShip(self.dragShip)
-                },
-                onNewFleetDrop: function(event){
-                    var newFleet= new Fleet([self.dragShip], self._ractive.data.planet, self.galaxy);
-                    self._ractive.data.newFleets.push(newFleet);
-                    self._ractive.data.planet.fleets.push(newFleet);
-                    _.each(self._ractive.data.planet.fleets, function(fleet){
+                    var allFleets = self._ractive.get('planet.fleets');
+                    if(allFleets) allFleets = allFleets.concat(self._ractive.get('newFleets'));
+                    _.each(allFleets, function(fleet){
                         _.each(fleet.ships, function(ship){
-                            if(ship===self.dragShip) fleet.removeShip(ship);
+                            if(ship === self.dragShip) self.dragShip.fleet = fleet;
                         });
                     });
-                    self._ractive.set('planet', self._ractive.data.planet);
-                    self.galaxy.gameInstance.planetUpdatedSignal.dispatch(self._ractive.data.planet);
+                },
+                onFleetDrop: function(event){
+                    if(self.dragShip &&
+                        self.dragShip.fleet !== event.context &&
+                        !event.context.containsShip(self.dragShip)){
+
+                        event.context.addShip(self.dragShip);
+
+                        var fleet = self.dragShip.fleet;
+                        fleet.removeShip(self.dragShip);
+                        self.synchStores(fleet);
+                        self.galaxy.gameInstance.planetUpdatedSignal.dispatch(self._ractive.get('planet'));
+                        delete self.dragShip;
+                        console.log('ship dropped on fleet');
+                    }
+
+                },
+                onNewFleetDrop: function(event){
+                    var newFleet= new Fleet([self.dragShip], null, self.galaxy);
+                    self._ractive.get('newFleets').push(newFleet);
+                    var fleet = self.dragShip.fleet;
+                    fleet.removeShip(self.dragShip);
+                    self.synchStores(fleet);
+                    self.galaxy.gameInstance.planetUpdatedSignal.dispatch(self._ractive.get('planet'));
+                    delete self.dragShip;
+
+                    console.log('ship dropped on new fleet');
+                },
+                allowDrop: function(event) {
+                    event.original.preventDefault();
                 }
             });
         };
@@ -45,6 +67,7 @@ define(['lodash', 'fleet', 'ractive', 'rv!/spacedout/js/src/ui/fleetManagerModal
                 //animate this component away
                 this._dom.className = this._dom.className.replace('fleetModalIn', '');
                 this._dom.className = [this._dom.className, 'fleetModalOut'].join(" ");
+                this.saveNewFleets();
             },
             transitionTo: function(planet){
                 this.isVisible = true;
@@ -52,6 +75,25 @@ define(['lodash', 'fleet', 'ractive', 'rv!/spacedout/js/src/ui/fleetManagerModal
                 this._dom.className = this._dom.className.replace('fleetModalOut', '');
                 this._dom.className = [this._dom.className, 'fleetModalIn'].join(" ");
                 this._ractive.set('planet', planet);
+            },
+            saveNewFleets: function(){
+                _.each(this._ractive.get('newFleets'), function(fleet){
+                    fleet.location = this._ractive.get('planet');
+                }, this);
+                this._ractive.get('planet.fleets').push(this._ractive.get('newFleets'));
+            },
+            synchStores: function(fleet){
+                var newFleets = this._ractive.get('newFleets');
+                if(fleet.ships.length <= 0){
+                    if(fleet.location){
+                        fleet.location.removeFleet(fleet);
+                    }
+                    else {
+                        newFleets = newFleets.splice(newFleets.indexOf(fleet), 1);
+                    }
+                }
+                this._ractive.set('newFleets', newFleets);
+                if(fleet.location) this._ractive.set('planet', fleet.location);
             }
         };
         return fleetModal;

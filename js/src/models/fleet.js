@@ -8,7 +8,7 @@ define(['lodash'], function(_){
         this.location = planet;
         this.inTransit = false;
         this.queuedForTravel = false;
-        planet.fleets.push(this);
+        planet && planet.fleets.push(this);
         this.galaxy = galaxy;
     };
     fleet.prototype = {
@@ -24,12 +24,10 @@ define(['lodash'], function(_){
             this.speed = this._getMaxFleetSpeed();
             this.range = this._getMaxFleetRange();
         },
-        splitFleet: function(){
-            var halfArr;
-            _.times(Math.round(this.ships.length/2), function(){
-                halfArr.push(this.ships.pop());
-            }, this);
-            return new fleet(halfArr);
+        containsShip: function(shipObj){
+            return _.filter(this.ships, function(ship){
+                return ship === shipObj;
+            }).length > 0;
         },
         setDestination: function(planet){
             this.distanceToDestination = this.galaxy.gameInstance.physics.arcade.distanceBetween(this.location.sprites[2], planet.sprites[2]);
