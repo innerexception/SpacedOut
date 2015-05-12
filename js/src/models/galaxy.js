@@ -269,16 +269,16 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            var ships = [];
            switch(difficulty){
                case 0:
-                   ships.push(new Ship(homeworld, player, 'scout', 1, 1, 1, 0, this.gameInstance));
-                   ships.push(new Ship(homeworld, player, 'scout', 1, 1, 1, 0, this.gameInstance));
-                   ships.push(new Ship(homeworld, player, 'colony', 1, 1, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'scout', 1, 1, 1, 0, 0, this.gameInstance, true));
+                   ships.push(new Ship(homeworld, player, 'scout', 1, 1, 1, 0, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'colony', 1, 1, 1, 0, 0, this.gameInstance, true));
                    break;
                case 1:
-                   ships.push(new Ship(homeworld, player, 'scout', 1, 1, 1, 0, this.gameInstance));
-                   ships.push(new Ship(homeworld, player, 'scout', 1, 1, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'scout', 1, 1, 1, 0, 0, this.gameInstance, true));
+                   ships.push(new Ship(homeworld, player, 'scout', 1, 1, 1, 0, 0, this.gameInstance));
                    break;
                case 2:
-                   ships.push(new Ship(homeworld, player, 'scout', 1, 1, 1, 0, this.gameInstance));
+                   ships.push(new Ship(homeworld, player, 'scout', 1, 1, 1, 0, 0, this.gameInstance, true));
                    break;
            }
            return new Fleet(ships, homeworld, this);

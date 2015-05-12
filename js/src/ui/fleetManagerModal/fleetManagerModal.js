@@ -87,6 +87,7 @@ define(['lodash', 'fleet', 'ractive', 'rv!/spacedout/js/src/ui/fleetManagerModal
                 }, this);
                 this._ractive.set('planet.fleets', this._ractive.get('planet.fleets').concat(this._ractive.get('newFleets')));
                 this.galaxy.gameInstance.planetUpdatedSignal.dispatch(this._ractive.get('planet'));
+                this._ractive.set('newFleets', []);
             },
             synchStores: function(fleet){
                 var newFleets = this._ractive.get('newFleets');

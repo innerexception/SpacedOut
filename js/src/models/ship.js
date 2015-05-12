@@ -1,5 +1,5 @@
 define(['lodash'], function(_){
-   var ship = function(planet, player, type, range, speed, weapon, shield, gameInstance){
+   var ship = function(planet, player, type, range, speed, weapon, shield, mini, gameInstance, isPrototype){
         this.type = type;
         if(type === this.Constants.ShipTypes.Colony && planet.population > 7500){
             this.colonists = 7500;
@@ -7,17 +7,36 @@ define(['lodash'], function(_){
         }
         this.id = 'ship_'+Math.random();
         this.range = ((range * 0.3) * this.Constants.TechStats.rangeBase) + this.Constants.TechStats.rangeBase;
+        this.rangeLevel = range;
         this.speed = ((speed * 0.3) * this.Constants.TechStats.speedBase) + this.Constants.TechStats.speedBase;
+        this.speedLevel = speed;
         this.weapon = weapon;
         this.shield = shield;
+        this.mini = mini;
+        this.prototypeCost = 0;
+        this.updateProductionCost();
+        this.updateMetalCost();
+        this.number = 0;
         this.spriteGroup = null;
         this.owner = player;
         this.gameInstance = gameInstance;
         this.hp = 3;
         this.drawAtLocation(planet.getCenterPoint().x, planet.getCenterPoint().y, {orbit: true, create: true});
+        if(isPrototype){
+           player.designs.push(this);
+        }
    };
 
    ship.prototype = {
+       updatePrototypeCost: function(){
+           this.prototypeCost= (this.rangeLevel + this.speedLevel + this.shield + this.weapon + this.mini) * 1000;
+       },
+       updateProductionCost: function(){
+           this.productionCost= (this.rangeLevel + this.speedLevel + this.shield + this.weapon + this.mini) * 100;
+       },
+       updateMetalCost: function(){
+           this.metalCost = (this.rangeLevel + this.speedLevel + this.shield + this.weapon - this.mini) * 100;
+       },
        drawAtLocation: function(x, y, options){
            if(options.create){
                this._destroySpritesAndGroup();
@@ -119,8 +138,8 @@ define(['lodash'], function(_){
 
    ship.prototype.Constants= {
        TechStats: {
-           rangeBase: 1500,
-           speedBase: 300
+           rangeBase: 150,
+           speedBase: 30
        },
        ShipTypes: {
            Colony: 'colony',
