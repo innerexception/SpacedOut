@@ -190,7 +190,6 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
 
            //get initial ships
            player.fleets.push(this._getInitialFleet(homeWorld, player, difficulty));
-           this.ships = this.ships.concat(player.fleets[0].ships);
            return player;
        },
        generatePlanets: function(shape, size, spread){

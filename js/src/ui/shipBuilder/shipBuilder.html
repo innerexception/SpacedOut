@@ -1,3 +1,61 @@
 <div class="inner-panel">
-    Ship Builder
+    <div class="col-md-4">
+        <div class="list-group design-list">
+            {{#designs:i}}
+                {{>designItem}}
+            {{/designs}}
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div>{{selectedDesign.type}}</div>
+        <img src="{{selectedDesign.thumbnailPath}}" />
+        <div>
+            1st <img class="inline" src="./js/res/img/icon_budget.png" />:
+            <div class="inline"> {{selectedDesign.prototypeCost}}</div>
+        </div>
+        <div>
+            2nd+ <img class="inline" src="./js/res/img/icon_budget.png" />:
+            <div class="inline"> {{selectedDesign.productionCost}}</div>
+        </div>
+        <div>
+            <img class="inline" src="./js/res/img/icon-metal.png" />:
+            <div class="inline"> {{selectedDesign.metalCost}}</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="well list-group stats-panel">
+            <div>
+                <img src="./js/res/img/icon-range.png" />
+                <input data-id="range" type="range" max="{{player.techs.range.level}}" on-change="onStatChanged" />
+            </div>
+            <div>
+                <img src="./js/res/img/icon-speed.png" />
+                <input data-id="speed" type="range" max="{{player.techs.speed.level}}" on-change="onStatChanged" />
+            </div>
+            <div>
+                <img src="./js/res/img/icon-shield.png" />
+                <input data-id="shield" type="range" max="{{player.techs.shield.level}}" on-change="onStatChanged" />
+            </div>
+            <div>
+                <img src="./js/res/img/icon-weapon.png" />
+                <input data-id="weapon" max="{{player.techs.weapon.level}}" type="range" on-change="onStatChanged" />
+            </div>
+            <div>
+                <img src="./js/res/img/icon-mini.png" />
+                <input data-id="mini" max="{{player.techs.mini.level}}" type="range" on-change="onStatChanged" />
+            </div>
+            <div>
+                <div class="inline">#</div>
+                <input id="shipNumber" type="number" on-change="onNumberChanged" min="0" max="25" />
+                <div>{{selectedDesign.prototypeCost + (selectedDesign.productionCost * selectedDesign.number)}}</div>
+            </div>
+        </div>
+        <div on-click="onDoneClicked">Done</div>
+    </div>
 </div>
+
+<!-- {{>designItem}} -->
+<div class="well">
+    <img on-click="onDesignClick" src="{{thumbnailPath}}"/>
+</div>
+<!-- {{/designItem}} -->

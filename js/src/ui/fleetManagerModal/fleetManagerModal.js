@@ -46,7 +46,7 @@ define(['lodash', 'fleet', 'ractive', 'rv!/spacedout/js/src/ui/fleetManagerModal
 
                 },
                 onNewFleetDrop: function(event){
-                    var newFleet= new Fleet([self.dragShip], null, self.galaxy);
+                    var newFleet= new Fleet([self.dragShip], null, null);
                     self._ractive.get('newFleets').push(newFleet);
                     var fleet = self.dragShip.fleet;
                     fleet.removeShip(self.dragShip);
@@ -58,6 +58,9 @@ define(['lodash', 'fleet', 'ractive', 'rv!/spacedout/js/src/ui/fleetManagerModal
                 },
                 allowDrop: function(event) {
                     event.original.preventDefault();
+                },
+                onCloseClick: function(event){
+                    self.transitionFrom();
                 }
             });
         };
@@ -79,8 +82,11 @@ define(['lodash', 'fleet', 'ractive', 'rv!/spacedout/js/src/ui/fleetManagerModal
             saveNewFleets: function(){
                 _.each(this._ractive.get('newFleets'), function(fleet){
                     fleet.location = this._ractive.get('planet');
+                    fleet.galaxy = this.galaxy;
+                    fleet.galaxy.ships = fleet.galaxy.ships.concat(fleet.ships);
                 }, this);
-                this._ractive.get('planet.fleets').push(this._ractive.get('newFleets'));
+                this._ractive.set('planet.fleets', this._ractive.get('planet.fleets').concat(this._ractive.get('newFleets')));
+                this.galaxy.gameInstance.planetUpdatedSignal.dispatch(this._ractive.get('planet'));
             },
             synchStores: function(fleet){
                 var newFleets = this._ractive.get('newFleets');

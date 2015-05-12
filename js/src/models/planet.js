@@ -95,6 +95,7 @@ define(['worldGen'], function(worldGen){
        },
        _onPlanetClick: function(){
            this.gameInstance.planetClickedSignal.dispatch(this);
+           this.gameInstance.selectedPlanet = this;
            if(this.selectedFleet) {
                this.gameInstance.dragSessionId = Math.random() + '_drag';
                this.gameInstance.planetDragFleet = this.selectedFleet;

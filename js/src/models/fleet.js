@@ -9,7 +9,10 @@ define(['lodash'], function(_){
         this.inTransit = false;
         this.queuedForTravel = false;
         planet && planet.fleets.push(this);
-        this.galaxy = galaxy;
+        if(galaxy){
+            this.galaxy = galaxy;
+            galaxy.ships = galaxy.ships.concat(this.ships);
+        }
     };
     fleet.prototype = {
         addShip: function(ship){
