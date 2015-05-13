@@ -35,7 +35,7 @@ define(['worldGen'], function(worldGen){
            this.owner = player;
            if(this.population === 0) this._setPopulation(population);
            this.setTerraformPercent(50);
-           this.bannerSprite = this.gameInstance.add.sprite(this.position.x-10, this.position.y-10, this.name+'_banner', null, this.gameInstance.stageGroup);
+           this.bannerSprite = this.gameInstance.add.sprite(this.position.x-10, this.position.y-10, player.name+'_banner', null, this.gameInstance.stageGroup);
            //TODO: colonization animation here
            this.gameInstance.planetUpdatedSignal && this.gameInstance.planetUpdatedSignal.dispatch(this);
            this.gameInstance.budgetUpdatedSignal && this.gameInstance.budgetUpdatedSignal.dispatch();

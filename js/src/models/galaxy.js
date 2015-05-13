@@ -202,11 +202,18 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
        onPlanetClicked: function(planet){
            //move selection halo to planet.
            if(this._selectionHaloSprite){
-               this._selectionHaloSprite.y = planet.position.y-20;
-               this._selectionHaloSprite.x = planet.position.x-20;
+               this._selectionHaloSprite.y = planet.position.y+(40*planet.sprites[0].scale.x);
+               this._selectionHaloSprite.x = planet.position.x+(40*planet.sprites[0].scale.x);
            }
            else{
-               this._selectionHaloSprite = this.gameInstance.add.sprite(planet.position.x-20, planet.position.y-20, 'halo', null, this.gameInstance.stageGroup);
+               this._selectionHaloSprite = this.gameInstance.add.sprite(planet.position.x+(40*planet.sprites[0].scale.x), planet.position.y+(40*planet.sprites[0].scale.x), 'halo', null, this.gameInstance.stageGroup);
+               this._selectionHaloSprite.scale.setTo(0.5);
+               this._selectionHaloSprite.anchor.setTo(0.5);
+               this._selectionHaloSprite.tween = this.gameInstance.add.tween(this._selectionHaloSprite.scale)
+                   .to({x:0.25, y:0.25}, 2000)
+                   .to({x:0.5, y:0.5}, 2000)
+                   .loop();
+               this._selectionHaloSprite.tween.start();
            }
        },
 
@@ -215,10 +222,10 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            this._initStarField();
            this.generatePlanets(shape, size, spread);
            this.players = [];
-           this.players.push(this.initializePlayer(this._getRandomPlayerName(), false, difficulty));
+           this.players.push(this.initializePlayer(this._getNextPlayerName(), false, difficulty));
            this.clientPlayer = this.players[0];
            for(var i=0; i<ai_players; i++){
-               this.players.push(this.initializePlayer(this._getRandomPlayerName(), true, difficulty));
+               this.players.push(this.initializePlayer(this._getNextPlayerName(), true, difficulty));
            }
            this.finishedSignal.dispatch();
        },
@@ -297,8 +304,9 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
        _getRandomPlanetMetal: function(){
            return (Math.random() * this.Constants.Metal.max) + this.Constants.Metal.min;
        },
-       _getRandomPlayerName: function(){
-           return this.Constants.PlayerNames[Math.round(Math.random() * (this.Constants.PlayerNames.length-1))];
+       _getNextPlayerName: function(){
+           this.Constants.nextNameIndex++;
+           return this.Constants.PlayerNames[this.Constants.nextNameIndex-1];
        },
        _getRandomPlanetName: function(){
            return this.Constants.PlanetNames[Math.round(Math.random() * (this.Constants.PlanetNames.length-1))];
@@ -380,13 +388,12 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
             max: 20000
         },
         PlayerNames: [
-            'Yojimbo',
-            'Chairman',
-            'Genralissimo',
-            'CEO',
-            'Lord',
-            'Prime Minister'
+            'player1',
+            'player2',
+            'player3',
+            'player4'
         ],
+        nextNameIndex: 0,
         PlanetNames: [
             'Phil',
             'Murray',
