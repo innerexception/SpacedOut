@@ -9,7 +9,7 @@
     <div class="col-md-4">
         <div class="cost-panel well">
             <div>{{selectedDesign.type}}</div>
-            <img src="{{selectedDesign.spriteGroup.thumbnailPath}}" />
+            <img style="width:100%;" src="{{selectedDesign.spriteGroup.thumbnailPath}}" />
             <div>
                 1st <img class="inline" src="./js/res/img/icon_budget.png" />:
                 <div class="inline"> {{selectedDesign.prototypeCost}}</div>
@@ -23,9 +23,14 @@
                 <div class="inline"> {{selectedDesign.metalCost}}</div>
             </div>
             <div>
-                Colony<input style="display: block;" type="radio" name="typeGroup" value="colony"/>
-                Tanker<input style="display: block;" type="radio" name="typeGroup" value="tanker"/>
-                Dreadnaught<input style="display: block;" type="radio" name="typeGroup" value="dreadnaught"/>
+                <select on-change="onTypeSelected">
+                    <option value="colony" selected="{{selectedDesign.type==='colony'}}">colony</option>
+                    <option value="tanker" selected="{{selectedDesign.type==='tanker'}}">tanker</option>
+                    <option value="scout" selected="{{selectedDesign.type==='scout'}}">scout</option>
+                    <option value="dreadnaught" selected="{{selectedDesign.type==='dreadnaught'}}">dreadnaught</option>
+                    <option value="fighter" selected="{{selectedDesign.type==='fighter'}}">fighter</option>
+                    <option value="platform" selected="{{selectedDesign.type==='platform'}}">platform</option>
+                </select>
                 <div class="inline">X</div>
                 <input id="shipNumber" value="0" style="width:38px !important; color:black;" type="number" on-change="onNumberChanged" min="0" max="25" />
                 <div class="inline">= $ {{selectedDesign.prototypeCost + (selectedDesign.productionCost * selectedDesign.number)}} /</div>
@@ -69,7 +74,7 @@
 <div class="well">
     <div class="{{isSelected ? 'selected' : ''}}">
         <div>{{type}}</div>
-        <img on-click="onDesignClick" src="{{spriteGroup.thumbnailPath}}"/>
+        <img on-click="onDesignClick" style="width:100%;" src="{{spriteGroup.thumbnailPath}}"/>
     </div>
 </div>
 <!-- {{/designItem}} -->

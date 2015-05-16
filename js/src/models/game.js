@@ -44,7 +44,7 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             }, this);
             this.load.image('common_head', 'js/res/img/ship/common2/common_head.png');
             this.load.image('common_colony_module', 'js/res/img/ship/common2/common_colony_module.png');
-            this.load.image('common_tanker_module', 'js/res/img/ship/common2/common_colony_module.png');
+            this.load.image('common_tanker_module', 'js/res/img/ship/common2/common_tanker_module.png');
         },
 
         phaserLoad: function () {

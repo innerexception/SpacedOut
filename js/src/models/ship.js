@@ -56,20 +56,16 @@ define(['lodash'], function(_){
                this._playMove(this.spriteGroup, x, y);
            }
        },
+       updateShipSprites: function(){
+           this.drawAtLocation(0, 0, {orbit: true, create: true});
+       },
        _createShipSpriteGroup: function(x, y, scale, phaserInstance){
            var spriteGroup = phaserInstance.add.group(phaserInstance.stageGroup);
            spriteGroup.create(0,0,'common_range_'+this.rangeLevel);
            spriteGroup.create(65,10,'common_shield_'+this.shield);
            spriteGroup.create(165,0,'common_head');
-           spriteGroup.create(225,-10,this.owner.name+'_weapon_'+this.weapon);
-           switch(this.type){
-               case 'colony':
-                   spriteGroup.create(75,20,'common_colony_module');
-                   break;
-               case 'tanker':
-                   spriteGroup.create(65,15,'common_tanker_module');
-                   break;
-           }
+           spriteGroup.create(225,0,this.owner.name+'_weapon_'+this.weapon);
+
            if(scale){
                spriteGroup.scale.y = scale;
                spriteGroup.scale.x = scale;
@@ -79,10 +75,21 @@ define(['lodash'], function(_){
 
            spriteGroup.explode = this._explodeAndDestroy;
 
-           var bmd = this.gameInstance.make.bitmapData(80,40);
-           _.each(spriteGroup.children, function(child, i){
-               bmd.draw(child, i*10, 0);
-           });
+           var bmd = this.gameInstance.make.bitmapData(300,65);
+           bmd.draw(spriteGroup.children[0], 0, 0);
+           bmd.draw(spriteGroup.children[1], 65, 10);
+           bmd.draw(spriteGroup.children[2], 165, 0);
+           bmd.draw(spriteGroup.children[3], 225, 0);
+           switch(this.type){
+               case 'colony':
+                   spriteGroup.create(75,20,'common_colony_module');
+                   bmd.draw(spriteGroup.children[4], 75, 20);
+                   break;
+               case 'tanker':
+                   spriteGroup.create(65,15,'common_tanker_module');
+                   bmd.draw(spriteGroup.children[4], 75, 20);
+                   break;
+           }
 
            spriteGroup.thumbnailPath = bmd.canvas.toDataURL();
 
@@ -99,7 +106,7 @@ define(['lodash'], function(_){
        },
        _destroySpritesAndGroup: function(){
            if(this.spriteGroup){
-               if(this.spriteGroup.tween) delete this.spriteGroup.tween;
+               if(this.spriteGroup.orbitTween) delete this.spriteGroup.orbitTween;
                this.spriteGroup.destroy(true);
            }
        },
@@ -154,7 +161,7 @@ define(['lodash'], function(_){
            Scout: 'scout',
            Fighter: 'fighter',
            Tanker: 'tanker',
-           Dreadnaught: 'dread',
+           Dreadnaught: 'dreadnaught',
            Platform: 'platform'
        }
    };
