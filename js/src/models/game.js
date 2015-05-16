@@ -29,12 +29,22 @@ define(['phaser', 'lodash', 'candy', 'budgetPanel',
             this.load.image('unexploredMask', 'js/res/img/unexploredMask.png');
             this.load.image('lazerShot', 'js/res/img/lazerShot.png');
             this.load.image('explosion', 'js/res/img/explosion.png');
-            this.load.image('player1_banner', 'js/res/img/red-shield.png');
-            this.load.image('player2_banner', 'js/res/img/blue-shield.png');
+            this.load.image('office_banner', 'js/res/img/red-shield.png');
+            this.load.image('lol_banner', 'js/res/img/blue-shield.png');
             this.load.image('player3_banner', 'js/res/img/yellow-shield.png');
             this.load.image('player4_banner', 'js/res/img/green-shield.png');
             this.load.image('player5_banner', 'js/res/img/orange-shield.png');
             this.load.image('halo', 'js/res/img/halo.png');
+            _.times(10, function(i){
+                i++;
+                this.load.image('common_shield_'+i, 'js/res/img/ship/common2/common_shield_'+i+'.png');
+                this.load.image('common_range_'+i, 'js/res/img/ship/common2/common_range_'+i+'.png');
+                this.load.image('lol_weapon_'+i, 'js/res/img/ship/lol/lol_weapon_'+i+'.png');
+                this.load.image('office_weapon_'+i, 'js/res/img/ship/office/office_weapon_'+i+'.png');
+            }, this);
+            this.load.image('common_head', 'js/res/img/ship/common2/common_head.png');
+            this.load.image('common_colony_module', 'js/res/img/ship/common2/common_colony_module.png');
+            this.load.image('common_tanker_module', 'js/res/img/ship/common2/common_colony_module.png');
         },
 
         phaserLoad: function () {

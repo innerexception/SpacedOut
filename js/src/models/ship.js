@@ -58,10 +58,18 @@ define(['lodash'], function(_){
        },
        _createShipSpriteGroup: function(x, y, scale, phaserInstance){
            var spriteGroup = phaserInstance.add.group(phaserInstance.stageGroup);
-           spriteGroup.create(0,0,this.type+'_range_'+this.range);
-           spriteGroup.create(10,0,this.type+'_speed_'+this.speed);
-           spriteGroup.create(20,0,this.type+'_shield_'+this.shield);
-           spriteGroup.create(30,0,this.type+'_weapon_'+this.weapon);
+           spriteGroup.create(0,0,'common_range_'+this.rangeLevel);
+           spriteGroup.create(65,10,'common_shield_'+this.shield);
+           spriteGroup.create(165,0,'common_head');
+           spriteGroup.create(225,-10,this.owner.name+'_weapon_'+this.weapon);
+           switch(this.type){
+               case 'colony':
+                   spriteGroup.create(75,20,'common_colony_module');
+                   break;
+               case 'tanker':
+                   spriteGroup.create(65,15,'common_tanker_module');
+                   break;
+           }
            if(scale){
                spriteGroup.scale.y = scale;
                spriteGroup.scale.x = scale;

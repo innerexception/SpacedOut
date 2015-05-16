@@ -6,7 +6,7 @@ define(['ractive', 'rv!/spacedout/js/src/ui/gameSetupModal/gameSetupModal.html',
             this.shape = 'Circle';
             this.handicap = 0;
             this.spread = 100;
-            this.players = 2;
+            this.otherPlayers = 1;
             this.difficulty = 0;
 
             var targetDiv = document.createElement('div');
@@ -37,7 +37,7 @@ define(['ractive', 'rv!/spacedout/js/src/ui/gameSetupModal/gameSetupModal.html',
                 },
                 startClicked: function(event){
                     self.transitionFrom();
-                    self.galaxy.initGalaxy(self.size, self.shape, self.players, self.difficulty, self.handicap, self.spread);
+                    self.galaxy.initGalaxy(self.size, self.shape, self.otherPlayers, self.difficulty, self.handicap, self.spread);
                 },
                 sizeSelected: function(event){
 
