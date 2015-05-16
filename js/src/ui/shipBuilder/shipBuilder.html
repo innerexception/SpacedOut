@@ -23,6 +23,9 @@
                 <div class="inline"> {{selectedDesign.metalCost}}</div>
             </div>
             <div>
+                Colony<input style="display: block;" type="radio" name="typeGroup" value="colony"/>
+                Tanker<input style="display: block;" type="radio" name="typeGroup" value="tanker"/>
+                Dreadnaught<input style="display: block;" type="radio" name="typeGroup" value="dreadnaught"/>
                 <div class="inline">X</div>
                 <input id="shipNumber" value="0" style="width:38px !important; color:black;" type="number" on-change="onNumberChanged" min="0" max="25" />
                 <div class="inline">= $ {{selectedDesign.prototypeCost + (selectedDesign.productionCost * selectedDesign.number)}} /</div>
