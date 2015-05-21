@@ -90,9 +90,12 @@ define(['fleet', 'ship', 'ractive', 'rv!/spacedout/js/src/ui/shipBuilder/shipBui
                     if(design.isPrototype)
                         this._ractive.get('player').designs.push(design);
                     _.times(design.number, function(){
-                        fleet.addShip(new Ship(planet, this._ractive.get('player'), design.type, design.range, design.speed, design.weapon, design.shield, design.mini, this.galaxy.gameInstance));
+                        fleet.addShip(new Ship(planet, this._ractive.get('player'), design.type, design.rangeLevel, design.speedLevel, design.weapon, design.shield, design.mini, this.galaxy.gameInstance));
                     }, this);
-                    this._ractive.get('player').fleets.push(fleet);
+                    var player = this._ractive.get('player');
+                    player.fleets.push(fleet);
+                    player.money -= design.number * design.productionCost;
+                    if(design.isPrototype) player.money -= design.prototypeCost;
                     this.galaxy.gameInstance.planetUpdatedSignal.dispatch(planet);
                 }
             }

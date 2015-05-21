@@ -54,11 +54,25 @@ define(['ractive', 'rv!/spacedout/js/src/ui/planetPanel/planetPanel.html', 'css!
                 }
             },
             onPlanetClicked: function(planet){
-                this._ractive.set('planet', planet);
+                if(planet.isExplored)this._ractive.set('planet', planet);
+                else this._ractive.set('planet', this._emptyPlanet);
                 if(!this.isVisible) this.transitionTo();
             },
             refreshPanel: function(planet){
                 if(this._ractive.get('planet') === planet) this._ractive.set('planet', planet);
+            },
+            _emptyPlanet: {
+                name: '?',
+                gravity: '?',
+                temp: '?',
+                popualtion: '?',
+                income: '?',
+                metal: '?',
+                miningChange: '?',
+                incomeGrowth: '?',
+                tempChange: '?',
+                populationGrowth: '?',
+                surfaceImagePath: './js/res/img/unexploredMask.png'
             }
         };
 
