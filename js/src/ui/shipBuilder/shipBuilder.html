@@ -43,30 +43,30 @@
             <div>
                 <img class="inline" src="./js/res/img/icon-range.png" />
                 <div class="inline">{{selectedDesign.rangeLevel || 0}}</div>
-                <input class="inline" data-id="range" value="{{selectedDesign.rangeLevel || 0}}" type="range" max="{{player.techs.range.level}}" on-change="onStatChanged" />
+                <input class="inline" data-id="rangeLevel" value="{{selectedDesign.rangeLevel || 0}}" type="range" min="1" max="{{player.techs.range.level}}" on-change="onStatChanged" />
             </div>
             <div>
                 <img class="inline" src="./js/res/img/icon-speed.png" />
                 <div class="inline">{{selectedDesign.speedLevel || 0}}</div>
-                <input class="inline" data-id="speed" value="{{selectedDesign.speedLevel || 0}}" type="range" max="{{player.techs.speed.level}}" on-change="onStatChanged" />
+                <input class="inline" data-id="speedLevel" value="{{selectedDesign.speedLevel || 0}}" type="range" min="1" max="{{player.techs.speed.level}}" on-change="onStatChanged" />
             </div>
             <div>
                 <img class="inline" src="./js/res/img/icon-shield.png" />
                 <div class="inline">{{selectedDesign.shield || 0}}</div>
-                <input class="inline" data-id="shield" value="{{selectedDesign.shield || 0}}" type="range" max="{{player.techs.shield.level}}" on-change="onStatChanged" />
+                <input class="inline" data-id="shield" value="{{selectedDesign.shield || 0}}" type="range" min="1" max="{{player.techs.shield.level}}" on-change="onStatChanged" />
             </div>
             <div>
                 <img class="inline" src="./js/res/img/icon-weapon.png" />
                 <div class="inline">{{selectedDesign.weapon || 0}}</div>
-                <input class="inline" data-id="weapon" value="{{selectedDesign.weapon || 0}}" max="{{player.techs.weapon.level}}" type="range" on-change="onStatChanged" />
+                <input class="inline" data-id="weapon" value="{{selectedDesign.weapon || 0}}" min="1" max="{{player.techs.weapon.level}}" type="range" on-change="onStatChanged" />
             </div>
             <div>
                 <img class="inline" src="./js/res/img/icon-mini.png" />
                 <div class="inline">{{selectedDesign.mini || 0}}</div>
-                <input class="inline" data-id="mini" value="{{selectedDesign.mini || 0}}" max="{{player.techs.mini.level}}" type="range" on-change="onStatChanged" />
+                <input class="inline" data-id="mini" value="{{selectedDesign.mini || 0}}" min="0" max="{{player.techs.mini.level}}" type="range" on-change="onStatChanged" />
             </div>
         </div>
-        <div class="well" on-click="onDoneClicked">Done</div>
+        <div class="well" on-click="onDoneClicked">Build @ {{selectedPlanet ? selectedPlanet.name : player.homeWorld.name}}</div>
     </div>
 </div>
 

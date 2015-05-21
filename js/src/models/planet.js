@@ -89,7 +89,7 @@ define(['worldGen'], function(worldGen){
        _setPopulation: function(number){
            this.population = number;
            var oldIncome = this.income;
-           this.income = number * 0.5;
+           this.income = number * 0.1;
            this.incomeGrowth = Math.round(oldIncome === 0 ? 0 : (this.income / oldIncome));
            this._setPopulationGrowth();
        },

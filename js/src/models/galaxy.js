@@ -186,6 +186,8 @@ define(['planet', 'player', 'ship', 'fleet'], function(Planet, Player, Ship, Fle
            }
 
            this.homeWorlds.push(homeWorld);
+           homeWorld.gravity = 1;
+           homeWorld.temp = 72;
            var player = new Player(homeWorld, name, isAi, difficulty, this);
 
            //get initial ships

@@ -60,11 +60,11 @@ define(['ractive', 'rv!/spacedout/js/src/ui/techPanel/techPanel.html', 'css!/spa
                 }
             },
             setTechValue: function(type, val){
-                this._ractive.data.player.setIndividualTechRate(type, val);
+                this._ractive.get('player').setIndividualTechRate(type, val);
                 this._ractive.set('player', this.galaxy.clientPlayer);
             },
             lockTechValue: function(type, val){
-                this._ractive.data.player.lockTechValue(type, val);
+                this._ractive.get('player').lockTechValue(type, val);
             }
         };
 

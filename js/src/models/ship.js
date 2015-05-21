@@ -29,13 +29,13 @@ define(['lodash'], function(_){
 
    ship.prototype = {
        updatePrototypeCost: function(){
-           this.prototypeCost= (this.rangeLevel + this.speedLevel + this.shield + this.weapon + this.mini) * 1000;
+           this.prototypeCost= (parseInt(this.rangeLevel) + parseInt(this.speedLevel) + this.shield + this.weapon + this.mini) * 1000;
        },
        updateProductionCost: function(){
-           this.productionCost= (this.rangeLevel + this.speedLevel + this.shield + this.weapon + this.mini) * 100;
+           this.productionCost= (parseInt(this.rangeLevel) + parseInt(this.speedLevel) + this.shield + this.weapon + this.mini) * 100;
        },
        updateMetalCost: function(){
-           this.metalCost = (this.rangeLevel + this.speedLevel + this.shield + this.weapon - this.mini) * 100;
+           this.metalCost = (parseInt(this.rangeLevel) + parseInt(this.speedLevel) + this.shield + this.weapon - this.mini) * 100;
        },
        drawAtLocation: function(x, y, options){
            if(options.create){

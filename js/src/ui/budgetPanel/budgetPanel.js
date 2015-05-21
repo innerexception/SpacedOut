@@ -24,12 +24,12 @@ function(Ractive, budgetPanelTemplate){
 
         this._ractive.on({
             onCapitalBudgetChanged: function(event){
-                self._ractive.data.player.setCashPercent(event.node.value);
+                self._ractive.get('player').setCashPercent(event.node.value);
                 self._ractive.set('player', galaxy.clientPlayer);
                 self._ractive.set('planets', galaxy.clientPlayer.getPlanets());
             },
             onTechBudgetChanged: function(event){
-                self._ractive.data.player.setTechPercent(event.node.value);
+                self._ractive.get('player').setTechPercent(event.node.value);
                 self._ractive.set('player', galaxy.clientPlayer);
                 self._ractive.set('planets', galaxy.clientPlayer.getPlanets());
             },

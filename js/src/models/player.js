@@ -52,12 +52,13 @@ define(['lodash'], function(_){
            var techMoney = this.moneyIncome * (this.techRate / 100);
            this.money += Math.round(this.moneyIncome * (this.cashRate / 100));
            _.forOwn(this.techs, function(tech, name){
-               tech.progress += (techMoney * (tech.rate/100)) / 500;  //500 per point
+               tech.progress += (techMoney * (tech.rate/100)) / 50;  //50 per point //TODO modify by level also
                if(tech.progress >= 100){
                    tech.progress = 0;
                    tech.level++;
                    this.galaxy.gameInstance.messageSignal.dispatch('You discovered: '+this.getTechName(name, tech.level));
                }
+               console.log(tech.progress);
            }, this);
        },
        setTechPercent: function(percent){

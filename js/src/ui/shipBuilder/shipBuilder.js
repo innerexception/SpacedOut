@@ -13,7 +13,8 @@ define(['fleet', 'ship', 'ractive', 'rv!/spacedout/js/src/ui/shipBuilder/shipBui
                 template: shipBuilderTemplate,
                 data: {
                     player: {},
-                    selectedDesign: {}
+                    selectedDesign: {},
+                    selectedPlanet: this.galaxy.gameInstance.selectedPlanet
                 }
             });
 
@@ -70,19 +71,11 @@ define(['fleet', 'ship', 'ractive', 'rv!/spacedout/js/src/ui/shipBuilder/shipBui
             },
             updatePrototypeCost: function(field, value){
                 this._ractive.set('selectedDesign.'+field, value);
-                if(this._ractive.get('selectedDesign.prototypeCost')!==0)
-                {
-                    this._ractive.get('selectedDesign').updatePrototypeCost();
-                    this._ractive.get('selectedDesign').updateProductionCost();
-                    this._ractive.set('selectedDesign', this._ractive.get('selectedDesign'));
-                }
-                else{
-                    this.createNewDesign(this._ractive.get('selectedDesign.type'));
-                }
+                this.createNewDesign(this._ractive.get('selectedDesign.type'));
             },
             createNewDesign: function(type){
                 var designToCopy = this._ractive.get('selectedDesign');
-                var designCopy = new Ship(this.galaxy.gameInstance.selectedPlanet, this._ractive.get('player'), type,
+                var designCopy = new Ship(this.galaxy.gameInstance.selectedPlanet ? this.galaxy.gameInstance.selectedPlanet : this._ractive.get('player.homeWorld'), this._ractive.get('player'), type,
                     designToCopy.rangeLevel, designToCopy.speedLevel, designToCopy.weapon, designToCopy.shield, designToCopy.mini, this.galaxy.gameInstance);
                 designCopy.isPrototype = true;
                 designCopy.updatePrototypeCost();
@@ -90,16 +83,18 @@ define(['fleet', 'ship', 'ractive', 'rv!/spacedout/js/src/ui/shipBuilder/shipBui
                 this._ractive.set('selectedDesign', designCopy);
             },
             saveShips: function(){
-                var planet = this.galaxy.gameInstance.selectedPlanet;
+                var planet = this.galaxy.gameInstance.selectedPlanet ? this.galaxy.gameInstance.selectedPlanet : this._ractive.get('player.homeWorld');
                 var fleet = new Fleet([], planet, this.galaxy);
                 var design = this._ractive.get('selectedDesign');
-                if(design.isPrototype)
-                    this._ractive.get('player').designs.push(design);
-                _.times(design.number, function(){
-                    fleet.addShip(new Ship(planet, this._ractive.get('player'), design.type, design.range, design.speed, design.weapon, design.shield, design.mini, this.galaxy.gameInstance));
-                }, this);
-                this._ractive.get('player').fleets.push(fleet);
-                this.galaxy.gameInstance.planetUpdatedSignal.dispatch(planet);
+                if(design.number > 0){
+                    if(design.isPrototype)
+                        this._ractive.get('player').designs.push(design);
+                    _.times(design.number, function(){
+                        fleet.addShip(new Ship(planet, this._ractive.get('player'), design.type, design.range, design.speed, design.weapon, design.shield, design.mini, this.galaxy.gameInstance));
+                    }, this);
+                    this._ractive.get('player').fleets.push(fleet);
+                    this.galaxy.gameInstance.planetUpdatedSignal.dispatch(planet);
+                }
             }
         };
 
